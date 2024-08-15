@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 e-frontend/.vscode/
+
+e-backend/.vscode/
