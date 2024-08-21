@@ -36,6 +36,9 @@
                 {{ product.descripcion }}
               </p>
             </mat-card-content>
+            <mat-card-actions>
+              <button class="button is-primary has-text-white" [disabled]="!comprobacionUsuario">Ver Producto</button>
+            </mat-card-actions>
           </mat-card>
         </div>
       </div>

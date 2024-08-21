@@ -32,9 +32,11 @@ import { productos } from '../../db';
 export class ProductCarouselComponent implements AfterViewInit, OnInit {
 
    productos: Producto[] = []
+   comprobacionUsuario = false;
 
   ngOnInit(): void {
     this.productos = productos;
+    this.comprobacionUsuario = false;
   }
 
   ngAfterViewInit(): void {
