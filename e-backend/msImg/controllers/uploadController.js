@@ -1,10 +1,14 @@
+const express = require("express");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 
+const app = express();
+app.use(express.static(path.join(__dirname, '../public')));
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, 'public/uploads'));
+        cb(null, path.join(__dirname, '../public/uploads'));
     },
     filename: function (req, file, cb) {
         cb(null, uuidv4() + '-' + path.extname(file.originalname));
@@ -12,8 +16,10 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-        cb(null, true);
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff"];
+    
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);  // Acepta la imagen
     } else {
         cb(new Error("Tipo de archivo no permitido"), false);
     }
