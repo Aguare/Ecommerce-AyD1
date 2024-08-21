@@ -132,3 +132,7 @@ dist
 e-frontend/.vscode/
 
 e-backend/.vscode/
+
+# ignorar imagenes carpeta public
+public/uploads/
+
