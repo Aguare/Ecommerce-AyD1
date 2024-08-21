@@ -11,25 +11,24 @@ import {MatCardModule} from '@angular/material/card';
 // SplideJs
 import Splide from '@splidejs/splide';
 
-
-
 @Component({
-  selector: 'app-prueba-material',
+  selector: 'app-product-carousel',
   standalone: true,
   imports: [MatDatepickerModule, MatInputModule, MatFormFieldModule, MatButtonModule, MatDividerModule, MatCardModule],
-  templateUrl: './prueba-material.component.html',
-  styleUrl: './prueba-material.component.scss'
+  templateUrl: './product-carousel.component.html',
+  styleUrl: './product-carousel.component.scss'
 })
-export class PruebaMaterialComponent implements AfterViewInit {
-
-  ngAfterViewInit(): void {
-    if (typeof document !== 'undefined') {
-      new Splide('.splide', {
-        type: 'loop',
-        perPage: 1,
-        autoplay: true,
-      }).mount();
+export class ProductCarouselComponent implements AfterViewInit {
+  
+    ngAfterViewInit(): void {
+      if (typeof document !== 'undefined') {
+        new Splide('.splide', {
+          type: 'loop',
+          perPage: 1,
+          autoplay: true,
+        }).mount();
+      }
     }
-  }
 
+  
 }
