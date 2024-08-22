@@ -1,0 +1,56 @@
+<div class="container m-5">
+  <section class="splide" aria-label="Splide Basic HTML Example">
+    <div class="splide__track px-4">
+      <div class="splide__list">
+        <div class="splide__slide card" *ngFor="let product of productos">
+          <mat-card class="example-card" appearance="outlined">
+            <div class="card-image image is-5by4">
+              <img
+                mat-card-image
+                [src]="product.imagen"
+                alt="Imagen de {{ product.nombre }}"
+              />
+            </div>
+            <mat-card-content>
+              <div class="card-content">
+                <div class="card-title">
+                  <mat-card-subtitle>{{ product.nombre }}</mat-card-subtitle>
+                </div>
+                <p>
+                  Precio:
+                  <span
+                    class="span-price {{
+                      product.descuento > 0 ? 'line-throught' : ''
+                    }}"
+                  >
+                    ${{ product.precio }}
+                  </span>
+                  <span *ngIf="product.descuento > 0" class="span-descuento"
+                    >${{
+                      (
+                        product.precio -
+                        product.precio * (product.descuento / 100)
+                      ).toFixed(2)
+                    }}</span
+                  >
+                </p>
+                <p>
+                  {{ product.descripcion }}
+                </p>
+
+                <div class="card-button">
+                  <button
+                    class="button is-primary has-text-white"
+                    [disabled]="comprobacionUsuario"
+                  >
+                    Ver Producto
+                  </button>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
