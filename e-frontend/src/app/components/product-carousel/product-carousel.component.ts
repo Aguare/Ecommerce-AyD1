@@ -1,16 +1,13 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 // Material
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 
 // SplideJs
 import Splide from '@splidejs/splide';
-import { CommonModule } from '@angular/common';
+
+//Mis Importaciones
 import { Producto } from '../../interfaces';
 import { productos } from '../../db';
 
@@ -19,11 +16,6 @@ import { productos } from '../../db';
   standalone: true,
   imports: [
     CommonModule,
-    MatDatepickerModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatDividerModule,
     MatCardModule,
   ],
   templateUrl: './product-carousel.component.html',
@@ -43,7 +35,13 @@ export class ProductCarouselComponent implements AfterViewInit, OnInit {
     if (typeof document !== 'undefined') {
       new Splide('.splide', {
         type: 'loop',
-        perPage: 3,
+        perPage: 4,
+        perMove:1,
+        gap: 0,
+        padding: {
+          right: 0,
+          left: 0
+        },
         autoplay: true,
       }).mount();
     }
