@@ -1,0 +1,29 @@
+<div class="container m-5">
+  <section
+    id="simple-splide"
+    class="splide border rounded-2"
+    aria-label="Splide Basic HTML Example"
+  >
+    <div class="splide__track px-4">
+      <div class="splide__list">
+        <div class="splide__slide card" *ngFor="let product of productos">
+          <mat-card class="example-card" appearance="outlined">
+            <mat-card-header>
+              <mat-card-title-group>
+                <mat-card-subtitle>{{ product.nombre }}</mat-card-subtitle>
+                <img
+                  class="simple-carousel-image"
+                  mat-card-lg-image
+                  [src]="product.imagen"
+                  alt="Imagen de {{ product.nombre }}"
+                />
+              </mat-card-title-group>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<h2>Pero</h2>

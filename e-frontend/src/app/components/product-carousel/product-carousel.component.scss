@@ -1,0 +1,50 @@
+.example-card {
+  max-width: 250px;
+}
+
+.span-price {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.span-descuento {
+  background-color: red;
+  color: white;
+  text-decoration: underline;
+  font-weight: bold;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.line-throught {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.card {
+  color: black;
+}
+
+
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  
+}
+
+.card-title {
+  width: 200px;
+  height: 55px;
+}
+
+.card-content p{
+  font-size: small;
+}
+
+.card-button{
+  width: 100%;
+}
