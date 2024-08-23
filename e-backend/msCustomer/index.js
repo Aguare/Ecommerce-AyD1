@@ -1,3 +1,4 @@
+const sequelize = require("./config/database.config");
 const express = require("express");
 const app = express();
 
@@ -6,6 +7,7 @@ const log4js = require("log4js");
 const logger = log4js.getLogger();
 
 const PORT = 3003;
+
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -18,7 +20,6 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use(router);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,3 +40,5 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
     res.send('Hello World from msCustomer');
 });
+
+app.use(router);
