@@ -1,0 +1,80 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 25rem; 
+
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 900px; 
+    max-height: 1000px; 
+  }
+
+  .logo {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .box {
+    width: 800px; 
+    padding: 5rem; 
+  }
+}
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  .box {
+    width: 800px; 
+    padding: 5rem; 
+    position: relative; 
+  }
+}
+
+.modal-card {
+  position: relative;
+
+  .delete {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+  }
+
+  .modal-card-head {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .columns {
+    display: flex;
+    gap: 1rem;
+  }
+  .control.has-icons-right {
+    position: relative;
+    
+    .icon.is-right {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+  }
+
+  .column {
+    flex: 1;
+  }
+
+  .modal-card-body {
+    padding: 2rem;
+  }
+}
+
