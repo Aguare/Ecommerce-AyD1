@@ -1,8 +1,7 @@
-const { Router } = require("express");
 const express = require("express");
-const router = Router();
+const router = express.Router();
+const CustomerController = require("../controllers/customer.controller");
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
+router.post("/customer/sign-up", CustomerController.signUp);
 
 module.exports = router;
