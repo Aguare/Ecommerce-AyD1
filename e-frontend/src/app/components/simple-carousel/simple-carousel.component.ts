@@ -8,8 +8,8 @@ import { MatCardModule } from '@angular/material/card';
 import Splide from '@splidejs/splide';
 
 //Mis Importaciones
-import { Producto } from '../../interfaces';
-import { productos } from '../../db';
+import { Product } from '../../interfaces';
+import { products } from '../../db';
 
 @Component({
   selector: 'app-simple-carousel',
@@ -19,11 +19,11 @@ import { productos } from '../../db';
   styleUrl: './simple-carousel.component.scss',
 })
 export class SimpleCarouselComponent implements AfterViewInit, OnInit {
-  productos: Producto[] = [];
+  products: Product[] = [];
   comprobacionUsuario = false;
 
   ngOnInit(): void {
-    this.productos = productos;
+    this.products = products;
     this.comprobacionUsuario = false;
   }
 
