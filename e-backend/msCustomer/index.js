@@ -1,12 +1,14 @@
 const express = require("express");
 const app = express();
+
 const router = require("./routes/routes");
 const log4js = require("log4js");
 const logger = log4js.getLogger();
-const PORT = process.env.PORT || 3002;
+
+const PORT = 3003;
 
 app.use((req, res, next) => {
-	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "*");
 	res.header(
 		"Access-Control-Allow-Headers",
 		"Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Content-Length, Content-Disposition, Accept, Access-Control-Allow-Request-Method"
@@ -16,11 +18,9 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use(router)
+app.use(router);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(express.static('public'));
 
 if (process.env.NODE_ENV === "production") {
 	logger.level = "trace";
@@ -37,5 +37,5 @@ app.listen(PORT, () => {
 
 //test
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    res.send('Hello World from msCustomer');
 });
