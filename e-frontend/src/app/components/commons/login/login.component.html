@@ -74,9 +74,9 @@
               </div>
               <div class="column">
                 <div class="field">
-                  <label class="label">Apellido</label>
+                  <label class="label">Direccion</label>
                   <div class="control">
-                    <input class="input" type="text" formControlName="lastName" placeholder="Apellido" required>
+                    <input class="input" type="text" formControlName="address" placeholder="Direccion" required>
                   </div>
                 </div>
               </div>
@@ -103,6 +103,12 @@
                 </div>
               </div>
             </div>
+            <div class="field">
+                  <label class="label">Nit</label>
+                  <div class="control">
+                    <input class="input" type="text" formControlName="nit" placeholder="Nit" required>
+                  </div>
+                </div>
             <div class="field">
               <div class="control">
                 <button class="button is-primary is-fullwidth" type="submit" [disabled]="registerForm.invalid || isLoading">
