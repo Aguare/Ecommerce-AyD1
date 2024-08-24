@@ -33,8 +33,9 @@ export class LoginComponent {
 
 		this.registerForm = this.fb.group({
 			name: ["", Validators.required],
-			lastName: ["", Validators.required],
 			email: ["", [Validators.required, Validators.email]],
+			address: ["", Validators.required],
+			nit : ["", Validators.required],
 			password: ["", Validators.required],
 		});
 	}
