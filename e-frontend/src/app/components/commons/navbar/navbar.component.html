@@ -1,0 +1,58 @@
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/"> Logo </a>
+
+    <a
+      role="button"
+      class="navbar-burger"
+      aria-label="menu"
+      aria-expanded="false"
+      data-target="navbarBasicExample"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <ng-container *ngFor="let item of menuItems">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">{{ item.name }}</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" *ngFor="let submenu of item.items">
+              {{ submenu.name }}
+            </a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <a class="navbar-item" *ngIf="isClient">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="shopping_cart"></mat-icon>
+        </a>
+        <div class="navbar-item has-dropdown is-hoverable mr-3">
+          <a class="navbar-link">
+            <span class="icon">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
+                alt="Logo"
+              />
+            </span>
+            Mi Perfil</a
+          >
+          <div class="navbar-dropdown">
+            <a class="navbar-item"> About </a>
+            <a class="navbar-item"> Jobs </a>
+            <a class="navbar-item"> Contact </a>
+            <hr class="navbar-divider" />
+            <a class="navbar-item"> Log Out </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
