@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 
 interface MenuItem {
   name: string;
   link: string;
-  items?: MenuItem[];
+  items: MenuItem[];
 }
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
@@ -28,7 +29,6 @@ export class NavbarComponent implements OnInit {
     this.rol = 'Administrador';
     this.buildMenu();
     this.isLoggedIn = true;
-    this.isClient = true;
   }
 
   buildMenu(): void {
@@ -40,28 +40,48 @@ export class NavbarComponent implements OnInit {
     const dynamicItems = [];
 
     if (this.rol === 'Administrador') {
-      dynamicItems.push({
-        name: 'Usuarios',
-        link: '/usuarios',
-        items: [
-          { name: 'Artículos', link: '/articulos' },
-          { name: 'Artículos 1', link: '/articulos' },
-          { name: 'Artículos 2', link: '/articulos' },
-        ],
-      }, {
-        name: 'Pagina2',
-        link: '/usuarios',
-        items: [
-          { name: 'Pagina 1', link: '/articulos' },
-          { name: 'Pagina 2', link: '/articulos' },
-          { name: 'Pagina 3', link: '/articulos' },
-        ],
-      });
-    }
-    if (this.rol === 'Editor') {
-      dynamicItems.push({ name: 'Artículos', link: '/articulos' });
+      this.isClient = false;
+      dynamicItems.push(
+        {
+          name: 'Productos',
+          link: '---',
+          items: [
+            { name: 'Agregar Producto', link: '/addProduct' },
+            { name: 'Ver Productos', link: '/products' },
+          ],
+        },
+        {
+          name: 'Pedidos',
+          link: '----',
+          items: [{ name: 'Gestionar Pedidos', link: '/orders' }],
+        },
+        {
+          name: 'Reportes',
+          link: '----',
+          items: [
+            { name: 'Dashboard', link: '/dashboard' },
+            { name: 'Reportes Perzonalizados', link: '/personal-reports' },
+          ],
+        },
+        {
+          name: 'Tienda',
+          link: '----',
+          items: [
+            { name: 'Configuracion', link: '/store-config' },
+            { name: 'Facturacion', link: '/store-billing' },
+          ],
+        },
+        {
+          name: 'Ayudantes',
+          link: '----',
+          items: [
+            { name: 'Crear Ayudante', link: '/create-assistant' },
+            { name: 'Permisos', link: '/assistants' },
+          ],
+        }
+      );
     }
 
-    return [];
+    return dynamicItems;
   }
 }
