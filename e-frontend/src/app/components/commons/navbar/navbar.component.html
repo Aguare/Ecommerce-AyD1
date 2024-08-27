@@ -27,7 +27,7 @@
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link">{{ item.name }}</a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" *ngFor="let submenu of item.items">
+            <a class="navbar-item" *ngFor="let submenu of item.items" [routerLink]="[submenu.link]">
               {{ submenu.name }}
             </a>
           </div>
