@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { LoginComponent } from "../login/login.component";
-import { NavbarComponent } from '../navbar/navbar.component';
+import { ProductCarouselComponent } from '../../product-carousel/product-carousel.component';
+import { SimpleCarouselComponent } from '../../simple-carousel/simple-carousel.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [LoginComponent, NavbarComponent],
+  imports: [ProductCarouselComponent, SimpleCarouselComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
