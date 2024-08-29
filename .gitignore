@@ -80,7 +80,7 @@ web_modules/
 .env.local
 
 # dev.env environment variable files into backend directory
-e-backend/config/dev.env
+e-backend/config/db-credentials.js
 e-backend/msImg/config/dev.env
 e-backend/msAdmin/config/dev.env
 e-backend/msCustomer/config/dev.env
