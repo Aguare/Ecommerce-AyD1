@@ -1,4 +1,3 @@
-const Customer = require('../models/Customer.js');
 const pbkdf2 = require('pbkdf2');
 require('dotenv').config();
 
@@ -21,13 +20,14 @@ const signUp = async (req, res) => {
 
         const encryptedPassword = pbkdf2.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex');
 
-        const customer = await Customer.create({
+        //TODO: Save the customer in the database
+        const customer = {
             email,
             name,
             password: encryptedPassword,
             address,
             nit
-        });
+        };
 
         res.status(201).send({
             message: 'Cliente creado con éxito',
