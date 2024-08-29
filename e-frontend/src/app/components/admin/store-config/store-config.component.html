@@ -1,0 +1,116 @@
+<div class="container mt-5">
+  <div class="columns is-centered">
+    <div class="columns is-half mt-5">
+      <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+        <h2>Datos de Facturación de la Empresa</h2>
+
+        <div class="field">
+          <label class="label">Direccion de la empresa</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Dirección de la empresa"
+              formControlName="addressCompany"
+            />
+          </div>
+          <p
+            class="help is-danger"
+            *ngIf="
+              companyForm.get('addressCompany')?.invalid &&
+              companyForm.get('addressCompany')!.touched
+            "
+          >
+            La direccion es requerida y debe tener al menos 3 caracteres.
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">Ciudad</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Ciudad"
+              formControlName="city"
+            />
+          </div>
+          <p
+            class="help is-danger"
+            *ngIf="
+              companyForm.get('city')?.invalid &&
+              companyForm.get('city')!.touched
+            "
+          >
+            La ciudad es requerida y debe tener al menos 3 caracteres.
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">Estado</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Estado"
+              formControlName="state"
+            />
+          </div>
+          <p
+            class="help is-danger"
+            *ngIf="
+              companyForm.get('state')?.invalid &&
+              companyForm.get('state')!.touched
+            "
+          >
+            El estado es requerido y debe tener al menos 3 caracteres.
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">Codigo Postal</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Codigo Postal"
+              formControlName="postalCode"
+            />
+          </div>
+          <p
+            class="help is-danger"
+            *ngIf="
+              companyForm.get('postalCode')?.invalid &&
+              companyForm.get('postalCode')!.touched
+            "
+          >
+            El codigo postal es requerido
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">Pais</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="País"
+              formControlName="country"
+            />
+          </div>
+          <p
+            class="help is-danger"
+            *ngIf="
+              companyForm.get('country')?.invalid &&
+              companyForm.get('country')!.touched
+            "
+          >
+            El país es requerido
+          </p>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button is-link">Guardar Cambios</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
