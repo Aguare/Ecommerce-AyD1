@@ -1,4 +1,5 @@
 const pbkdf2 = require('pbkdf2');
+const getConnection = require('../../db/db.js');
 require('dotenv').config();
 
 const salt = process.env.SALT || 'salt';
@@ -15,30 +16,31 @@ const salt = process.env.SALT || 'salt';
  * @param {Response} res
  */
 const signUp = async (req, res) => {
+    let conn;
     try {
-        const { email, name, password, address, nit } = req.body;
+        const { email, username, password } = req.body;
 
         const encryptedPassword = pbkdf2.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex');
 
         //TODO: Save the customer in the database
-        const customer = {
-            email,
-            name,
-            password: encryptedPassword,
-            address,
-            nit
-        };
-
+        conn = await getConnection();
+        const insertUserQuery = "INSERT INTO user (email, username, password) VALUES (?, ?, ?)";
+        const [result] = await conn.query(insertUserQuery, [email, username, encryptedPassword]);
         res.status(201).send({
-            message: 'Cliente creado con éxito',
-            data: customer
+            message: 'Usuario registrado',
+            id: result.insertId
         });
+
     } catch (error) {
         console.error(error);
         res.status(400).send({
-            message: 'No se pudo crear el cliente',
+            message: 'Error al registrar el usuario',
             error
         });
+    } finally {
+        if (conn) {
+            conn.release();
+        }
     }
 }
 
