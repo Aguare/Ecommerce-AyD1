@@ -23,12 +23,12 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <ng-container *ngFor="let item of menuItems">
+      <ng-container *ngFor="let module of pagesNavBar">
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">{{ item.name }}</a>
+          <a class="navbar-link">{{ module.module }}</a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" *ngFor="let submenu of item.items" [routerLink]="[submenu.link]">
-              {{ submenu.name }}
+            <a class="navbar-item" *ngFor="let page of module.pages" [routerLink]="[page.direction]">
+              {{ page.pageName }}
             </a>
           </div>
         </div>
@@ -55,9 +55,7 @@
             Mi Perfil</a
           >
           <div class="navbar-dropdown">
-            <a class="navbar-item"> About </a>
-            <a class="navbar-item"> Jobs </a>
-            <a class="navbar-item"> Contact </a>
+            <a class="navbar-item"> Mi Cuenta </a>
             <hr class="navbar-divider" />
             <a class="navbar-item"> Log Out </a>
           </div>
