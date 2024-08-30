@@ -3,11 +3,18 @@ import { Component, OnInit } from '@angular/core';
 
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { AdminService, Page, PagesResponse } from '../../../services/admin.service';
+import { error, log } from 'console';
 
 interface MenuItem {
-  name: string;
-  link: string;
-  items: MenuItem[];
+  module: string;
+  pages: PageItem[]
+}
+
+interface PageItem {
+  pageName: string;
+  direction: string;
+  isAvailable: number
 }
 
 @Component({
@@ -22,15 +29,45 @@ export class NavbarComponent implements OnInit {
   rol: string = '';
   menuItems: MenuItem[] = [];
   isClient = false;
+  pages: Page[] = [];
+  pagesNavBar: MenuItem[] = []
 
-  constructor() {}
+  constructor(private adminService: AdminService) {}
 
   ngOnInit(): void {
-    this.rol = 'Administrador';
-    this.buildMenu();
-    this.isLoggedIn = true;
+    const userId = 1; // El ID del usuario para enviar en la petición
+    this.adminService.getPages(1).subscribe({
+      next: (res: PagesResponse) => {
+        this.pages = res.result;
+        this.pagesNavBar = this.groupPagesByModule(this.pages);
+        console.log(this.pagesNavBar);
+        
+      },
+      error: (err: any) => {
+        console.log('Error:', err);
+      },
+    });
   }
 
+  groupPagesByModule(pages: Page[]): MenuItem[] {
+    const groupedPages: { [key: string]: PageItem[] } = {};
+  
+    pages.forEach((page) => {
+      if (!groupedPages[page.moduleName]) {
+        groupedPages[page.moduleName] = [];
+      }
+      groupedPages[page.moduleName].push({
+        pageName: page.pageName,
+        direction: page.direction,
+        isAvailable: page.isAvailable,
+      });
+    });
+  
+    return Object.keys(groupedPages).map((moduleName) => ({
+      module: moduleName,
+      pages: groupedPages[moduleName],
+    }));
+  }
   buildMenu(): void {
     this.menuItems = [...this.getDynamicItems()];
   }
