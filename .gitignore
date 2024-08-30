@@ -141,4 +141,8 @@ e-backend/.vscode/
 
 # ignorar imagenes carpeta public
 e-backend/msImg/public/uploads/
+e-backend/msImg/controllers/public
+
+
+
 
