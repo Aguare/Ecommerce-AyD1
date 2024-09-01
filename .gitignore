@@ -143,3 +143,5 @@ e-backend/.vscode/
 e-backend/msImg/public/uploads/
 e-backend/msImg/controllers/public/
 
+
+e-backend/config/
