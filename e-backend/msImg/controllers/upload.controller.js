@@ -28,7 +28,7 @@ const fileFilter = (req, file, cb) => {
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);  // Accept file
     } else {
-        cb(new Error("Tipo de archivo no permitido"), false);
+        cb(new Error("File type not allowed"), false);
     }
 };
 
@@ -43,22 +43,111 @@ const createUploadMiddleware = (folderPath) => {
     }).array("image", parseInt(process.env.MAX_FILES));
 };
 
-const uploadImage = (folderPath) => (req, res) => {
+const uploadImage = (folderPath) => async (req, res) => {
     const upload = createUploadMiddleware(folderPath);
 
-    upload(req, res, function (err) {
+    upload(req, res, async function (err) {
         if (err instanceof multer.MulterError) {
-            return res.status(400).send({ message: 'Error en la carga de las imágenes: ' + err.message });
+            return res.status(400).send({ message: 'Error uploading images: ' + err.message });
         } else if (err) {
-            return res.status(400).send({ message: 'Error al subir las imágenes: ' + err.message });
+            return res.status(400).send({ message: 'Error uploading images: ' + err.message });
         }
 
-        res.status(201).send({
-            message: 'Imágenes subidas correctamente',
-            data: req.files
-        });
+        if (folderPath ==="product"){
+            saveImageProduct(req, res);
+        }else if(folderPath === "client"){
+            saveImageClient(req, res);
+        }else if(folderPath === "admin"){
+            saveImageAdmin(req, res);
+        }
+            
     });
 };
+
+const saveImageProduct = async (req, res) => {
+    let conn;
+    try {
+        conn = await getConnection();
+        const paths = req.files.map((file) => {
+            return path.join("/img", "product", file.filename);
+        });
+        const insertImagesProduct = "INSERT INTO product_image (image_path, FK_Product, created_at) VALUES (?,?,?)";
+
+        for (const imagePath of paths) {
+            const result = await conn.query(insertImagesProduct, [imagePath, req.body.productId, new Date()]);
+        }
+        res.status(201).send({
+            message: 'Images uploaded successfully',
+            data: paths
+        });
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send({ message: 'Internal server error' });
+    } finally {
+        if (conn) {
+            conn.release();
+        }
+    }
+};
+
+const saveImageClient = async (req, res) => {
+   let conn;
+   try{
+         conn = await getConnection();
+         const paths = req.files.map((file) => {
+              return path.join("/img", "client", file.filename);
+         });
+         const oldPath = "SELECT image_profile FROM user_information WHERE FK_user = ?";
+         const oldPathResult = await conn.query(oldPath, [req.body.userId]);
+
+         //Delete old image
+         fs.unlinkSync(path.join(__dirname, "public", oldPathResult[0].image_profile));
+
+         //Save new image
+         const insertImagesClient = "UPDATE user_information SET image_profile = ? WHERE FK_user = ?";
+         await conn.query(insertImagesClient, [paths[0], req.body.userId]);
+            res.status(201).send({
+                message: 'Image uploaded successfully',
+                data: paths[0]
+            });
+
+   }catch(e){
+       console.log(e);
+       res.status(500).send({message: 'Internal server error'});
+   } finally {
+       if (conn){
+           conn.release();
+       }
+   }
+}
+
+const saveImageAdmin = async (req, res) => {
+   let conn;
+   try{
+        conn = await getConnection();
+        const paths = req.files.map((file) => {
+            return path.join("/img", "admin", file.filename);
+        });
+
+        //Save logo
+        const insertImagesAdmin = "INSERT INTO company_settings (key_name, key_value) VALUES (?,?)";
+        await conn.query(insertImagesAdmin, [paths[0], req.body.key_name]);
+        res.status(201).send({
+            message: 'Image uploaded successfully',
+            data: paths[0]
+        });
+    
+   }catch(e){
+        console.log(e);
+        res.status(500).send({message: 'Internal server error'});
+   }finally{
+       if (conn){
+           conn.release();
+       }
+   }
+}
+    
 
 const uploadImageP = uploadImage("product");
 const uploadImageC = uploadImage("client");
