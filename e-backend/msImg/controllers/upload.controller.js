@@ -53,11 +53,11 @@ const uploadImage = (folderPath) => async (req, res) => {
             return res.status(400).send({ message: 'Error uploading images: ' + err.message });
         }
 
-        if (folderPath ==="product"){
+        if (folderPath ==="products"){
             saveImageProduct(req, res);
-        }else if(folderPath === "client"){
+        }else if(folderPath === "profiles"){
             saveImageClient(req, res);
-        }else if(folderPath === "admin"){
+        }else if(folderPath === "settings"){
             saveImageAdmin(req, res);
         }
             
@@ -69,7 +69,7 @@ const saveImageProduct = async (req, res) => {
     try {
         conn = await getConnection();
         const paths = req.files.map((file) => {
-            return path.join("/img", "product", file.filename);
+            return path.join(__dirname,"public","img", "products", file.filename);
         });
         const insertImagesProduct = "INSERT INTO product_image (image_path, FK_Product, created_at) VALUES (?,?,?)";
 
@@ -96,13 +96,13 @@ const saveImageClient = async (req, res) => {
    try{
          conn = await getConnection();
          const paths = req.files.map((file) => {
-              return path.join("/img", "client", file.filename);
+            return path.join(__dirname,"public","img", "profiles", file.filename);
          });
          const oldPath = "SELECT image_profile FROM user_information WHERE FK_user = ?";
          const oldPathResult = await conn.query(oldPath, [req.body.userId]);
 
          //Delete old image
-         fs.unlinkSync(path.join(__dirname, "public", oldPathResult[0].image_profile));
+         fs.unlinkSync(path.join(oldPathResult[0].image_profile));
 
          //Save new image
          const insertImagesClient = "UPDATE user_information SET image_profile = ? WHERE FK_user = ?";
@@ -127,7 +127,7 @@ const saveImageAdmin = async (req, res) => {
    try{
         conn = await getConnection();
         const paths = req.files.map((file) => {
-            return path.join("/img", "admin", file.filename);
+            return path.join(__dirname,"public","/img", "settings", file.filename);
         });
 
         //Save logo
@@ -149,8 +149,8 @@ const saveImageAdmin = async (req, res) => {
 }
     
 
-const uploadImageP = uploadImage("product");
-const uploadImageC = uploadImage("client");
-const uploadImageA = uploadImage("admin");
+const uploadImageP = uploadImage("products");
+const uploadImageC = uploadImage("profiles");
+const uploadImageA = uploadImage("settings");
 
 module.exports = { uploadImage, uploadImageP, uploadImageC, uploadImageA };
