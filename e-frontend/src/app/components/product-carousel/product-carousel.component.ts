@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 // SplideJs
 import Splide from '@splidejs/splide';
 
-//Mis Importaciones
-import { Producto } from '../../interfaces';
-import { productos } from '../../db';
+//My Imports
+import { Product } from '../../interfaces';
+import { products } from '../../db';
 
 @Component({
   selector: 'app-product-carousel',
@@ -17,18 +18,19 @@ import { productos } from '../../db';
   imports: [
     CommonModule,
     MatCardModule,
+    MatIconModule
   ],
   templateUrl: './product-carousel.component.html',
   styleUrl: './product-carousel.component.scss',
 })
 export class ProductCarouselComponent implements AfterViewInit, OnInit {
 
-   productos: Producto[] = []
-   comprobacionUsuario = false;
+   productos: Product[] = []
+   checkUser = false;
 
   ngOnInit(): void {
-    this.productos = productos;
-    this.comprobacionUsuario = false;
+    this.productos = products;
+    this.checkUser = true;
   }
 
   ngAfterViewInit(): void {

@@ -1,8 +1,10 @@
-const { Router } = require("express");
-const express = require("express");
-const router = Router();
+const express = require('express');
+const router = express.Router();
+const adminRoutes = require('./admin.routes') 
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
+
+router.use('/admin', adminRoutes);
 
 module.exports = router;

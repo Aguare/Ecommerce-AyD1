@@ -33,7 +33,7 @@
   align-items: center;
   justify-content: center;
   margin: auto;
-  
+  position: relative;
 }
 
 .card-title {
@@ -41,10 +41,27 @@
   height: 55px;
 }
 
+.card-content{
+  padding: 0%;
+  margin-top: 10px;
+}
+
 .card-content p{
-  font-size: small;
+  font-size: small; 
 }
 
 .card-button{
   width: 100%;
+}
+
+.discount-tag {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: 5px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border-radius: 10px;
+  z-index: 10
 }
