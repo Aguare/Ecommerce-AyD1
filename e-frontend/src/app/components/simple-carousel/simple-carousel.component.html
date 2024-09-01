@@ -6,16 +6,16 @@
   >
     <div class="splide__track px-4">
       <div class="splide__list">
-        <div class="splide__slide card" *ngFor="let product of productos">
+        <div class="splide__slide card" *ngFor="let product of products">
           <mat-card class="example-card" appearance="outlined">
             <mat-card-header>
               <mat-card-title-group>
-                <mat-card-subtitle>{{ product.nombre }}</mat-card-subtitle>
+                <mat-card-subtitle>{{ product.name }}</mat-card-subtitle>
                 <img
                   class="simple-carousel-image"
                   mat-card-lg-image
-                  [src]="product.imagen"
-                  alt="Imagen de {{ product.nombre }}"
+                  [src]="product.image"
+                  alt="Imagen de {{ product.name }}"
                 />
               </mat-card-title-group>
             </mat-card-header>
@@ -25,5 +25,3 @@
     </div>
   </section>
 </div>
-
-<h2>Pero</h2>

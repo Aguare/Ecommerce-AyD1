@@ -24,5 +24,14 @@ module.exports = {
 				MAX_FILES: '10',
 			},
 		},
+		{
+			name: "msCustomer",
+			script: "./msCustomer/index.js",
+			watch: true,
+			env_production: {
+				PORT: 3003,
+				NODE_ENV: "production"
+			},
+		}
 	],
 };

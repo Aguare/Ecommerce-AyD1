@@ -4,46 +4,56 @@
       <div class="splide__list">
         <div class="splide__slide card" *ngFor="let product of productos">
           <mat-card class="example-card" appearance="outlined">
+            <div *ngIf="product.discount > 0" class="discount-tag">
+              {{ product.discount }}% off
+            </div>
             <div class="card-image image is-5by4">
+              
               <img
                 mat-card-image
-                [src]="product.imagen"
-                alt="Imagen de {{ product.nombre }}"
+                [src]="product.image"
+                alt="Imagen de {{ product.name }}"
               />
             </div>
             <mat-card-content>
               <div class="card-content">
                 <div class="card-title">
-                  <mat-card-subtitle>{{ product.nombre }}</mat-card-subtitle>
+                  <mat-card-subtitle>{{ product.name }}</mat-card-subtitle>
                 </div>
                 <p>
                   Precio:
                   <span
                     class="span-price {{
-                      product.descuento > 0 ? 'line-throught' : ''
+                      product.discount > 0 ? 'line-throught' : ''
                     }}"
                   >
-                    ${{ product.precio }}
+                    ${{ product.price }}
                   </span>
-                  <span *ngIf="product.descuento > 0" class="span-descuento"
+                  <span *ngIf="product.discount > 0" class="span-descuento"
                     >${{
                       (
-                        product.precio -
-                        product.precio * (product.descuento / 100)
+                        product.price -
+                        product.price * (product.discount / 100)
                       ).toFixed(2)
                     }}</span
                   >
                 </p>
                 <p>
-                  {{ product.descripcion }}
+                  {{ product.description }}
                 </p>
 
                 <div class="card-button">
                   <button
-                    class="button is-primary has-text-white"
-                    [disabled]="comprobacionUsuario"
+                    class="button is-primary has-text-white is-fullwidth"
+                    [disabled]="!checkUser"
                   >
-                    Ver Producto
+                    Add Product
+                    <mat-icon
+                      aria-hidden="false"
+                      aria-label="Shopping cart"
+                      fontIcon="add_shopping_cart"
+                      class="mx-1"
+                    ></mat-icon>
                   </button>
                 </div>
               </div>

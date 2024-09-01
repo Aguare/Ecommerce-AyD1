@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const router = require("./routes/router");
+const router = require("./routes/routes");
 const log4js = require("log4js");
 const logger = log4js.getLogger();
 const PORT = process.env.PORT || 3002;
