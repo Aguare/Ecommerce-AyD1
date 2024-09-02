@@ -12,6 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 export class NavbarGuestComponent {
 
     showButtonsRegister = true;
+    navbarActive: boolean = false;
 
     constructor(
       private _router: Router
@@ -20,5 +21,9 @@ export class NavbarGuestComponent {
     ngOnInit() {
       const url = this._router.url;
       this.showButtonsRegister = url === '/home';
+    }
+
+    toggleNavbar() {
+      this.navbarActive = !this.navbarActive;
     }
 }
