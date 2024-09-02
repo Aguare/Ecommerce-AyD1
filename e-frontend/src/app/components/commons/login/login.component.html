@@ -1,10 +1,11 @@
+<app-navbar-guest></app-navbar-guest>
 <div *ngIf="!isModalVisible" class="login-container">
   <div class="logo-container">
     <img [src]="logoUrl" alt="Logo" class="logo" />
   </div>
   <div  class="box is-large">
     <h1 class="title is-4 has-text-centered">Iniciar Sesión</h1>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
       <div class="field">
         <label class="label">Usuario o Correo</label>
         <div class="control">
@@ -14,7 +15,7 @@
           Este campo es requerido
         </p>
       </div>
-  
+
       <div class="field">
         <label class="label">Contraseña</label>
         <div class="control has-icons-right">
@@ -27,24 +28,24 @@
         <p class="help is-danger" *ngIf="passwordHasErrorRequired">
           Este campo es requerido
         </p>
-      </div>      
-  
+      </div>
+
       <div class="field">
         <div class="control">
-          <button class="button is-primary is-fullwidth" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión
+          <button class="button is-primary is-fullwidth" type="submit" [disabled]="loginForm.invalid || isLoading">Iniciar Sesión
           <mat-progress-spinner *ngIf="isLoading" [diameter]="20" mode="indeterminate" style="margin-left: 10px;"></mat-progress-spinner>
         </button>
         </div>
       </div>
     </form>
-  
+
     <div class="has-text-centered">
-      <p class="mt-4">¿No tienes una cuenta? 
+      <p class="mt-4">¿No tienes una cuenta?
         <a href="javascript:void(0)" (click)="openRegisterModal()">Registrarse</a>
       </p>
     </div>
     <div class="has-text-centered">
-      <p class="mt-4">¿Olvidaste tu contraseña? 
+      <p class="mt-4">¿Olvidaste tu contraseña?
         <a href="javascript:void(0)" (click)="forgotPassword()">¡Recuperar!</a>
       </p>
     </div>
@@ -121,7 +122,7 @@
         </section>
       </div>
     </app-modal>
-  </div>  
+  </div>
 </div>
 
 

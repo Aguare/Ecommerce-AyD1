@@ -2,7 +2,6 @@ const pbkdf2 = require('pbkdf2');
 const getConnection = require("../../db/db.js");
 require('dotenv').config();
 
-const salt = process.env.SALT || 'salt';
 const userController = {};
 /**
  * Sign up a new customer
@@ -16,9 +15,12 @@ userController.signUp = async (req, res) => {
     try {
         const { email, username, password } = req.body;
 
+        const querySalt = `SELECT * FROM company_settings WHERE key_name = 'password_salt';`;
+		const resultSalt = await connection.query(querySalt);
+        const salt = resultSalt[0].key_value;
+
         const encryptedPassword = pbkdf2.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex');
 
-        //TODO: Save the customer in the database
         conn = await getConnection();
         const insertUserQuery = "INSERT INTO user (email, username, password) VALUE (?, ?, ?)";
         const result = await conn.query(insertUserQuery, [email, username, encryptedPassword]);

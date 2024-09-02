@@ -1,19 +1,10 @@
 <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" [routerLink]="['/']">
-      <span class="icon is-large"  >
-        <img
-          src="https://i.pinimg.com/originals/75/fa/9b/75fa9b17f632646e5ae7fae3cf837761.jpg"
-          alt="Logo"
-        />
+      <span class="icon is-large">
+        <img src="https://i.pinimg.com/originals/75/fa/9b/75fa9b17f632646e5ae7fae3cf837761.jpg" alt="Logo" />
       </span>
-      <a
-        role="button"
-        class="navbar-burger"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarBasicExample"
-      >
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -38,26 +29,18 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <a class="navbar-item" *ngIf="isClient">
-          <mat-icon
-            aria-hidden="false"
-            aria-label="Example home icon"
-            fontIcon="shopping_cart"
-          ></mat-icon>
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="shopping_cart"></mat-icon>
         </a>
         <div class="navbar-item has-dropdown is-hoverable mr-3">
           <a class="navbar-link">
             <span class="icon">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
-                alt="Logo"
-              />
+              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Logo" />
             </span>
-            Mi Perfil</a
-          >
+            Mi Perfil</a>
           <div class="navbar-dropdown">
-            <a class="navbar-item"> Mi Cuenta </a>
+            <a class="navbar-item">Mi Cuenta</a>
             <hr class="navbar-divider" />
-            <a class="navbar-item"> Log Out </a>
+            <a class="navbar-item" (click)="logout()">Salir</a>
           </div>
         </div>
       </div>

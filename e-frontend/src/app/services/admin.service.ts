@@ -19,12 +19,16 @@ export interface PagesResponse {
 })
 export class AdminService {
 
-  private apiUrl = 'http://localhost:3001/admin';
+  private apiAdmin = 'http://localhost:3001/admin';
+  private apiUsers = 'http://localhost:3001/users';
 
   constructor(private http: HttpClient) { }
 
   getPages(id: number): Observable<PagesResponse> {
+    return this.http.post<PagesResponse>(`${this.apiAdmin}/getPages`, { id });
+  }
 
-    return this.http.post<PagesResponse>(`${this.apiUrl}/getPages`, { id });
+  login(data: any): Observable<any> {
+    return this.http.post(`${this.apiUsers}/login`, data);
   }
 }

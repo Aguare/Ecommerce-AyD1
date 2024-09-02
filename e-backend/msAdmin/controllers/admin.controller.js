@@ -25,7 +25,6 @@ adminController.getPages = async (req, res) => {
             WHERE uhs.FK_User = ?`;
 
         const result = await connection.query(queryMoney, [id]);
-
         res.status(200).send({ result });
 
     } catch (error) {

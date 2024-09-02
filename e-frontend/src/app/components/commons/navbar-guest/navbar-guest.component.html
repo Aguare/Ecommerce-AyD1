@@ -1,23 +1,12 @@
 <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" [routerLink]="['/']">
+    <a class="navbar-item" [routerLink]="['/home']">
       <span class="icon is-large">
         <img
           src="https://i.pinimg.com/originals/75/fa/9b/75fa9b17f632646e5ae7fae3cf837761.jpg"
           alt="Logo"
         />
       </span>
-      <a
-        role="button"
-        class="navbar-burger"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarBasicExample"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
     </a>
   </div>
 
@@ -30,11 +19,8 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <div class="buttons">
-          <a class="button is-dark">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-light"> Log in </a>
+        <div class="buttons" *ngIf="showButtonsRegister">
+          <a class="button is-light" href="/login">Ingreso/Registro</a>
         </div>
       </div>
     </div>

@@ -7,12 +7,12 @@ const fs = require("fs");
 const getConnection = require("../../db/db.js");
 
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 const createStorage = (folderPath) => {
     return multer.diskStorage({
         destination: (req, file, cb) => {
-            const fullPath = path.join(__dirname, "public", "img", folderPath);
+            const fullPath = path.join(__dirname, "../public", "img", folderPath);
             fs.mkdirSync(fullPath, { recursive: true });
             cb(null, fullPath);
         },
