@@ -4,6 +4,7 @@
       <span class="icon is-large">
         <img src="https://i.pinimg.com/originals/75/fa/9b/75fa9b17f632646e5ae7fae3cf837761.jpg" alt="Logo" />
       </span>
+<<<<<<< HEAD
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" 
          [ngClass]="{'is-active': isActive}" 
          (click)="toggleNavbar()">
@@ -12,6 +13,14 @@
         <span aria-hidden="true"></span>
       </a>
     </div>
+=======
+    </a>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+>>>>>>> 252401a (fix: change navbar <a> label to avoid hydration problem)
   </div>
 
   <div id="navbarBasicExample" class="navbar-menu" [ngClass]="{'is-active': isActive}">
