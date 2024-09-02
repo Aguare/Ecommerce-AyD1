@@ -31,6 +31,8 @@ export class NavbarComponent implements OnInit {
   pages: Page[] = [];
   pagesNavBar: MenuItem[] = [];
   user: any;
+  isActive: boolean = false;
+  activeModule: string | null = null;
 
   constructor(
     private adminService: AdminService,
@@ -83,6 +85,14 @@ export class NavbarComponent implements OnInit {
     localStorage.removeItem('user');
     this._cookieService.delete('token');
     this._router.navigate(['/home']);
+  }
+
+  toggleNavbar() {
+    this.isActive = !this.isActive;
+  }
+
+  toggleSubmenu(module: string) {
+    this.activeModule = this.activeModule === module ? null : module;
   }
 
 }
