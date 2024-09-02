@@ -8,17 +8,20 @@
       <div class="splide__list">
         <div class="splide__slide card" *ngFor="let product of products">
           <mat-card class="example-card" appearance="outlined">
-            <mat-card-header>
-              <mat-card-title-group>
-                <mat-card-subtitle>{{ product.name }}</mat-card-subtitle>
+            <div class="card-content-container">
+              <div class="card-text-content">
+                <h4 class="card-title">{{ product.name }}</h4>
+                <p class="card-price">Precio: <span>{{ product.price }}</span></p>
+              </div>
+              <div class="card-image-content">
                 <img
                   class="simple-carousel-image"
                   mat-card-lg-image
                   [src]="product.image"
                   alt="Imagen de {{ product.name }}"
                 />
-              </mat-card-title-group>
-            </mat-card-header>
+              </div>
+            </div>
           </mat-card>
         </div>
       </div>
