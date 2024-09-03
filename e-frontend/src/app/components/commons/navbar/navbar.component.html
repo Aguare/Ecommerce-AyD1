@@ -1,23 +1,30 @@
 <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" [routerLink]="['/']">
+    <div class="navbar-item">
       <span class="icon is-large">
         <img src="https://i.pinimg.com/originals/75/fa/9b/75fa9b17f632646e5ae7fae3cf837761.jpg" alt="Logo" />
       </span>
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" 
+         [ngClass]="{'is-active': isActive}" 
+         (click)="toggleNavbar()">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
       </a>
-    </a>
+    </div>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu">
+  <div id="navbarBasicExample" class="navbar-menu" [ngClass]="{'is-active': isActive}">
     <div class="navbar-start">
       <ng-container *ngFor="let module of pagesNavBar">
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">{{ module.module }}</a>
-          <div class="navbar-dropdown">
+        <div class="navbar-item has-dropdown" [ngClass]="{'is-active': activeModule === module.module}">
+          <a class="navbar-link" (click)="toggleSubmenu(module.module)">
+            {{ module.module }}
+            <span class="icon">
+              <i [ngClass]="{'fa-angle-down': activeModule !== module.module, 'fa-angle-up': activeModule === module.module}" class="fas"></i>
+            </span>
+          </a>
+          <div class="navbar-dropdown" *ngIf="activeModule === module.module">
             <a class="navbar-item" *ngFor="let page of module.pages" [routerLink]="[page.direction]">
               {{ page.pageName }}
             </a>
@@ -36,7 +43,8 @@
             <span class="icon">
               <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Logo" />
             </span>
-            Mi Perfil</a>
+            Mi Perfil
+          </a>
           <div class="navbar-dropdown">
             <a class="navbar-item">Mi Cuenta</a>
             <hr class="navbar-divider" />
