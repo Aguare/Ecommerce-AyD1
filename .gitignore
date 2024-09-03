@@ -139,7 +139,7 @@ e-frontend/.vscode/
 
 e-backend/.vscode/
 
-# imgs directory public
+# ignorar imagenes carpeta public
 # e-backend/msImg/public
 
 
