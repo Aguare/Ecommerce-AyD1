@@ -37,6 +37,15 @@ module.exports = {
 				PORT: 3003,
 				NODE_ENV: "production"
 			},
+		},
+		{
+			name: "msProduct",
+			script: "./msProduct/index.js",
+			ignore_watch: paths,
+			env_production: {
+				PORT: 3004,
+				NODE_ENV: "production"
+			},
 		}
 	],
 };
