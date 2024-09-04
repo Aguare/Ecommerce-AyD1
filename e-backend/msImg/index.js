@@ -5,6 +5,7 @@ const log4js = require("log4js");
 const logger = log4js.getLogger();
 const PORT = process.env.PORT || 3002;
 
+
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header(
@@ -20,7 +21,6 @@ app.use(router)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static('public'));
 
 if (process.env.NODE_ENV === "production") {
 	logger.level = "trace";

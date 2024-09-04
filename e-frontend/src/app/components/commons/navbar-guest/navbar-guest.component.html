@@ -7,14 +7,28 @@
           alt="Logo"
         />
       </span>
+      <div class="navbar-item">
+        <p>Bienvenido a nuestro sistema</p>
+      </div>
+    </a>
+
+    <a
+      role="button"
+      class="navbar-burger"
+      aria-label="menu"
+      aria-expanded="false"
+      data-target="navbarBasicExample"
+      (click)="toggleNavbar()"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
     </a>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu">
+  <div id="navbarBasicExample" class="navbar-menu" [ngClass]="{ 'is-active': navbarActive }">
     <div class="navbar-start">
-      <div class="navbar-item mt-3 ml-3">
-        <p>Bienvenido a nuestro sistema</p>
-      </div>
+      
     </div>
 
     <div class="navbar-end">

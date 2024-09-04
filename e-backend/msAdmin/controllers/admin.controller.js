@@ -1,9 +1,8 @@
 /** @format */
 
 const getConnection = require("../../db/db.js");
-const util = require("util");
 
-const adminController = {};
+const adminController = {} ;
 
 adminController.getPages = async (req, res) => {
 	let connection;
@@ -31,7 +30,7 @@ adminController.getPages = async (req, res) => {
         res.status(500).send({ message: "Error al obtener las páginas.", error: error.message });
     } finally {
         if (connection) {
-            connection.release();
+            connection.end();
         }
     }
 };

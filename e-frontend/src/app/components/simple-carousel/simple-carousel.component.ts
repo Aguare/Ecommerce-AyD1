@@ -29,17 +29,30 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     if (typeof document !== 'undefined') {
-      new Splide('#simple-splide', {
+      const splide = new Splide('#simple-splide', {
         type: 'loop',
-        perPage: 3,
+        perPage: 3, // Por defecto en pantallas grandes
         perMove: 1,
-        gap: '0.1px',
+        gap: '10px',
         padding: {
           right: '0',
           left: '0',
         },
         autoplay: true,
-      }).mount();
+        breakpoints: {
+          1024: {
+            perPage: 2, // 2 tarjetas en pantallas medianas
+            gap: '8px',
+          },
+          768: {
+            perPage: 1, // 1 tarjeta en pantallas pequeñas
+            gap: '5px',
+          },
+        },
+      });
+  
+      splide.mount();
     }
   }
+  
 }

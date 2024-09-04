@@ -6,5 +6,4 @@ router.post('/upload/product', uploadController.uploadImageP);
 router.post('/upload/client', uploadController.uploadImageC);
 router.post('/upload/admin', uploadController.uploadImageA);
 
-
 module.exports = router;

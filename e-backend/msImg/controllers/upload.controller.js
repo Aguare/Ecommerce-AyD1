@@ -69,7 +69,7 @@ const saveImageProduct = async (req, res) => {
     try {
         conn = await getConnection();
         const paths = req.files.map((file) => {
-            return path.join(__dirname,"public","img", "products", file.filename);
+            return path.join("public","img", "products", file.filename);
         });
         const insertImagesProduct = "INSERT INTO product_image (image_path, FK_Product, created_at) VALUES (?,?,?)";
 
@@ -86,7 +86,7 @@ const saveImageProduct = async (req, res) => {
         res.status(500).send({ message: 'Internal server error' });
     } finally {
         if (conn) {
-            conn.release();
+            conn.end();
         }
     }
 };
@@ -96,13 +96,16 @@ const saveImageClient = async (req, res) => {
    try{
          conn = await getConnection();
          const paths = req.files.map((file) => {
-            return path.join(__dirname,"public","img", "profiles", file.filename);
+            return path.join("public","img", "profiles", file.filename);
          });
          const oldPath = "SELECT image_profile FROM user_information WHERE FK_user = ?";
          const oldPathResult = await conn.query(oldPath, [req.body.userId]);
 
          //Delete old image
-         fs.unlinkSync(path.join(oldPathResult[0].image_profile));
+         if(oldPathResult[0].image_profile !== ""){
+            console.log("entro al if");
+            fs.unlinkSync(path.join(__dirname, "../public","img", oldPathResult[0].image_profile));
+         }
 
          //Save new image
          const insertImagesClient = "UPDATE user_information SET image_profile = ? WHERE FK_user = ?";
@@ -117,7 +120,7 @@ const saveImageClient = async (req, res) => {
        res.status(500).send({message: 'Internal server error'});
    } finally {
        if (conn){
-           conn.release();
+           conn.end();
        }
    }
 }
@@ -127,12 +130,12 @@ const saveImageAdmin = async (req, res) => {
    try{
         conn = await getConnection();
         const paths = req.files.map((file) => {
-            return path.join(__dirname,"public","/img", "settings", file.filename);
+            return path.join("public","img", "settings", file.filename);
         });
 
         //Save logo
         const insertImagesAdmin = "INSERT INTO company_settings (key_name, key_value) VALUES (?,?)";
-        await conn.query(insertImagesAdmin, [paths[0], req.body.key_name]);
+        await conn.query(insertImagesAdmin, ['company_img', paths[0]]);
         res.status(201).send({
             message: 'Image uploaded successfully',
             data: paths[0]
@@ -143,7 +146,7 @@ const saveImageAdmin = async (req, res) => {
         res.status(500).send({message: 'Internal server error'});
    }finally{
        if (conn){
-           conn.release();
+           conn.end();
        }
    }
 }
