@@ -69,14 +69,36 @@ export class LoginComponent{
 
 	onRegister() {
 		if (this.registerForm.valid) {
+			const data = {
+				email: this.registerForm.get("email")?.value,
+				username: this.registerForm.get("username")?.value,
+				password: this.registerForm.get("password")?.value,
+			};
 			const registerData = this.registerForm.value;
 			this.isLoading = true;
 			setTimeout(() => {
 				alert("Register Data: " + JSON.stringify(registerData));
+				this._adminService.register(data).subscribe(
+				(response) => {
+					Swal.fire("¡Registro exitoso!", "", "success");
+					this.closeRegisterModal();
+				},
+				(error) => {
+					console.log('Error recibido:', error);  // Muestra detalles del error recibido
+					Swal.fire("Error", "Ocurrió un error al registrar el usuario", "error");
+				}
+				);
+
 				this.isLoading = false;
 				this.closeRegisterModal();
+
 			}, 1000);
 			this.registerForm.reset();
+		}else{
+			Swal.fire("Error", "Por favor, complete los campos requeridos", "error");
+			this.isLoading = false;
+			this.registerForm.reset();
+			return;
 		}
 	}
 
