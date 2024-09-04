@@ -15,4 +15,8 @@ export class ProductService {
   getProductsForCart(){
     return this.http.post<Product[]>(`${this.apiProduct}/getProductsForCart`,{});
   }
+  
+  getProductsByCategory(category: string){
+    return this.http.post<Product[]>(`${this.apiProduct}/getProductsByCategory`,{category});
+  }
 }
