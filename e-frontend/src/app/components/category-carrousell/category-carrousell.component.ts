@@ -17,10 +17,11 @@ import { ImagePipe } from '../../pipes/image.pipe';
 export class CategoryCarrousellComponent implements AfterViewInit {
 
   products1: Product[] = []
-  title1 = "Tecnologia"
   products2: Product[] = []
-  title2 = "Hogar"
   products3: Product[] = []
+
+  title1 = "Tecnologia"
+  title2 = "Hogar"
   title3 = "Academico"
 
   constructor(private productService: ProductService){}
