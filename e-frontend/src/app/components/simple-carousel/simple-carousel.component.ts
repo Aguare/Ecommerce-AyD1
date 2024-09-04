@@ -8,8 +8,18 @@ import { MatCardModule } from '@angular/material/card';
 import Splide from '@splidejs/splide';
 
 //Mis Importaciones
-import { Product } from '../../interfaces';
-import { products } from '../../db';
+import { ProductService } from '../../services/product.service';
+
+export interface Product {
+  name: string;
+  description: string;
+  price: number;
+  image_path: string;
+  category: string;
+  discount: number;
+  
+}
+
 
 @Component({
   selector: 'app-simple-carousel',
@@ -20,18 +30,25 @@ import { products } from '../../db';
 })
 export class SimpleCarouselComponent implements AfterViewInit, OnInit {
   products: Product[] = [];
-  comprobacionUsuario = false;
+
+  constructor(private productService: ProductService){}
 
   ngOnInit(): void {
-    this.products = products;
-    this.comprobacionUsuario = false;
+    this.productService.getProductsForCart().subscribe({
+      next: (res: Product[]) => {
+        this.products = res;
+      },
+      error: (err: any) => {
+        console.log('Error:', err);
+      },
+    });
   }
 
   ngAfterViewInit(): void {
     if (typeof document !== 'undefined') {
       const splide = new Splide('#simple-splide', {
         type: 'loop',
-        perPage: 3, // Por defecto en pantallas grandes
+        perPage: 3,
         perMove: 1,
         gap: '10px',
         padding: {
@@ -41,11 +58,11 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
         autoplay: true,
         breakpoints: {
           1024: {
-            perPage: 2, // 2 tarjetas en pantallas medianas
+            perPage: 2, 
             gap: '8px',
           },
           768: {
-            perPage: 1, // 1 tarjeta en pantallas pequeñas
+            perPage: 1, 
             gap: '5px',
           },
         },
