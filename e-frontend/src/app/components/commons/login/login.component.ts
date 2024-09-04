@@ -30,6 +30,7 @@ export class LoginComponent{
 	logoUrl = "https://marketplace.canva.com/EAFMNm9ybqQ/1/0/1600w/canva-gold-luxury-initial-circle-logo-qRQJCijq_Jw.jpg";
 	hidePassword = true;
 	isLoading = false;
+	isLoginMode = false;
 
 	constructor(
     private fb: FormBuilder,
@@ -43,13 +44,17 @@ export class LoginComponent{
 		});
 
 		this.registerForm = this.fb.group({
-			name: ["", [Validators.required, Validators.minLength(3)]],
-			email: ["", [Validators.required, Validators.email]],
-			address: ["", Validators.required],
-			nit : ["", Validators.required],
-			password: ["", Validators.required],
-		});
+			email: ['', [Validators.required, Validators.email]],
+			username: ['', Validators.required],
+			password: ['', [Validators.required, Validators.minLength(6)]],
+			confirmPassword: ['', Validators.required]
+		  }, { validators: this.passwordMatchValidator });
 	}
+	passwordMatchValidator(form: FormGroup) {
+		const password = form.get('password')?.value || '';
+		const confirmPassword = form.get('confirmPassword')?.value || '';
+		return password === confirmPassword ? null : { passwordMismatch: true };
+	  }	  
 
 	openRegisterModal() {
 		this.isModalVisible = true;
