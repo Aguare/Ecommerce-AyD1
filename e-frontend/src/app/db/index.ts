@@ -1,6 +1,6 @@
-import { Product } from "../interfaces";
 
-export const products: Product[] = [
+
+export const products = [
     {
       name: 'Smartwatch Deportivo',
       image: 'https://d2j6dbq0eux0bg.cloudfront.net/images/29501524/4100185208.png',

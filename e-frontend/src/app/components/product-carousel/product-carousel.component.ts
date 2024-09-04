@@ -7,10 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 
 // SplideJs
 import Splide from '@splidejs/splide';
+import { Product } from '../simple-carousel/simple-carousel.component';
 
 //My Imports
-import { Product } from '../../interfaces';
-import { products } from '../../db';
 
 @Component({
   selector: 'app-product-carousel',
@@ -29,8 +28,6 @@ export class ProductCarouselComponent implements AfterViewInit, OnInit {
    checkUser = false;
 
   ngOnInit(): void {
-    this.productos = products;
-    this.checkUser = true;
   }
 
   ngAfterViewInit(): void {
