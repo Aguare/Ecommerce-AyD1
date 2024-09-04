@@ -1,0 +1,21 @@
+<!-- @format -->
+
+<div class="container mt-5">
+	<div class="columns is-centered">
+		<div class="columns is-half mt-5">
+			<div>
+                <h2>Configuración de la Empresa</h2>
+
+				<div class="tabs is-centered">
+					<ul>
+						@for(tab of tabs; track tab.name) {
+                            <li [ngClass]="{ 'is-active': tab.name === currentTab }">
+                                <a (click)="navigate(tab)">{{ tab.label }}</a>
+                            </li>
+                        }
+					</ul>
+				</div>
+            </div>
+		</div>
+	</div>
+</div>
