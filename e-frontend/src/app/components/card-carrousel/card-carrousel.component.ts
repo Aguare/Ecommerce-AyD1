@@ -7,12 +7,11 @@ import Splide from '@splidejs/splide';
   standalone: true,
   imports: [],
   templateUrl: './card-carrousel.component.html',
-  styleUrl: './card-carrousel.component.scss'
+  styleUrl: './card-carrousel.component.scss',
 })
-export class CardCarrouselComponent implements AfterViewInit{
-
+export class CardCarrouselComponent implements AfterViewInit {
   ngAfterViewInit(): void {
-    if( typeof document !== 'undefined' ) {
+    if (typeof document !== 'undefined') {
       new Splide('#image-carousel', {
         type: 'loop',
         perPage: 3,
