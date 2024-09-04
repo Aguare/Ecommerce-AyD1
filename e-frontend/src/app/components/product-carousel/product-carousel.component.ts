@@ -24,7 +24,7 @@ import { Product } from '../simple-carousel/simple-carousel.component';
 })
 export class ProductCarouselComponent implements AfterViewInit, OnInit {
 
-   productos: Product[] = []
+   products: Product[] = []
    checkUser = false;
 
   ngOnInit(): void {

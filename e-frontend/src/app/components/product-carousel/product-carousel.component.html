@@ -1,14 +1,17 @@
 <div class="container m-5">
-  <section class="splide" aria-label="Splide Basic HTML Example">
+  <section
+    id="product-carrousell"
+    class="splide"
+    aria-label="Splide Basic HTML Example"
+  >
     <div class="splide__track px-4">
       <div class="splide__list">
-        <div class="splide__slide card" *ngFor="let product of productos">
+        <div class="splide__slide card" *ngFor="let product of products">
           <mat-card class="example-card" appearance="outlined">
             <div *ngIf="product.discount > 0" class="discount-tag">
               {{ product.discount }}% off
             </div>
             <div class="card-image image is-5by4">
-              
               <img
                 mat-card-image
                 [src]="product.image_path"
@@ -38,24 +41,9 @@
                     }}</span
                   >
                 </p>
-                <p>
-                  {{ product.description }}
+                <p class="description">
+                  {{ product.description | slice : 0 : 75 }}...
                 </p>
-
-                <div class="card-button">
-                  <button
-                    class="button is-primary has-text-white is-fullwidth"
-                    [disabled]="!checkUser"
-                  >
-                    Add Product
-                    <mat-icon
-                      aria-hidden="false"
-                      aria-label="Shopping cart"
-                      fontIcon="add_shopping_cart"
-                      class="mx-1"
-                    ></mat-icon>
-                  </button>
-                </div>
               </div>
             </mat-card-content>
           </mat-card>

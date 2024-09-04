@@ -19,7 +19,7 @@ productController.getProductsByCategory = async (req, res) => {
                 JOIN product_image primg ON pr.id = primg.FK_Product
                 JOIN product_has_category phc ON pr.id = phc.FK_Product
                 JOIN category c ON phc.FK_Category = c.id
-                WHERE c.name = ? LIMIT 10`;
+                WHERE c.name = ?`;
 
 		const result = await connection.query(queryMoney, [category]);
 		res.status(200).send(result);
