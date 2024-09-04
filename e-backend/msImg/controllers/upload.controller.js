@@ -86,7 +86,7 @@ const saveImageProduct = async (req, res) => {
         res.status(500).send({ message: 'Internal server error' });
     } finally {
         if (conn) {
-            conn.release();
+            conn.end();
         }
     }
 };
@@ -120,7 +120,7 @@ const saveImageClient = async (req, res) => {
        res.status(500).send({message: 'Internal server error'});
    } finally {
        if (conn){
-           conn.release();
+           conn.end();
        }
    }
 }
@@ -146,7 +146,7 @@ const saveImageAdmin = async (req, res) => {
         res.status(500).send({message: 'Internal server error'});
    }finally{
        if (conn){
-           conn.release();
+           conn.end();
        }
    }
 }

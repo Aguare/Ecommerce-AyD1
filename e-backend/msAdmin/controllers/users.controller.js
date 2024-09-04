@@ -62,7 +62,7 @@ usersController.login = async (req, res) => {
 		res.status(500).send({ message: "Error al iniciar sesión", error: error.message });
 	} finally {
 		if (connection) {
-			connection.release();
+			connection.end();
 		}
 	}
 };
