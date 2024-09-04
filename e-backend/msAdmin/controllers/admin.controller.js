@@ -1,9 +1,8 @@
 /** @format */
 
 const getConnection = require("../../db/db.js");
-const util = require("util");
 
-const adminController = {};
+const adminController = {} ;
 
 adminController.getPages = async (req, res) => {
 	let connection;
