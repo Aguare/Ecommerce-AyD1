@@ -6,6 +6,7 @@ import { LoginComponent } from './components/commons/login/login.component';
 import { StoreConfigComponent } from './components/admin/store-config/store-config.component';
 import { NotFoundComponent } from './components/commons/not-found/not-found.component';
 import { ProductHomeComponent } from './components/products/product-home/product-home.component';
+import { MyAccountComponent } from './components/user/my-account/my-account.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
   { path: 'test', component: PruebaMaterialComponent },
   { path: 'store-config', component: StoreConfigComponent },
   { path: 'store-billing', component: StoreConfigComponent },
+  { path: 'account/:username', component: MyAccountComponent },
   {
     path: 'products', children: [
       { path: 'init', component: ProductHomeComponent }

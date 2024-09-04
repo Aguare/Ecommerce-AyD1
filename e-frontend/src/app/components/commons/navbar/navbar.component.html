@@ -43,10 +43,10 @@
             <span class="icon">
               <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Logo" />
             </span>
-            Mi Perfil
+            {{ user?.username }}
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item">Mi Cuenta</a>
+            <a class="navbar-item" (click)="myAccount()">Mi Cuenta</a>
             <hr class="navbar-divider" />
             <a class="navbar-item" (click)="logout()">Salir</a>
           </div>

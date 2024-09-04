@@ -12,24 +12,26 @@ import Splide from '@splidejs/splide';
 export class CardCarrouselComponent implements AfterViewInit{
 
   ngAfterViewInit(): void {
-    new Splide('#image-carousel', {
-      type: 'loop',
-      perPage: 3,
-      perMove: 1,
-      gap: '20px',
-      padding: {
-        right: '10px',
-        left: '10px',
-      },
-      autoplay: true,
-      breakpoints: {
-        1024: {
-          perPage: 2,
+    if( typeof document !== 'undefined' ) {
+      new Splide('#image-carousel', {
+        type: 'loop',
+        perPage: 3,
+        perMove: 1,
+        gap: '20px',
+        padding: {
+          right: '10px',
+          left: '10px',
         },
-        768: {
-          perPage: 1,
+        autoplay: true,
+        breakpoints: {
+          1024: {
+            perPage: 2,
+          },
+          768: {
+            perPage: 1,
+          },
         },
-      },
-    }).mount();
+      }).mount();
+    }
   }
 }
