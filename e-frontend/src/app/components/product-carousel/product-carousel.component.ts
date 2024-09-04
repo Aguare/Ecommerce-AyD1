@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 // SplideJs
 import Splide from '@splidejs/splide';
 import { Product } from '../simple-carousel/simple-carousel.component';
+import { ProductService } from '../../services/product.service';
 
 //My Imports
 
@@ -27,22 +28,51 @@ export class ProductCarouselComponent implements AfterViewInit, OnInit {
    products: Product[] = []
    checkUser = false;
 
+  constructor(private productService: ProductService){}
+
   ngOnInit(): void {
+    this.productService.getProductsForCart().subscribe({
+      next: (res: Product[]) => {
+        this.products = res;
+        
+        // this.products.forEach(pr => {
+        //   pr.image_path = `C:/Users/oscar/OneDrive/Desktop/Git/Ecommerce-AyD1/e-backend/msImg/${pr.image_path}`
+        //   console.log(pr.image_path);
+          
+        // })
+        
+      },
+      error: (err: any) => {
+        console.log('Error:', err);
+      },
+    });
   }
 
   ngAfterViewInit(): void {
     if (typeof document !== 'undefined') {
-      new Splide('.splide', {
+      const splide1 = new Splide('#product-carrousel', {
         type: 'loop',
         perPage: 4,
-        perMove:1,
-        gap: 0,
+        perMove: 1,
+        gap: '10px',
         padding: {
-          right: 0,
-          left: 0
+          right: '0',
+          left: '0',
         },
         autoplay: true,
-      }).mount();
+        breakpoints: {
+          1024: {
+            perPage: 2, 
+            gap: '8px',
+          },
+          768: {
+            perPage: 1, 
+            gap: '5px',
+          },
+        },
+      });
+  
+      splide1.mount();
     }
   }
 }

@@ -16,10 +16,11 @@ import { ProductService } from '../../services/product.service';
 export class CategoryCarrousellComponent implements AfterViewInit {
 
   products1: Product[] = []
-  title1 = "Tecnologia"
   products2: Product[] = []
-  title2 = "Hogar"
   products3: Product[] = []
+
+  title1 = "Tecnologia"
+  title2 = "Hogar"
   title3 = "Academico"
 
   constructor(private productService: ProductService){}
@@ -28,7 +29,7 @@ export class CategoryCarrousellComponent implements AfterViewInit {
   this.productService.getProductsByCategory(this.title1).subscribe({
     next: (res: Product[]) => {
       this.products1 = res;  
-      this.products1 = this.products1.slice(0,10);    
+      this.products1 = this.products1.slice(0,10);          
     },
     error: (err: any) => {
       console.log('Error:', err);
@@ -38,7 +39,7 @@ export class CategoryCarrousellComponent implements AfterViewInit {
   this.productService.getProductsByCategory(this.title2).subscribe({
     next: (res: Product[]) => {
       this.products2 = res;      
-      this.products1 = this.products2.slice(0,10);
+      this.products2 = this.products2.slice(0,10);
     },
     error: (err: any) => {
       console.log('Error:', err);
@@ -48,7 +49,7 @@ export class CategoryCarrousellComponent implements AfterViewInit {
   this.productService.getProductsByCategory(this.title3).subscribe({
     next: (res: Product[]) => {
       this.products3 = res;     
-      this.products1 = this.products3.slice(0,10); 
+      this.products3 = this.products3.slice(0,10); 
     },
     error: (err: any) => {
       console.log('Error:', err);
