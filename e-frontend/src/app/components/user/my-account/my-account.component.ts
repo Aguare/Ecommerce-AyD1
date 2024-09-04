@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-my-account',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './my-account.component.html',
   styleUrl: './my-account.component.scss'
 })
 export class MyAccountComponent {
 
   user = {
-    name: 'John Doe',
+    username: 'John Doe',
     email: 'johndoe@email.com',
     address: '123 Street Name',
     nit: '123456789',

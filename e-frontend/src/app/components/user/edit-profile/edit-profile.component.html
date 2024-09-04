@@ -1,1 +1,80 @@
-<p>edit-profile works!</p>
+<div class="container mt-5">
+  <div class="is-centered">
+    <h2>Editar Perfil de Usuario</h2>
+    <div class="mt-5">
+      <form>
+        <div class="field mt-5">
+          <label class="label">Dirección</label>
+          <div class="control">
+            <input class="input" type="text" name="address" placeholder="Dirección">
+          </div>
+        </div>
+      
+        <div class="field mt-5">
+          <label class="label">NIT</label>
+          <div class="control">
+            <input class="input" type="text" name="nit" placeholder="Número de Identificación Tributaria">
+          </div>
+        </div>
+      
+        <div class="field mt-5">
+          <label class="label">Subir Foto de perfil</label>
+          <div class="control">
+            <div class="file has-name">
+              <label class="file-label">
+                <input
+                  class="file-input"
+                  type="file"
+                  name="imagen"
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label"> Selecciona un archivo… </span>
+                </span>
+                <span class="file-name"> {{editProfileForm.value.image.name ? editProfileForm.value.image.name : 'Foto de perfil...' }} </span>
+              </label>
+            </div>
+          </div>
+          <p class="help is-danger">
+            Debes subir una imagen.
+          </p>
+        </div>
+      
+        <div class="field mt-5">
+          <label class="label">Preferencia de Pago</label>
+          <div class="control">
+            <label class="radio mr-5">
+              <input type="radio" name="isPreferedCash" [value]="true">
+              Efectivo
+            </label>
+            <label class="radio">
+              <input type="radio" name="isPreferedCash" [value]="false">
+              Otro
+            </label>
+          </div>
+        </div>
+      
+        <div class="field mt-5">
+        <label class="label">Descripción</label>
+          <div class="control">
+            <textarea class="textarea" name="description" placeholder="Descripción del perfil"></textarea>
+          </div>
+        </div>
+      
+        <div class="field is-grouped mt-5">
+          <div class="control">
+            <button class="button is-primary" type="submit">Guardar Cambios</button>
+          </div>
+          <div class="control">
+            <button (click)="goHome()" routerLinkActive="router-link-active"  class="button is-warn" type="reset">Cancelar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+</div>
