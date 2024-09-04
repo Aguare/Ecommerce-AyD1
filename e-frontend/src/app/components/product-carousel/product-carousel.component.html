@@ -1,6 +1,6 @@
 <div class="container m-5">
   <section
-    id="product-carrousell"
+    id="product-carrousel"
     class="splide"
     aria-label="Splide Basic HTML Example"
   >
@@ -44,6 +44,19 @@
                 <p class="description">
                   {{ product.description | slice : 0 : 75 }}...
                 </p>
+                <div class="card-button">
+                  <button
+                    class="button is-primary has-text-white is-fullwidth"
+                  >
+                    Add Product
+                    <mat-icon
+                      aria-hidden="false"
+                      aria-label="Shopping cart"
+                      fontIcon="add_shopping_cart"
+                      class="mx-1"
+                    ></mat-icon>
+                  </button>
+                </div>
               </div>
             </mat-card-content>
           </mat-card>
