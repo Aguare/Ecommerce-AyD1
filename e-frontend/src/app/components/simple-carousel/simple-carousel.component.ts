@@ -9,7 +9,10 @@ import Splide from '@splidejs/splide';
 
 //Mis Importaciones
 import { ProductService } from '../../services/product.service';
+<<<<<<< HEAD
 import { ImagePipe } from '../../pipes/image.pipe';
+=======
+>>>>>>> 33f98b5 (add products of bd to simple-carrousell)
 
 export interface Product {
   name: string;
@@ -38,13 +41,6 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
     this.productService.getProductsForCart().subscribe({
       next: (res: Product[]) => {
         this.products = res;
-        
-        // this.products.forEach(pr => {
-        //   pr.image_path = `C:/Users/oscar/OneDrive/Desktop/Git/Ecommerce-AyD1/e-backend/msImg/${pr.image_path}`
-        //   console.log(pr.image_path);
-          
-        // })
-        
       },
       error: (err: any) => {
         console.log('Error:', err);
