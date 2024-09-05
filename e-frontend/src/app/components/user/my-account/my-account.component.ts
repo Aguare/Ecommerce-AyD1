@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-<<<<<<< HEAD
 import { AdminService } from '../../../services/admin.service';
 import { ImagePipe } from '../../../pipes/image.pipe';
 import { NavbarComponent } from '../../commons/navbar/navbar.component';
-=======
->>>>>>> d71bfcf (Creating edit profile form)
 
 @Component({
   selector: 'app-my-account',
