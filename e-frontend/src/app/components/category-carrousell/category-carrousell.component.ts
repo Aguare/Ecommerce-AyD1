@@ -5,11 +5,12 @@ import { Product } from '../simple-carousel/simple-carousel.component';
 import Splide from '@splidejs/splide';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
+import { ImagePipePipe } from '../../pipes/image-pipe.pipe';
 
 @Component({
   selector: 'app-category-carrousell',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, CommonModule],
+  imports: [MatCardModule, MatIconModule, CommonModule, ImagePipePipe],
   templateUrl: './category-carrousell.component.html',
   styleUrl: './category-carrousell.component.scss'
 })
