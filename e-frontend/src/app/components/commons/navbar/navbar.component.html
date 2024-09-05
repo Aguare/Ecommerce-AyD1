@@ -40,9 +40,9 @@
         </a>
         <div class="navbar-item has-dropdown is-hoverable mr-3">
           <a class="navbar-link">
-            <span class="icon">
-              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Logo" />
-            </span>
+            <figure class="image is-32x32">
+              <img class="is-rounded" [src]="this.user.image | imagePipe" alt="profile image" />
+            </figure>
             {{ user?.username }}
           </a>
           <div class="navbar-dropdown">
