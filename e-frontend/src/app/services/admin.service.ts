@@ -33,6 +33,10 @@ export class AdminService {
   }
 
   updateUserInformation(data: any, id: number): Observable<any> {
-    return this.http.put(`${this.apiUsers}/update/user/information/${id}`, data);
+    return this.http.put(`${this.apiUsers}/user/information/${id}`, data);
+  }
+
+  getUserInformation(username: string): Observable<any> {
+    return this.http.get(`${this.apiUsers}/user/information/${username}`);
   }
 }
