@@ -9,10 +9,7 @@ import Splide from '@splidejs/splide';
 
 //Mis Importaciones
 import { ProductService } from '../../services/product.service';
-<<<<<<< HEAD
 import { ImagePipe } from '../../pipes/image.pipe';
-=======
->>>>>>> 33f98b5 (add products of bd to simple-carrousell)
 
 export interface Product {
   name: string;
