@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { ImagePipe } from '../../../pipes/image.pipe';
+import { NavbarComponent } from '../../commons/navbar/navbar.component';
 
 @Component({
   selector: 'app-my-account',
   standalone: true,
-  imports: [RouterLink, ImagePipe],
+  imports: [RouterLink, ImagePipe, NavbarComponent],
   templateUrl: './my-account.component.html',
   styleUrl: './my-account.component.scss'
 })

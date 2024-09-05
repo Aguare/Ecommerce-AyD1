@@ -7,17 +7,15 @@ import { Observable } from 'rxjs';
 })
 export class ImageService {
 
-  PORT: number = 3002;
-  DOMAIN: string = `http://localhost:${this.PORT}`;
-  upload: string = `${this.DOMAIN}/upload`;
+  portImage: string = 'http://localhost:3002/';
 
   constructor(private httpClient: HttpClient) { }
 
   getPort(){
-    return this.DOMAIN;
+    return this.portImage;
   }
 
   saveClientImage(image: any) : Observable<any> {
-    return this.httpClient.post(this.upload + '/client', image);
+    return this.httpClient.post(this.portImage + 'upload/client', image);
   }
 }
