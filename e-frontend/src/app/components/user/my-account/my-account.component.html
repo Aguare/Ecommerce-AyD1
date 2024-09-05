@@ -1,25 +1,33 @@
-<div class="card">
-    <div class="card-image">
-      <figure class="image is-128x128 is-rounded mx-auto mt-4">
-        <img [src]="user.imageProfile" alt="Profile Image">
-      </figure>
-    </div>
-    <div class="card-content">
-      <div class="media">
-        <div class="media-content has-text-centered">
-          <p class="title is-4">{{ user.username }}</p>
-          <p class="subtitle is-6">{{ user.email }}</p>
-          <button [routerLink]="['/edit/profile']" routerLinkActive="router-link-active"  class="button is-primary">Editar perfil</button>
-        </div>
+<div class="container mx-auto mt-5">
+  <h1 class="title is-2 has-text-centered">Mi cuenta</h1>
+  <div class="columns is-centered">
+    <div class="column is-one-quarter same-height">
+      <div class="box has-text-centered">
+        <figure class="image is-128x128 is-inline-block">
+          <img class="is-rounded" [src]="user.imageProfile | imagePipe" alt="Profile Image">
+        </figure>
+        <h2 class="title is-4 mt-3"> {{user.username}} </h2>
+        <h3 class="subtitle is-6"> {{user.email}} </h3>
       </div>
+    </div>
   
-      <div class="content">
-        <p><strong>Dirección:</strong> {{ user.address }}</p>
-        <p><strong>NIT:</strong> {{ user.nit }}</p>
-        <p><strong>Preferencia de Pago:</strong> {{ user.isPreferedCash ? 'Efectivo' : 'Otro' }}</p>
-        <p><strong>Descripción:</strong></p>
-        <p>{{ user.description }}</p>
+    <div class="column is-half">
+      <div class="box same-height">
+        <div class="content">
+          <p><strong>Nit:</strong> {{user.nit}} </p>
+          <p><strong>Preferencia de pago:</strong> {{user.isPreferCash === 1? 'Efectivo' : 'Otro'}} </p>
+          <p><strong>Descripción:</strong></p>
+          <div class="description-box">
+            <p>
+              {{user.description ? user.description : 'No hay descripción'}}
+            </p>
+          </div>
+        </div>
+        <div class="has-text-centered">
+          <button [routerLink]="['/edit/profile']" routerLinkActive="router-link-active"
+            class="button is-primary">Editar</button>
+        </div>
       </div>
     </div>
   </div>
-  
+</div>

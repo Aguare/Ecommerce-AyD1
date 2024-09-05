@@ -1,23 +1,19 @@
-<div class="container mt-5">
-  <div class="is-centered">
-    <h2>Editar Perfil de Usuario</h2>
-    <div class="mt-5">
-      <form>
-        <div class="field mt-5">
-          <label class="label">Dirección</label>
-          <div class="control">
-            <input class="input" type="text" name="address" placeholder="Dirección">
-          </div>
-        </div>
+<div class="container is-centered">
+  <h2 class="m-4">Editar Perfil de Usuario</h2>
+    <div class="m-5">
+      <form [formGroup]="editProfileForm" (ngSubmit)="updateProfile()">
       
-        <div class="field mt-5">
+        <div class="field m-5">
           <label class="label">NIT</label>
           <div class="control">
-            <input class="input" type="text" name="nit" placeholder="Número de Identificación Tributaria">
+            <input formControlName="nit" class="input" type="text" name="nit" placeholder="Número de Identificación Tributaria">
+            <p class="help is-danger">
+              Este campo es requerido.
+            </p>
           </div>
         </div>
       
-        <div class="field mt-5">
+        <div class="field m-5">
           <label class="label">Subir Foto de perfil</label>
           <div class="control">
             <div class="file has-name">
@@ -44,37 +40,36 @@
           </p>
         </div>
       
-        <div class="field mt-5">
+        <div class="field m-5">
           <label class="label">Preferencia de Pago</label>
           <div class="control">
             <label class="radio mr-5">
-              <input type="radio" name="isPreferedCash" [value]="true">
+              <input formControlName="isPreferCash" type="radio" [value]="1">
               Efectivo
             </label>
             <label class="radio">
-              <input type="radio" name="isPreferedCash" [value]="false">
+              <input formControlName="isPreferCash" type="radio" [value]="0">
               Otro
             </label>
           </div>
         </div>
       
-        <div class="field mt-5">
+        <div class="field m-5">
         <label class="label">Descripción</label>
           <div class="control">
-            <textarea class="textarea" name="description" placeholder="Descripción del perfil"></textarea>
+            <textarea formControlName="description" class="textarea" name="description" placeholder="Descripción del perfil"></textarea>
           </div>
         </div>
       
-        <div class="field is-grouped mt-5">
+        <div class="field is-grouped m-5">
           <div class="control">
-            <button class="button is-primary" type="submit">Guardar Cambios</button>
+            <button [disabled]="this.editProfileForm.invalid" class="button is-primary" type="submit">Guardar Cambios</button>
           </div>
           <div class="control">
-            <button (click)="goHome()" routerLinkActive="router-link-active"  class="button is-warn" type="reset">Cancelar</button>
+            <button (click)="goBack()" routerLinkActive="router-link-active"  class="button is-warn" type="reset">Volver</button>
           </div>
         </div>
       </form>
     </div>
-  </div>
   
 </div>
