@@ -95,13 +95,13 @@ const saveImageClient = async (req, res) => {
    try{
          conn = await getConnection();
          const paths = req.files.map((file) => {
-            return path.join("public","img", "profiles", file.filename);
+            return path.join("img", "profiles", file.filename);
          });
          const oldPath = "SELECT image_profile FROM user_information WHERE FK_user = ?";
          const oldPathResult = await conn.query(oldPath, [req.body.userId]);
 
          //Delete old image
-         if(oldPathResult[0].image_profile !== ""){
+         if(oldPathResult.length > 0 && oldPathResult[0].image_profile !== ""){
             console.log("entro al if");
             fs.unlinkSync(path.join(__dirname, "../public","img", oldPathResult[0].image_profile));
          }
