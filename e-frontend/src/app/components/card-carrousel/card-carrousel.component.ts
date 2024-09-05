@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 import Splide from '@splidejs/splide';
 import { ProductService } from '../../services/product.service';
-import { log } from 'console';
 import { CommonModule } from '@angular/common';
 import { ImagePipe } from '../../pipes/image.pipe';
 
@@ -25,7 +24,6 @@ export class CardCarrouselComponent implements OnInit, AfterViewInit {
   constructor(private productService: ProductService) {
     this.productService.getCategories().subscribe({
       next: (res: Category[]) => {
-        console.log('categories:', res);
         this.categories = res;
       },
       error: (err: any) => {

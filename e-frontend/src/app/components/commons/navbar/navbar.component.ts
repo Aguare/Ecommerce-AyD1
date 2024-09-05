@@ -32,6 +32,7 @@ export class NavbarComponent implements OnInit {
   pages: Page[] = [];
   pagesNavBar: MenuItem[] = [];
   user: any;
+  userImage: string = '';
   isActive: boolean = false;
   activeModule: string | null = null;
 
@@ -58,7 +59,7 @@ export class NavbarComponent implements OnInit {
 
     this.adminService.getUserImageProfile(this.user.id).subscribe({
       next: (res: any) => {
-        this.user.image = res.imageProfile;
+        this.userImage = res.imageProfile;
       },
       error: (err: any) => {
         console.log('Error:', err);

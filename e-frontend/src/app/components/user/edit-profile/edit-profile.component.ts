@@ -6,11 +6,12 @@ import { Router } from "@angular/router";
 import { AdminService } from "../../../services/admin.service";
 import { ImageService } from "../../../services/image.service";
 import Swal from "sweetalert2";
+import { NavbarComponent } from "../../commons/navbar/navbar.component";
 
 @Component({
 	selector: "app-edit-profile",
 	standalone: true,
-	imports: [ReactiveFormsModule],
+	imports: [ReactiveFormsModule, NavbarComponent],
 	templateUrl: "./edit-profile.component.html",
 	styleUrl: "./edit-profile.component.scss",
 })
