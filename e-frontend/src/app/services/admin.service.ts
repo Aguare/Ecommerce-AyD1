@@ -31,4 +31,8 @@ export class AdminService {
   login(data: any): Observable<any> {
     return this.http.post(`${this.apiUsers}/login`, data);
   }
+
+  updateUserInformation(data: any, id: number): Observable<any> {
+    return this.http.put(`${this.apiUsers}/update/user/information/${id}`, data);
+  }
 }
