@@ -139,4 +139,29 @@ usersController.getProfileInformation = async (req, res) => {
 	}
 }
 
+usersController.getImageProfile = async (req, res) => {
+	let connection;
+	try {
+		const { id } = req.params;
+		connection = await getConnection();
+
+		// Check if user exists
+		const query = `SELECT image_profile FROM user_information WHERE FK_User = ?;`;
+		const resultUserInfo = await connection.query(query, [id]);
+		if (resultUserInfo.length === 0) {
+			return res.status(400).send({ message: "El usuario no existe." });
+	}
+
+		res.status(200).send({ imageProfile: resultUserInfo[0].image_profile });
+
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ message: "Error al obtener la información", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+}
+
 module.exports = usersController;
