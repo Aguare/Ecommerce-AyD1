@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -13,7 +14,7 @@ export class EditProfileComponent {
 
   editProfileForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private router: Router, private adminService: AdminService) {
     this.editProfileForm = this.formBuilder.group({
       address: [''],
       nit: [''],
@@ -35,5 +36,24 @@ export class EditProfileComponent {
 
   goHome() {
     this.router.navigate(['/products/init']);
+  }
+
+  updateProfile() {
+    const formData = new FormData();
+    formData.append('address', this.editProfileForm.get('address')?.value);
+    formData.append('nit', this.editProfileForm.get('nit')?.value);
+    formData.append('description', this.editProfileForm.get('description')?.value);
+    formData.append('isPreferedCash', this.editProfileForm.get('isPreferedCash')?.value);
+    formData.append('image', this.editProfileForm.get('image')?.value);
+
+    this.adminService.updateUserInformation(formData, 1).subscribe(
+      (res) => {
+        console.log(res);
+        this.router.navigate(['/products/init']);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 }
