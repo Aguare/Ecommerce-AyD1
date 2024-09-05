@@ -44,9 +44,12 @@ export class AdminService {
   getUserImageProfile(id: number) : Observable<any> {
     return this.http.get(`${this.apiUsers}/user/image/${id}`);
   }
+<<<<<<< HEAD
   
   register = (data: any): Observable<any> => {
     console.log(data);
     return this.http.post(`${this.apiCustomers}/sign-up`, data);
   }
+=======
+>>>>>>> 17f0cb5 (Fixing bug, rename categories directory, adding profile image to navbar)
 }

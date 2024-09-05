@@ -24,6 +24,7 @@ export class CardCarrouselComponent implements OnInit, AfterViewInit {
   constructor(private productService: ProductService) {
     this.productService.getCategories().subscribe({
       next: (res: Category[]) => {
+        console.log('categories:', res);
         this.categories = res;
       },
       error: (err: any) => {
