@@ -1,18 +1,44 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 import Splide from '@splidejs/splide';
+import { ProductService } from '../../services/product.service';
+import { log } from 'console';
+import { CommonModule } from '@angular/common';
+import { ImagePipePipe } from '../../pipes/image-pipe.pipe';
+
+export interface Category {
+  name: string;
+  image: string;
+}
 
 @Component({
   selector: 'app-card-carrousel',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, ImagePipePipe],
   templateUrl: './card-carrousel.component.html',
-  styleUrl: './card-carrousel.component.scss'
+  styleUrl: './card-carrousel.component.scss',
 })
-export class CardCarrouselComponent implements AfterViewInit{
+export class CardCarrouselComponent implements OnInit, AfterViewInit {
+
+  categories: Category[] = [];
+
+  constructor(private productService: ProductService) {
+    this.productService.getCategories().subscribe({
+      next: (res: Category[]) => {
+        this.categories = res;
+      },
+      error: (err: any) => {
+        console.log('Error:', err);
+      },
+    });
+  }
+
+  ngOnInit(): void {
+    
+  }
 
   ngAfterViewInit(): void {
-    if( typeof document !== 'undefined' ) {
+    if (typeof document !== 'undefined') {
       new Splide('#image-carousel', {
         type: 'loop',
         perPage: 3,

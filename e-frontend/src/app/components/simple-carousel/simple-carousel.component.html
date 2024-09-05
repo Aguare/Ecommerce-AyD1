@@ -17,7 +17,7 @@
                 <img
                   class="simple-carousel-image"
                   mat-card-lg-image
-                  [src]="product.image"
+                  [src]="product.image_path | imagePipe"
                   alt="Imagen de {{ product.name }}"
                 />
               </div>
