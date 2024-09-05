@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { AdminService, Page, PagesResponse } from '../../../services/admin.service';
 import { CookieService } from 'ngx-cookie-service';
+import { ImagePipe } from '../../../pipes/image.pipe';
 
 interface MenuItem {
   module: string;
@@ -20,7 +21,7 @@ interface PageItem {
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, MatIconModule, RouterLink],
+  imports: [CommonModule, MatIconModule, RouterLink, ImagePipe],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   providers: [CookieService]
@@ -49,6 +50,15 @@ export class NavbarComponent implements OnInit {
       next: (res: PagesResponse) => {
         this.pages = res.result;
         this.pagesNavBar = this.groupPagesByModule(this.pages);
+      },
+      error: (err: any) => {
+        console.log('Error:', err);
+      },
+    });
+
+    this.adminService.getUserImageProfile(this.user.id).subscribe({
+      next: (res: any) => {
+        this.user.image = res.imageProfile;
       },
       error: (err: any) => {
         console.log('Error:', err);

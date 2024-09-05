@@ -39,4 +39,8 @@ export class AdminService {
   getUserInformation(username: string): Observable<any> {
     return this.http.get(`${this.apiUsers}/user/information/${username}`);
   }
+
+  getUserImageProfile(id: number) : Observable<any> {
+    return this.http.get(`${this.apiUsers}/user/image/${id}`);
+  }
 }

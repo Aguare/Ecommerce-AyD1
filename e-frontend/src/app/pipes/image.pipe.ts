@@ -11,7 +11,7 @@ export class ImagePipe implements PipeTransform {
 
   transform(imagePath: string): string {
     const port = this.imageService.getPort();
-    console.log('port', port);
+    console.log(`${port}/${imagePath}`);
     return `${port}/${imagePath}`;
   }
 
