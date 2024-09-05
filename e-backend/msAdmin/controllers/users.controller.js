@@ -67,4 +67,43 @@ usersController.login = async (req, res) => {
 	}
 };
 
+usersController.updateUserInformation = async (req, res) => {
+	let connection;
+	try {
+		const { id } = req.params;
+		const { address, nit, description, image, isPreferCash } = req.body;
+		connection = await getConnection();
+
+		// Check if user exists
+		const queryUser = `SELECT * FROM user WHERE id = ?;`;
+		const resultUser = await connection.query(queryUser, [id]);
+		if (resultUser.length === 0) {
+			return res.status(400).send({ message: "El usuario no existe." });
+		}
+
+		// Check if user information exists
+		const queryUserInfo = `SELECT * FROM user_information WHERE user_id = ?;`;
+		const resultUserInfo = await connection.query(queryUserInfo, [id]);
+		if (resultUserInfo.length === 0) {
+			//Create user information
+			const queryCreateUserInfo = `INSERT INTO user_information (address, nit, description, image_profile, isPreferCash, FK_User) VALUES (?, ?, ?, ?, ?, ?);`;
+			await connection.query(queryCreateUserInfo, [address, nit, description, image, isPreferCash, id]);
+			res.status(200).send({ message: "Información actualizada correctamente." });
+		}
+
+		// Update user information
+		const queryUpdateUserInfo = `UPDATE user_information SET address = ?, nit = ?, description = ?, image_profile = ?, is_prefered_cash = ? WHERE FK_User = ?;`;
+		await connection.query(queryUpdateUserInfo, [address, nit, description, image, isPreferCash, id]);
+		res.status(200).send({ message: "Información actualizada correctamente." });
+
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ message: "Error al actualizar la información", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+}
+
 module.exports = usersController;
