@@ -9,7 +9,7 @@ import Splide from '@splidejs/splide';
 
 //Mis Importaciones
 import { ProductService } from '../../services/product.service';
-import { ImagePipePipe } from '../../pipes/image-pipe.pipe';
+import { ImagePipe } from '../../pipes/image.pipe';
 
 export interface Product {
   name: string;
@@ -25,7 +25,7 @@ export interface Product {
 @Component({
   selector: 'app-simple-carousel',
   standalone: true,
-  imports: [CommonModule, MatCardModule, ImagePipePipe],
+  imports: [CommonModule, MatCardModule, ImagePipe],
   templateUrl: './simple-carousel.component.html',
   styleUrl: './simple-carousel.component.scss',
 })

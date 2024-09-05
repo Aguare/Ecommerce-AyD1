@@ -1,15 +1,23 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
 
-  portImage: string = 'http://localhost:3002/';
+  PORT: number = 3002;
+  DOMAIN: string = `http://localhost:${this.PORT}`;
+  upload: string = `${this.DOMAIN}/upload`;
 
-  constructor() { }
+  constructor(private httpClient: HttpClient) { }
 
   getPort(){
-    return this.portImage;
+    return this.DOMAIN;
+  }
+
+  saveClientImage(image: any) : Observable<any> {
+    return this.httpClient.post(this.upload + '/client', image);
   }
 }

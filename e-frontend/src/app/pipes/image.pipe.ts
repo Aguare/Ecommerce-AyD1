@@ -5,12 +5,13 @@ import { ImageService } from '../services/image.service';
   name: 'imagePipe',
   standalone: true
 })
-export class ImagePipePipe implements PipeTransform {
+export class ImagePipe implements PipeTransform {
 
   constructor(private imageService: ImageService) {}
 
   transform(imagePath: string): string {
     const port = this.imageService.getPort();
+    console.log('port', port);
     return `${port}/${imagePath}`;
   }
 
