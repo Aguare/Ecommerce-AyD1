@@ -7,7 +7,6 @@ const fs = require("fs");
 const getConnection = require("../../db/db.js");
 
 const app = express();
-app.use(express.static(path.join(__dirname, '../public')));
 
 const createStorage = (folderPath) => {
     return multer.diskStorage({
