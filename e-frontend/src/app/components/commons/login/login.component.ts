@@ -30,6 +30,7 @@ export class LoginComponent{
 	logoUrl = "https://marketplace.canva.com/EAFMNm9ybqQ/1/0/1600w/canva-gold-luxury-initial-circle-logo-qRQJCijq_Jw.jpg";
 	hidePassword = true;
 	isLoading = false;
+	isLoginMode = false;
 
 	constructor(
     private fb: FormBuilder,
@@ -43,13 +44,17 @@ export class LoginComponent{
 		});
 
 		this.registerForm = this.fb.group({
-			name: ["", [Validators.required, Validators.minLength(3)]],
-			email: ["", [Validators.required, Validators.email]],
-			address: ["", Validators.required],
-			nit : ["", Validators.required],
-			password: ["", Validators.required],
-		});
+			email: ['', [Validators.required, Validators.email]],
+			username: ['', Validators.required],
+			password: ['', [Validators.required, Validators.minLength(6)]],
+			confirmPassword: ['', Validators.required]
+		  }, { validators: this.passwordMatchValidator });
 	}
+	passwordMatchValidator(form: FormGroup) {
+		const password = form.get('password')?.value || '';
+		const confirmPassword = form.get('confirmPassword')?.value || '';
+		return password === confirmPassword ? null : { passwordMismatch: true };
+	  }	  
 
 	openRegisterModal() {
 		this.isModalVisible = true;
@@ -64,14 +69,36 @@ export class LoginComponent{
 
 	onRegister() {
 		if (this.registerForm.valid) {
+			const data = {
+				email: this.registerForm.get("email")?.value,
+				username: this.registerForm.get("username")?.value,
+				password: this.registerForm.get("password")?.value,
+			};
 			const registerData = this.registerForm.value;
 			this.isLoading = true;
 			setTimeout(() => {
 				alert("Register Data: " + JSON.stringify(registerData));
+				this._adminService.register(data).subscribe(
+				(response) => {
+					Swal.fire("¡Registro exitoso!", "", "success");
+					this.closeRegisterModal();
+				},
+				(error) => {
+					console.log('Error recibido:', error);  // Muestra detalles del error recibido
+					Swal.fire("Error", "Ocurrió un error al registrar el usuario", "error");
+				}
+				);
+
 				this.isLoading = false;
 				this.closeRegisterModal();
+
 			}, 1000);
 			this.registerForm.reset();
+		}else{
+			Swal.fire("Error", "Por favor, complete los campos requeridos", "error");
+			this.isLoading = false;
+			this.registerForm.reset();
+			return;
 		}
 	}
 

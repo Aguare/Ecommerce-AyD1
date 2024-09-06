@@ -21,6 +21,7 @@ export class AdminService {
 
   private apiAdmin = 'http://localhost:3001/admin';
   private apiUsers = 'http://localhost:3001/users';
+  private apiCustomers = 'http://localhost:3003/customer';
 
   constructor(private http: HttpClient) { }
 
@@ -42,5 +43,10 @@ export class AdminService {
 
   getUserImageProfile(id: number) : Observable<any> {
     return this.http.get(`${this.apiUsers}/user/image/${id}`);
+  }
+  
+  register = (data: any): Observable<any> => {
+    console.log(data);
+    return this.http.post(`${this.apiCustomers}/sign-up`, data);
   }
 }
