@@ -1,6 +1,6 @@
 /** @format */
 
-const paths = [
+const ignore_paths = [
 	"./msImg/public/*",
 	"./msImg/public/**",
 ]
@@ -10,7 +10,8 @@ module.exports = {
 		{
 			name: "msAdmin",
 			script: "./msAdmin/index.js",
-			ignore_watch: paths,
+			ignore_watch: ignore_paths,
+			watch: "./msAdmin",
 			env_production: {
 				PORT: 3001,
 				JWT_SECRET: "zl_frperg_xrl_cebcreqri",
@@ -20,7 +21,8 @@ module.exports = {
 		{
 			name: "msImg",
 			script: "./msImg/index.js",
-			ignore_watch: paths,
+			ignore_watch: ignore_paths,
+			watch: "./msImg",
 			env_production: {
 				PORT: 3002,
 				JWT_SECRET: "zl_frperg_xrl_cebcreqri",
@@ -32,7 +34,8 @@ module.exports = {
 		{
 			name: "msCustomer",
 			script: "./msCustomer/index.js",
-			ignore_watch: paths,
+			ignore_watch: ignore_paths,
+			watch: "./msCustomer",
 			env_production: {
 				PORT: 3003,
 				NODE_ENV: "production"
@@ -41,7 +44,8 @@ module.exports = {
 		{
 			name: "msProduct",
 			script: "./msProduct/index.js",
-			ignore_watch: paths,
+			ignore_watch: ignore_paths,
+			watch: "./msProduct",
 			env_production: {
 				PORT: 3004,
 				NODE_ENV: "production"
