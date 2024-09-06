@@ -2,9 +2,8 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 import Splide from '@splidejs/splide';
 import { ProductService } from '../../services/product.service';
-import { log } from 'console';
 import { CommonModule } from '@angular/common';
-import { ImagePipePipe } from '../../pipes/image-pipe.pipe';
+import { ImagePipe } from '../../pipes/image.pipe';
 
 export interface Category {
   name: string;
@@ -14,7 +13,7 @@ export interface Category {
 @Component({
   selector: 'app-card-carrousel',
   standalone: true,
-  imports: [CommonModule, ImagePipePipe],
+  imports: [CommonModule, ImagePipe],
   templateUrl: './card-carrousel.component.html',
   styleUrl: './card-carrousel.component.scss',
 })

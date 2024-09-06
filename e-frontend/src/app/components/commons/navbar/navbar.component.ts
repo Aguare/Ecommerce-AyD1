@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { AdminService, Page, PagesResponse } from '../../../services/admin.service';
 import { CookieService } from 'ngx-cookie-service';
+import { ImagePipe } from '../../../pipes/image.pipe';
 
 interface MenuItem {
   module: string;
@@ -20,7 +21,7 @@ interface PageItem {
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, MatIconModule, RouterLink],
+  imports: [CommonModule, MatIconModule, RouterLink, ImagePipe],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   providers: [CookieService]
@@ -31,6 +32,7 @@ export class NavbarComponent implements OnInit {
   pages: Page[] = [];
   pagesNavBar: MenuItem[] = [];
   user: any;
+  userImage: string = '';
   isActive: boolean = false;
   activeModule: string | null = null;
 
@@ -41,13 +43,23 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = 18;
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = this.user?.id;
 
     // Function to get pages of user by his id
     this.adminService.getPages(userId).subscribe({
       next: (res: PagesResponse) => {
         this.pages = res.result;
         this.pagesNavBar = this.groupPagesByModule(this.pages);
+      },
+      error: (err: any) => {
+        console.log('Error:', err);
+      },
+    });
+
+    this.adminService.getUserImageProfile(this.user.id).subscribe({
+      next: (res: any) => {
+        this.userImage = res.imageProfile;
       },
       error: (err: any) => {
         console.log('Error:', err);
@@ -93,6 +105,10 @@ export class NavbarComponent implements OnInit {
 
   toggleSubmenu(module: string) {
     this.activeModule = this.activeModule === module ? null : module;
+  }
+
+  myAccount() {
+    this._router.navigate([`/account/${this.user.username}`]);
   }
 
 }

@@ -33,6 +33,18 @@ export class AdminService {
     return this.http.post(`${this.apiUsers}/login`, data);
   }
 
+  updateUserInformation(data: any, id: number): Observable<any> {
+    return this.http.put(`${this.apiUsers}/user/information/${id}`, data);
+  }
+
+  getUserInformation(username: string): Observable<any> {
+    return this.http.get(`${this.apiUsers}/user/information/${username}`);
+  }
+
+  getUserImageProfile(id: number) : Observable<any> {
+    return this.http.get(`${this.apiUsers}/user/image/${id}`);
+  }
+  
   register = (data: any): Observable<any> => {
     console.log(data);
     return this.http.post(`${this.apiCustomers}/sign-up`, data);
