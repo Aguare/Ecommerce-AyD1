@@ -1,5 +1,5 @@
 <app-navbar-guest></app-navbar-guest>
-<div *ngIf="!isModalVisible" class="login-container">
+<div  class="login-container">
   <div class="logo-container">
     <img [src]="logoUrl" alt="Logo" class="logo" />
   </div>
@@ -16,7 +16,7 @@
         </p>
       </div>
 
-      <div class="field">
+      <div class="field mt-5">
         <label class="label">Contraseña</label>
         <div class="control has-icons-right">
           <input class="input" [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Contraseña" required>
@@ -30,7 +30,7 @@
         </p>
       </div>
 
-      <div class="field">
+      <div class="field mt-5">
         <div class="control">
           <button class="button is-primary is-fullwidth" type="submit" [disabled]="loginForm.invalid || isLoading">Iniciar Sesión
           <mat-progress-spinner *ngIf="isLoading" [diameter]="20" mode="indeterminate" style="margin-left: 10px;"></mat-progress-spinner>
@@ -39,12 +39,12 @@
       </div>
     </form>
 
-    <div class="has-text-centered">
+    <div class="has-text-centered mt-5">
       <p class="mt-4">¿No tienes una cuenta?
         <a href="javascript:void(0)" (click)="openRegisterModal()">Registrarse</a>
       </p>
     </div>
-    <div class="has-text-centered">
+    <div class="has-text-centered mt-4">
       <p class="mt-4">¿Olvidaste tu contraseña?
         <a href="javascript:void(0)" (click)="forgotPassword()">¡Recuperar!</a>
       </p>
@@ -52,7 +52,7 @@
   </div>
 </div>
 
-<div *ngIf="isModalVisible" class="register-container">
+<div *ngIf="isModalVisible" class="register-container mt-5">
   <div class="box is-large">
     <!-- Modal de Registro -->
     <app-modal [title]="'Cerrar'" (closeModal)="closeRegisterModal()">
@@ -63,7 +63,7 @@
         </header>
         <section class="modal-card-body">
           <!-- Formulario de Registro -->
-          <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <form [formGroup]="registerForm" class="mt-5" (ngSubmit)="onRegister()">
             <div class="field">
               <label class="label">Correo Electrónico</label>
               <div class="control">

@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import { AdminService } from "../../../services/admin.service";
 import { Router } from "@angular/router";
 import { CookieService } from 'ngx-cookie-service';
+import { ImageService } from "../../../services/image.service";
 
 @Component({
 	selector: "app-login",
@@ -27,14 +28,19 @@ export class LoginComponent{
 	hide = true;
 	isModalVisible = false;
 	registerModalTitle = "¡Regístrate!";
-	logoUrl = "https://marketplace.canva.com/EAFMNm9ybqQ/1/0/1600w/canva-gold-luxury-initial-circle-logo-qRQJCijq_Jw.jpg";
+	logoUrl = "";
 	hidePassword = true;
 	isLoading = false;
 	isLoginMode = false;
 
+	ngOnInit(): void {
+		this.getImgSettings();
+	}
+
 	constructor(
     private fb: FormBuilder,
     private _adminService: AdminService,
+	private _imageService: ImageService,
     private _router: Router,
     private _cookieService: CookieService
   ) {
@@ -77,15 +83,14 @@ export class LoginComponent{
 			const registerData = this.registerForm.value;
 			this.isLoading = true;
 			setTimeout(() => {
-				alert("Register Data: " + JSON.stringify(registerData));
 				this._adminService.register(data).subscribe(
 				(response) => {
 					Swal.fire("¡Registro exitoso!", "", "success");
 					this.closeRegisterModal();
 				},
-				(error) => {
-					console.log('Error recibido:', error);  // Muestra detalles del error recibido
-					Swal.fire("Error", "Ocurrió un error al registrar el usuario", "error");
+				(error) => {// Muestra detalles del error recibido
+					Swal.fire({icon: 'error',title: 'Error',text: error.error.message
+					})
 				}
 				);
 
@@ -142,5 +147,16 @@ export class LoginComponent{
         Swal.fire('Error', 'Ocurrió un error al iniciar sesión', 'error');
       }
     );
+  }
+
+  getImgSettings(){
+	this._imageService.getLogoCompany().subscribe((response) => {
+		if(response.data === null || response.data === ""){
+			this.logoUrl = this._imageService.getPort()+ 'default/logo.jpg';
+			return;
+		}
+		this.logoUrl = this._imageService.getPort() + response.data;
+		
+	});
   }
 }
