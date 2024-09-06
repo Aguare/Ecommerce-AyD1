@@ -6,11 +6,12 @@ import Splide from '@splidejs/splide';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { ImagePipe } from '../../pipes/image.pipe';
+import { ProductCardComponent } from "../product-card/product-card.component";
 
 @Component({
   selector: 'app-category-carrousell',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, CommonModule, ImagePipe],
+  imports: [MatCardModule, MatIconModule, CommonModule, ImagePipe, ProductCardComponent],
   templateUrl: './category-carrousell.component.html',
   styleUrl: './category-carrousell.component.scss'
 })
@@ -30,7 +31,7 @@ export class CategoryCarrousellComponent implements AfterViewInit {
   this.productService.getProductsByCategory(this.title1).subscribe({
     next: (res: Product[]) => {
       this.products1 = res;  
-      this.products1 = this.products1.slice(0,10);          
+      this.products1 = this.products1.slice(0,10);     
     },
     error: (err: any) => {
       console.log('Error:', err);
@@ -62,7 +63,7 @@ export class CategoryCarrousellComponent implements AfterViewInit {
   if (typeof document !== 'undefined') {
     const splide1 = new Splide('#category-carrousel1', {
       type: 'loop',
-      perPage: 4,
+      perPage: 5,
       perMove: 1,
       gap: '10px',
       padding: {
