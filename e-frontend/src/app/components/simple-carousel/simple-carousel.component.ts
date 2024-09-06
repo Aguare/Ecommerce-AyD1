@@ -21,7 +21,6 @@ export interface Product {
   
 }
 
-
 @Component({
   selector: 'app-simple-carousel',
   standalone: true,
@@ -37,14 +36,7 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.productService.getProductsForCart().subscribe({
       next: (res: Product[]) => {
-        this.products = res;
-        
-        // this.products.forEach(pr => {
-        //   pr.image_path = `C:/Users/oscar/OneDrive/Desktop/Git/Ecommerce-AyD1/e-backend/msImg/${pr.image_path}`
-        //   console.log(pr.image_path);
-          
-        // })
-        
+        this.products = res;       
       },
       error: (err: any) => {
         console.log('Error:', err);
@@ -53,31 +45,33 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (typeof document !== 'undefined') {
-      const splide = new Splide('#simple-splide', {
-        type: 'loop',
-        perPage: 3,
-        perMove: 1,
-        gap: '10px',
-        padding: {
-          right: '0',
-          left: '0',
-        },
-        autoplay: true,
-        breakpoints: {
-          1024: {
-            perPage: 2, 
-            gap: '8px',
+    setTimeout(() => {
+      if (typeof document !== 'undefined') {
+        const splide = new Splide('#simple-splide', {
+          type: 'loop',
+          perPage: 3,
+          perMove: 1,
+          gap: '10px',
+          padding: {
+            right: '0',
+            left: '0',
           },
-          768: {
-            perPage: 1, 
-            gap: '5px',
+          autoplay: true,
+          breakpoints: {
+            1024: {
+              perPage: 2, 
+              gap: '8px',
+            },
+            768: {
+              perPage: 1, 
+              gap: '5px',
+            },
           },
-        },
-      });
-  
-      splide.mount();
-    }
+        });
+    
+        splide.mount();
+      }
+    }, 500)
   }
   
 }

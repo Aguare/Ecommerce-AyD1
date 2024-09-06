@@ -22,6 +22,10 @@ export class ProductService {
     return this.http.post<Product[]>(`${this.apiProduct}/getProductsByCategory`,{category});
   }
   
+  getProductsWithCategory(){
+    return this.http.get<Product[]>(`${this.apiProduct}/getProductsWithCategory`);
+  }
+  
   getCategories(){
     return this.http.get<Category[]>(`${this.apiCategories}/getCategories`);
   }
