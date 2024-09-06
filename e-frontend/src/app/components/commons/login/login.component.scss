@@ -1,4 +1,5 @@
 .login-container {
+  color:#4A4A4A;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -6,14 +7,14 @@
   min-height: 100vh; 
   padding-top: 70px; 
   gap: 2rem;
-  background-color: #1e1e1e;
+  background-color: 	#FFFFFF;
 
-  .logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 600px;
-    padding: 1rem;
+.logo-container {
+    padding: 2rem; 
+    border: 1px solid #e5e5e5; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #FFFFFF;
   }
 
   .logo {
@@ -27,8 +28,9 @@
     width: 100%;
     max-width: 1000px;
     padding: 6rem;
-    background-color: #1e1e1e;
+    background-color: 	#FFFFFF;
     border-radius: 8px;
+    color: #333333;
   }
 
 /* Two-column view for large screens */
@@ -113,20 +115,28 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(216, 213, 213, 0.6);
   z-index: 1000;
   padding: 2rem;
+  overflow-x: hidden;
 
   .box {
-    width: 90%;
-    max-width: 900px; 
+    width: 100%;
+    max-width: 1000px; 
     padding: 4rem;
-    background-color: #1e1e1e;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #FFFFFF;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     overflow-y: auto;
-    max-height: 90vh;
+    overflow-x: hidden;
+    max-height: 100vh;
+    box-sizing: border-box;
+
+    .field .label {
+      color: #2C3E50;
+    }    
   }
+  
 
   .field {
     margin-bottom: 1.5rem;
@@ -136,11 +146,10 @@
     position: absolute;
     top: 1rem;
     right: 1rem;
-    background: transparent;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: white;
+    color: #1e1e1e;
   }
 
   @media (max-width: 768px) {
@@ -151,5 +160,9 @@
       overflow-x: hidden;
     }
   }
+  .has-text-centered a {
+    color: #2E8B57; 
+  }
+  
 }
 

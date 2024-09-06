@@ -18,4 +18,8 @@ export class ImageService {
   saveClientImage(image: any) : Observable<any> {
     return this.httpClient.post(this.portImage + 'upload/client', image);
   }
+
+  getLogoCompany(): Observable<any> {
+    return this.httpClient.get(this.portImage + 'company/logo');
+  }
 }
