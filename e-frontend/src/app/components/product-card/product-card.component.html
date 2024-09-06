@@ -1,0 +1,31 @@
+<mat-card class="example-card" appearance="outlined" (click)="navigateToProductDetail(product)">
+    <div *ngIf="product.discount > 0" class="discount-tag">
+      {{ product.discount }}% off
+    </div>
+    <div class="card-image image is-5by4">
+      <img
+        mat-card-image
+        [src]="product.image_path | imagePipe"
+        alt="Imagen de {{ product.name }}"
+      />
+    </div>
+    <mat-card-content>
+      <div class="card-content">
+        <div class="card-title">
+          <mat-card-subtitle>{{ product.name }}</mat-card-subtitle>
+        </div>
+        <p>
+          <span
+            class="span-price {{ product.discount > 0 ? 'line-throught' : '' }}"
+          >
+            ${{ product.price }}
+          </span>
+          <span *ngIf="product.discount > 0" class="span-descuento">
+            ${{ (product.price - product.price * (product.discount / 100)).toFixed(2) }}
+          </span>
+        </p>
+        <p class="description">{{ product.description | slice : 0 : 50 }}...</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
