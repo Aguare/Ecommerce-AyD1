@@ -1,12 +1,15 @@
 <app-navbar></app-navbar>
 
-<div class="container">
-    <h3 class="mt-5 ml-3">Categorias</h3>
+<div class="container m-5" *ngIf="spinner">
+  <div class="columns is-mobile is-centered">
+    <div class="column is-half">
+      <mat-progress-spinner [mode]="'indeterminate'"> </mat-progress-spinner>
+    </div>
   </div>
+</div>
+
+<div class="container" *ngIf="!spinner">
+  <h3 class="mt-5 ml-3">Categorias</h3>
   <app-card-carrousel></app-card-carrousel>
-  
-  <div class="container">
-    <h3 class="mt-5 ml-3">Nuestras Ofertas</h3>
-    <app-product-carousel></app-product-carousel>
-    <app-category-carrousell></app-category-carrousell>
-  </div>
+  <app-category-carrousell></app-category-carrousell>
+</div>
