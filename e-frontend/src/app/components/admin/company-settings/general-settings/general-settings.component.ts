@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { SettingTabsComponent } from '../setting-tabs/setting-tabs.component';
+import { NavbarComponent } from '../../../commons/navbar/navbar.component';
 
 @Component({
   selector: 'app-general-settings',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SettingTabsComponent],
+  imports: [ReactiveFormsModule, CommonModule, SettingTabsComponent, NavbarComponent],
   templateUrl: './general-settings.component.html',
   styleUrl: './general-settings.component.scss'
 })
