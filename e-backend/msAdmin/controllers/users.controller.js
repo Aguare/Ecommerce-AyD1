@@ -123,8 +123,7 @@ usersController.getProfileInformation = async (req, res) => {
 		const query = `SELECT u.username, u.email, i.nit, i.image_profile as imageProfile, i.isPreferCash, i.description FROM user u INNER JOIN user_information i ON u.id = i.FK_User WHERE u.username = ?;`;
 		const resultUserInfo = await connection.query(query, [username]);
 		if (resultUserInfo.length === 0) {
-			console.error("El usuario no existe.");
-			return res.status(500).send({ message: "El usuario no existe." });
+			return res.status(400).send({ message: "El usuario no existe." });
 		}
 
 		res.status(200).send({ user: resultUserInfo[0] });

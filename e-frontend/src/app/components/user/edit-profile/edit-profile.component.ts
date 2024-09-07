@@ -48,7 +48,7 @@ export class EditProfileComponent implements OnInit {
 				this.editProfileForm.get("image")?.setValue(res.user.imageProfile);
 			},
 			error: (err: any) => {
-				// console.log("Error:", err);
+				console.log("Error:", err);
 			},
 		});
 	}
