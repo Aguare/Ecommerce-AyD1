@@ -9,7 +9,6 @@ import {
 	ReactiveFormsModule,
 	Validators,
 } from "@angular/forms";
-import { CompanyService } from "../../../../services/company.service";
 import { CommonModule } from "@angular/common";
 import { NavbarComponent } from "../../../commons/navbar/navbar.component";
 import { SettingTabsComponent } from "../setting-tabs/setting-tabs.component";
@@ -17,6 +16,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ImagePipe } from "../../../../pipes/image.pipe";
 import { ImageService } from "../../../../services/image.service";
 import Swal from "sweetalert2";
+import { AdminService } from "../../../../services/admin.service";
 
 type FormRow = FormGroup<{
 	label: FormControl<string>;
@@ -46,7 +46,7 @@ export class SettingsFormComponent implements OnInit {
 	});
 
 	constructor(
-		private companyService: CompanyService,
+		private adminService: AdminService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private imageService: ImageService
@@ -62,7 +62,7 @@ export class SettingsFormComponent implements OnInit {
 		});
 
 		this.settingName = this.route.snapshot.paramMap.get("name") || "";
-		this.companyService.getSettings(this.settingName).subscribe((response) => {
+		this.adminService.getSettings(this.settingName).subscribe((response) => {
 			response.forEach((element: any) => {
 				if (element.key_name.includes("img")) {
 					this.previews.push(element.key_value);
@@ -84,7 +84,6 @@ export class SettingsFormComponent implements OnInit {
 	}
 
 	onSubmit() {
-		console.log("click");
 		if (this.generalForm.invalid) {
 			Swal.fire({
 				icon: "error",
@@ -126,7 +125,7 @@ export class SettingsFormComponent implements OnInit {
 			);
 		});
 
-		this.companyService.updateSettings(data).subscribe({
+		this.adminService.updateSettings(data).subscribe({
 			next: (data) => {
 				Swal.fire({
 					icon: "success",

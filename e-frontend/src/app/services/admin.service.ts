@@ -23,6 +23,7 @@ export class AdminService {
   private apiUsers = 'http://localhost:3001/users';
   private apiCustomers = 'http://localhost:3003/customer';
   private apiLogin = 'http://localhost:3001';
+  private apiSettings = 'http://localhost:3001/settings';
 
   constructor(private http: HttpClient) { }
 
@@ -53,5 +54,17 @@ export class AdminService {
   
   register = (data: any): Observable<any> => {
     return this.http.post(`${this.apiCustomers}/sign-up`, data);
+  }
+
+  getSettings(name: string) : Observable<any> {
+    return this.http.get(`${this.apiSettings}/find/${name}`);
+  }
+
+  getTabs() : Observable<any> {
+    return this.http.get(`${this.apiSettings}/tabs`);
+  }
+
+  updateSettings(body: any) : Observable<any> {
+    return this.http.put(`${this.apiSettings}/update`, body)
   }
 }

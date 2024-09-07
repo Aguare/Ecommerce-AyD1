@@ -1,8 +1,8 @@
 const getConnection = require("../../db/db.js");
 
-const companyController = {};
+const settingsController = {};
 
-companyController.getSettings = async (req, res) => {
+settingsController.getSettings = async (req, res) => {
     let connection;
     try {
         connection = await getConnection();
@@ -25,7 +25,7 @@ companyController.getSettings = async (req, res) => {
     }
 }
 
-companyController.updateSettings = async (req, res) => {
+settingsController.updateSettings = async (req, res) => {
 
     let connection;
     try {
@@ -52,7 +52,7 @@ companyController.updateSettings = async (req, res) => {
     }
 }
 
-companyController.getTabs = async (req, res) => {
+settingsController.getTabs = async (req, res) => {
     let connection;
     try {
         connection = await getConnection();
@@ -73,4 +73,4 @@ companyController.getTabs = async (req, res) => {
     }
 }
 
-module.exports = companyController;
+module.exports = settingsController;

@@ -50,15 +50,6 @@ module.exports = {
 				PORT: 3004,
 				NODE_ENV: "production"
 			},
-		},
-		{
-			name: "msCompany",
-			script: "./msCompany/index.js",
-			ignore_watch: ignore_paths,
-			env_production: {
-				PORT: 3005,
-				NODE_ENV: "production"
-			},
 		}
 	],
 };

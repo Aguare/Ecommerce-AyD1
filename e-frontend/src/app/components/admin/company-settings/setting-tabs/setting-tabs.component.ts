@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CompanyService } from '../../../../services/company.service';
+import { AdminService } from '../../../../services/admin.service';
 
 
 type Tab = {
@@ -22,11 +22,10 @@ export class SettingTabsComponent implements OnInit{
 
   @Input() currentTab?: string = 'General';
 
-  constructor(private _router: Router, private companyService: CompanyService) { }
+  constructor(private _router: Router, private adminService: AdminService) { }
 
   ngOnInit() {
-    this.companyService.getTabs().subscribe((tabs: Tab[]) => {
-      console.log(tabs);
+    this.adminService.getTabs().subscribe((tabs: Tab[]) => {
       this.tabs = tabs;
     });
   }
