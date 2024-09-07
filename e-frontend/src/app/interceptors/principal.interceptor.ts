@@ -18,7 +18,6 @@ export const principalInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(req);
   } else {
-    console.log(router.url);
     if (router.url !== '/home' && router.url !== '/login') {
       router.navigate(['/home']);
       return next(req);
