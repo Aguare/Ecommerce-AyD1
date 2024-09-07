@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,9 @@ export class CompanyService {
     return this.httpClient.get(`${this.apiCompany}/tabs`);
   }
 
-  updateSettings(name: string, value: string) : Observable<any> {
-    return this.httpClient.put(`${this.apiCompany}/settings`, {name, value});
+  updateSettings(body: any) : Observable<any> {
+    return this.httpClient.put(`${this.apiCompany}/settings`, body).pipe(
+      catchError(err => of([]))
+  );
   }
 }

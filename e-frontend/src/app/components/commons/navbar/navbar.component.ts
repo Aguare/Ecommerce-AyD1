@@ -60,14 +60,20 @@ export class NavbarComponent implements OnInit {
       },
     });
 
-    this.adminService.getUserImageProfile(this.userId).subscribe({
-      next: (res: any) => {
-        this.userImage = res.imageProfile;
-      },
-      error: (err: any) => {
-        console.log('Error:', err);
-      },
-    });
+
+    const photo = this._localStorage.getUserPhoto();
+
+    if (!photo) {
+      this.adminService.getUserImageProfile(this.userId).subscribe({
+        next: (res: any) => {
+          this.userImage = res.imageProfile;
+          this._localStorage.setUserPhoto(res.imageProfile);
+        }
+      });
+      return;
+    }
+
+    this.userImage = photo;
   }
 
 

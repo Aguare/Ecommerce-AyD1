@@ -54,7 +54,7 @@ module.exports = {
 		{
 			name: "msCompany",
 			script: "./msCompany/index.js",
-			ignore_watch: paths,
+			ignore_watch: ignore_paths,
 			env_production: {
 				PORT: 3005,
 				NODE_ENV: "production"

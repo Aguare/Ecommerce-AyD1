@@ -13,7 +13,7 @@ import { CompanyService } from "../../../../services/company.service";
 import { CommonModule } from "@angular/common";
 import { NavbarComponent } from "../../../commons/navbar/navbar.component";
 import { SettingTabsComponent } from "../setting-tabs/setting-tabs.component";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ImagePipe } from "../../../../pipes/image.pipe";
 import { ImageService } from "../../../../services/image.service";
 import Swal from "sweetalert2";
@@ -41,8 +41,6 @@ export class SettingsFormComponent implements OnInit {
 	settingName: string = "";
 	previews: string[] = [];
 
-  
-
 	generalForm: Form = this.fb.group({
 		rows: this.fb.array<FormRow>([]),
 	});
@@ -50,10 +48,19 @@ export class SettingsFormComponent implements OnInit {
 	constructor(
 		private companyService: CompanyService,
 		private route: ActivatedRoute,
+		private router: Router,
 		private imageService: ImageService
 	) {}
 
 	ngOnInit(): void {
+		this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+
+		this.router.events.subscribe((event) => {
+			if (event.constructor.name === "NavigationEnd") {
+				this.router.navigated = false;
+			}
+		});
+
 		this.settingName = this.route.snapshot.paramMap.get("name") || "";
 		this.companyService.getSettings(this.settingName).subscribe((response) => {
 			response.forEach((element: any) => {
@@ -77,16 +84,15 @@ export class SettingsFormComponent implements OnInit {
 	}
 
 	onSubmit() {
-
-    console.log('click')
-    if(this.generalForm.invalid) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Por favor, llene todos los campos",
-      });
-      return;
-    }
+		console.log("click");
+		if (this.generalForm.invalid) {
+			Swal.fire({
+				icon: "error",
+				title: "Error",
+				text: "Por favor, llene todos los campos",
+			});
+			return;
+		}
 
 		// get the form data that name is an img
 		const imgData = this.generalForm.controls.rows.value.filter(
@@ -102,39 +108,40 @@ export class SettingsFormComponent implements OnInit {
 			const formData = new FormData();
 			formData.append("image", element.value);
 			formData.append("keyName", element.name);
-			this.imageService.saveCompanyImage(formData).subscribe((response) => {
-				Swal.fire({
-          icon: "success",
-          title: "Éxito",
-          text: "Imagen subida correctamente",
-        });
-			}, (error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Error al subir la imagen",
-        });
-      });
+			this.imageService.saveCompanyImage(formData).subscribe(
+				(response) => {
+					Swal.fire({
+						icon: "success",
+						title: "Éxito",
+						text: "Imagen subida correctamente",
+					});
+				},
+				(error) => {
+					Swal.fire({
+						icon: "error",
+						title: "Error",
+						text: "Error al subir la imagen",
+					});
+				}
+			);
 		});
 
-    data.forEach((el: any) => {
-      this.companyService.updateSettings(el.name, el.value).subscribe(
-        (response) => {
-          Swal.fire({
-            icon: "success",
-            title: "Éxito",
-            text: "Configuración actualizada correctamente",
-          });
-        },
-        (error) => {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Error al actualizar la configuración",
-          });
-        }
-      );
-    });
+		this.companyService.updateSettings(data).subscribe({
+			next: (data) => {
+				Swal.fire({
+					icon: "success",
+					title: "Éxito",
+					text: "Datos actualizados correctamente",
+				});
+			},
+			error: (error) => {
+				Swal.fire({
+					icon: "error",
+					title: "Error",
+					text: "Error al actualizar los datos",
+				});
+			},
+		});
 	}
 
 	onFileSelected(event: Event, rowIndex: number) {
@@ -144,18 +151,18 @@ export class SettingsFormComponent implements OnInit {
 			// this.editProfileForm.get("image")?.setValue(file);
 			this.generalForm.controls.rows.controls[rowIndex].controls.value.setValue(file);
 			const previewUrl = URL.createObjectURL(file);
-			if(this.previews.length > 1) {
-        this.previews[1] = previewUrl;
-      } else {
-        this.previews.push(previewUrl);
-      }
+			if (this.previews.length > 1) {
+				this.previews[1] = previewUrl;
+			} else {
+				this.previews.push(previewUrl);
+			}
 		}
 	}
 
 	deleteImage(rowIndex: number) {
 		this.previews.pop();
-    if(this.previews.length === 1) {
-      this.generalForm.controls.rows.controls[rowIndex].controls.value.setValue(this.previews[0]);
-    }
+		if (this.previews.length === 1) {
+			this.generalForm.controls.rows.controls[rowIndex].controls.value.setValue(this.previews[0]);
+		}
 	}
 }

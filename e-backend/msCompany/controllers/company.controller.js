@@ -26,19 +26,25 @@ companyController.getSettings = async (req, res) => {
 }
 
 companyController.updateSettings = async (req, res) => {
+
     let connection;
     try {
         connection = await getConnection();
-        const { name, value } = req.body;
-        const query = `
-            UPDATE company_settings
-            SET key_value = ?
-            WHERE key_name = ?
-        `;
-        await connection.query(query, [value, name]);
+        await connection.beginTransaction();
+        req.body.forEach(async (element) => {
+            const {name, value } = element;
+            const query = `
+                UPDATE company_settings
+                SET key_value = ?
+                WHERE key_name = ?;
+            `;
+            await connection.query(query, [value, name]);
+        });
+        await connection.commit();
         res.status(200).send({ message: "Configuración actualizada correctamente." });
     } catch (error) {
         res.status(500).send({ message: "Error al actualizar la configuración.", error: error.message });
+        connection.rollback();
     } finally {
         if (connection) {
             connection.end();

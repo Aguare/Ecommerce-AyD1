@@ -7,6 +7,7 @@ import { AdminService } from "../../../services/admin.service";
 import { ImageService } from "../../../services/image.service";
 import Swal from "sweetalert2";
 import { NavbarComponent } from "../../commons/navbar/navbar.component";
+import { LocalStorageService } from "../../../services/local-storage.service";
 
 @Component({
 	selector: "app-edit-profile",
@@ -22,7 +23,8 @@ export class EditProfileComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private router: Router,
 		private adminService: AdminService,
-		private imageService: ImageService
+		private imageService: ImageService,
+		private localStorageService: LocalStorageService
 	) {
 		this.editProfileForm = this.formBuilder.group({
 			nit: ["", [Validators.required, Validators.minLength(6), Validators.maxLength(10)]],
@@ -32,7 +34,12 @@ export class EditProfileComponent implements OnInit {
 		});
 	}
 	ngOnInit(): void {
-		const username = JSON.parse(localStorage.getItem("user") || "{}").username;
+		const username = this.localStorageService.getUserName();
+
+		if (!username) {
+			this.router.navigate(["/"]);
+			return;
+		}
 		this.adminService.getUserInformation(username).subscribe({
 			next: (res: any) => {
 				this.editProfileForm.get("nit")?.setValue(res.user.nit);
@@ -41,7 +48,7 @@ export class EditProfileComponent implements OnInit {
 				this.editProfileForm.get("image")?.setValue(res.user.imageProfile);
 			},
 			error: (err: any) => {
-				console.log("Error:", err);
+				// console.log("Error:", err);
 			},
 		});
 	}
@@ -55,7 +62,7 @@ export class EditProfileComponent implements OnInit {
 	}
 
 	goBack() {
-		const username = JSON.parse(localStorage.getItem("user") || "{}").username;
+		const username = this.localStorageService.getUserName();
 		this.router.navigate([`account/${username}`]);
 	}
 
@@ -68,7 +75,7 @@ export class EditProfileComponent implements OnInit {
 			});
 			return;
 		}
-		const id = JSON.parse(localStorage.getItem("user") || "{}").id;
+		const id = this.localStorageService.getUserId();
 
 		if (!id) {
 			Swal.fire({
@@ -86,6 +93,7 @@ export class EditProfileComponent implements OnInit {
 			(response) => {
 				const { nit, description, isPreferCash } = this.editProfileForm.value;
 				const image = response.data;
+				this.localStorageService.setUserPhoto(image);
 				this.adminService.updateUserInformation({ nit, description, isPreferCash, image }, id).subscribe(
 					(res) => {
 						Swal.fire({

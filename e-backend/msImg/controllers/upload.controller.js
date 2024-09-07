@@ -151,7 +151,27 @@ const saveImageAdmin = async (req, res) => {
        }
    }
 }
-    
+ 
+const getCompanyLogo = async (req, res) => {
+	let conn;
+	try {
+		conn = await getConnection();
+		const getLogo = "SELECT key_value FROM company_settings WHERE key_name = 'company_img'";
+		const logo = await conn.query(getLogo);
+		if (logo.length > 0) {
+			res.status(200).send({ data: logo[0].key_value });
+		} else {
+			res.status(404).send({ message: "Company logo not found" });
+		}
+	} catch (e) {
+		console.log(e);
+		res.status(500).send({ message: "Internal server error" });
+	} finally {
+		if (conn) {
+			conn.end();
+		}
+	}
+};
 
 const uploadImageP = uploadImage("products");
 const uploadImageC = uploadImage("profiles");

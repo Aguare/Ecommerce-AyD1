@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 export interface Page {
   id: number;
@@ -43,7 +43,12 @@ export class AdminService {
   }
 
   getUserImageProfile(id: number) : Observable<any> {
-    return this.http.get(`${this.apiUsers}/user/image/${id}`);
+    return this.http.get(`${this.apiUsers}/user/image/${id}`).pipe(
+      catchError((error) => {
+        console.error('Error al obtener la imagen de perfil:', error);
+        return throwError(() => error);  
+      })
+    );
   }
   
   register = (data: any): Observable<any> => {
