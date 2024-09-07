@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AdminService, Page, PagesResponse } from '../../../services/admin.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ImagePipe } from '../../../pipes/image.pipe';
+import { LocalStorageService } from '../../../services/local-storage.service';
 
 interface MenuItem {
   module: string;
@@ -31,7 +32,8 @@ export class NavbarComponent implements OnInit {
   isClient = true;
   pages: Page[] = [];
   pagesNavBar: MenuItem[] = [];
-  user: any;
+  userName: any;
+  userId: any;
   userImage: string = '';
   isActive: boolean = false;
   activeModule: string | null = null;
@@ -39,15 +41,16 @@ export class NavbarComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private _router: Router,
-    private _cookieService: CookieService
+    private _cookieService: CookieService,
+    private _localStorage: LocalStorageService
   ) {}
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || '{}');
-    const userId = this.user?.id;
+    this.userId = this._localStorage.getUserId();
+    this.userName = this._localStorage.getUserName();
 
     // Function to get pages of user by his id
-    this.adminService.getPages(userId).subscribe({
+    this.adminService.getPages(this.userId).subscribe({
       next: (res: PagesResponse) => {
         this.pages = res.result;
         this.pagesNavBar = this.groupPagesByModule(this.pages);
@@ -57,7 +60,7 @@ export class NavbarComponent implements OnInit {
       },
     });
 
-    this.adminService.getUserImageProfile(this.user.id).subscribe({
+    this.adminService.getUserImageProfile(this.userId).subscribe({
       next: (res: any) => {
         this.userImage = res.imageProfile;
       },
@@ -94,7 +97,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('user');
+    this._localStorage.clear();
     this._cookieService.delete('token');
     this._router.navigate(['/home']);
   }
@@ -108,7 +111,7 @@ export class NavbarComponent implements OnInit {
   }
 
   myAccount() {
-    this._router.navigate([`/account/${this.user.username}`]);
+    this._router.navigate([`/account/${this.userName}`]);
   }
 
 }
