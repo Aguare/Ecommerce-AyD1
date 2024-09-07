@@ -5,15 +5,7 @@ const controller = {};
 const jwt = require("jsonwebtoken");
 
 controller.verifyToken = async (req, res, next) => {
-	const bearerHeader = req.headers["authorization"];
-	console.log("bearerHeader", bearerHeader);
-
-	if (!bearerHeader) {
-		return res.status(403).send({ message: "No token provided" });
-	}
-
-	const token = bearerHeader.split(" ")[1];
-	console.log("token", token);
+	const token = req.header("Authorization") ? req.header("Authorization").replace("Bearer_auth=", "") : null;
 
 	if (!token) {
 		return res.status(403).send({ message: "No token provided" });
@@ -36,7 +28,7 @@ controller.verifyToken = async (req, res, next) => {
 				if (err.name === "TokenExpiredError") {
 					return res.status(401).send({ message: "El token ha expirado. Por favor, inicia sesión de nuevo." });
 				} else {
-					return res.status(403).send({ message: "Token no válido" });
+					return res.status(403).send({ message: "Token no generado por JWT" });
 				}
 			}
 
@@ -44,7 +36,7 @@ controller.verifyToken = async (req, res, next) => {
 			const result_token = await connec.query(sql, [token, decoded.id]);
 
 			if (result_token.length === 0) {
-				return res.status(403).send({ message: "Token no válido" });
+				return res.status(403).send({ message: "Token no existe" });
 			}
 
 			const dateNow = new Date();
@@ -52,7 +44,7 @@ controller.verifyToken = async (req, res, next) => {
 			const resultExpired = await connec.query(queryExpired, [decoded.id]);
 
 			if (resultExpired.length === 0) {
-				return res.status(403).send({ message: "Token no válido" });
+				return res.status(403).send({ message: "Token sin expiración" });
 			}
 
 			const expired = new Date(resultExpired[0].auth_token_expired);
