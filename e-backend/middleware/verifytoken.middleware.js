@@ -8,7 +8,7 @@ controller.verifyToken = async (req, res, next) => {
 	const token = req.header("Authorization") ? req.header("Authorization").replace("Bearer_auth=", "") : null;
 
 	if (!token) {
-		return res.status(403).send({ message: "No token provided" });
+		return res.status(401).send({ message: "No token provided" });
 	}
 
 	let connec;
@@ -19,7 +19,7 @@ controller.verifyToken = async (req, res, next) => {
 		const result = await connec.query(query);
 
 		if (result.length === 0) {
-			return res.status(400).send({ message: "Error interno al iniciar la sesion" });
+			return res.status(401).send({ message: "Error interno al iniciar la sesion" });
 		}
 
 		jwtKey = result[0].key_value;
@@ -28,7 +28,7 @@ controller.verifyToken = async (req, res, next) => {
 				if (err.name === "TokenExpiredError") {
 					return res.status(401).send({ message: "El token ha expirado. Por favor, inicia sesión de nuevo." });
 				} else {
-					return res.status(403).send({ message: "Token no generado por JWT" });
+					return res.status(401).send({ message: "Token no generado por JWT" });
 				}
 			}
 
@@ -36,7 +36,7 @@ controller.verifyToken = async (req, res, next) => {
 			const result_token = await connec.query(sql, [token, decoded.id]);
 
 			if (result_token.length === 0) {
-				return res.status(403).send({ message: "Token no existe" });
+				return res.status(401).send({ message: "Token no existe" });
 			}
 
 			const dateNow = new Date();
@@ -44,18 +44,18 @@ controller.verifyToken = async (req, res, next) => {
 			const resultExpired = await connec.query(queryExpired, [decoded.id]);
 
 			if (resultExpired.length === 0) {
-				return res.status(403).send({ message: "Token sin expiración" });
+				return res.status(401).send({ message: "Token sin expiración" });
 			}
 
 			const expired = new Date(resultExpired[0].auth_token_expired);
 			if (dateNow > expired) {
-				return res.status(403).send({ message: "Token expirado" });
+				return res.status(401).send({ message: "Token expirado" });
 			}
 			next();
 		});
 	} catch (error) {
 		console.log(error);
-		return res.status(500).send({ message: "Error al obtener la información", error: error.message });
+		return res.status(401).send({ message: "Error al obtener la información", error: error.message });
 	} finally {
 		if (connec) {
 			connec.end();
