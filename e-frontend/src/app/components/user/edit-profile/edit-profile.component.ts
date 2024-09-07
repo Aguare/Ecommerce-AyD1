@@ -61,21 +61,21 @@ export class EditProfileComponent implements OnInit {
 
 	updateProfile() {
 		if (this.editProfileForm.invalid) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Por favor, llena todos los campos correctamente",
-      });
+			Swal.fire({
+				icon: "error",
+				title: "Error",
+				text: "Por favor, llena todos los campos correctamente",
+			});
 			return;
 		}
 		const id = JSON.parse(localStorage.getItem("user") || "{}").id;
 
 		if (!id) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "No se ha podido identificar al usuario",
-      });
+			Swal.fire({
+				icon: "error",
+				title: "Error",
+				text: "No se ha podido identificar al usuario",
+			});
 			return;
 		}
 
@@ -88,28 +88,28 @@ export class EditProfileComponent implements OnInit {
 				const image = response.data;
 				this.adminService.updateUserInformation({ nit, description, isPreferCash, image }, id).subscribe(
 					(res) => {
-            Swal.fire({
-              icon: "success",
-              title: "Éxito",
-              text: "Información actualizada correctamente",
-            });
+						Swal.fire({
+							icon: "success",
+							title: "Éxito",
+							text: "Información actualizada correctamente",
+						});
 					},
 					(err) => {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: "Ocurrió un error al actualizar la información",
-            });
-          }
+						Swal.fire({
+							icon: "error",
+							title: "Error",
+							text: "Ocurrió un error al actualizar la información",
+						});
+					}
 				);
 			},
 			(err) => {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Ocurrió un error al subir la imagen",
-        });
-      }
+				Swal.fire({
+					icon: "error",
+					title: "Error",
+					text: "Ocurrió un error al subir la imagen",
+				});
+			}
 		);
 	}
 }

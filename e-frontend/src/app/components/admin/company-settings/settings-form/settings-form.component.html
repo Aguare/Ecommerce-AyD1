@@ -1,0 +1,70 @@
+<app-navbar></app-navbar>
+<app-setting-tabs currentTab="{{this.settingName}}"></app-setting-tabs>
+
+<div class="container card p-3 mx-auto mt-5">
+    <div class="is-centered">
+        <h2>{{ this.settingName }}</h2>
+        <form [formGroup]="generalForm" (ngSubmit)="onSubmit()" class="form m-3">
+
+            <div formArrayName="rows">
+                @for(
+                row of generalForm.controls.rows.controls;
+                track rowIndex;
+                let rowIndex = $index
+                ) {
+                @if (generalForm.controls.rows.controls[rowIndex].controls.name.value.includes('img')) {
+
+                <div class="columns">
+                    <div class="field m-5" [formGroupName]="rowIndex">
+                        <label class="label">{{ generalForm.controls.rows.controls[rowIndex].controls.label.value }}</label>
+                        <div class="control">
+                            <div class="file has-name">
+                                <label class="file-label">
+                                    <input class="file-input" type="file" name="imagen" accept="image/*"
+                                        (change)="onFileSelected($event, rowIndex)" />
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label"> Selecciona un archivo… </span>
+                                    </span>
+                                    <span class="file-name">Logo...</span>
+                                </label>
+                            </div>
+                        </div>
+                        <p class="help is-danger">
+                            Debes subir una imagen.
+                        </p>
+                        
+                    </div>
+                    <div class="mx-auto">
+                        <label class="label">Previsualización de la imagen</label>
+                        <img class="image is-128x128 mx-auto" 
+                        [src]="this.previews.length === 1? (this.previews[0] | imagePipe ): this.previews[this.previews.length - 1]"
+                        >
+                        <button type="button" (click)="deleteImage(rowIndex)" *ngIf="this.previews.length > 1" class="m-3 button is-warning">Borrar</button>
+                    </div>
+                </div>
+                
+
+                }
+                @else {
+                <div class="field m-5" [formGroupName]="rowIndex">
+                    <label class="label">{{ generalForm.controls.rows.controls[rowIndex].controls.label.value }}</label>
+                    <div class="control">
+                        <input class="input" type="text" formControlName="value" placeholder="Nombre">
+                        <p class="help is-danger"
+                            *ngIf="generalForm.controls.rows.controls[rowIndex].controls.isRequired.value">
+                            Este campo es requerido.
+                        </p>
+                    </div>
+                </div>
+                }
+                }
+            </div>
+
+            <button type="submit" [disabled]="this.generalForm.invalid" class="button is-primary m-3">Guardar</button>
+        </form>
+
+    </div>
+</div>
