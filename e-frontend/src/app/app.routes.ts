@@ -9,6 +9,7 @@ import { ProductHomeComponent } from './components/products/product-home/product
 import { MyAccountComponent } from './components/user/my-account/my-account.component';
 import { EditProfileComponent } from './components/user/edit-profile/edit-profile.component';
 import { StoreBillingComponent } from './components/admin/store-billing/store-billing.component';
+import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'test', component: PruebaMaterialComponent },
   { path: 'store-config', component: StoreConfigComponent },
   { path: 'store-billing', component: StoreBillingComponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'account/:username', component: MyAccountComponent },
   { 
     path: 'edit', children: [
