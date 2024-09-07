@@ -1,0 +1,73 @@
+<app-navbar></app-navbar>
+
+<div class="cart-container">
+
+  <div *ngIf="isLoading" class="has-text-centered">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    <p>Cargando...</p>
+  </div>
+
+  <div *ngIf="!isLoading && myCart.length > 0" class="columns is-multiline">
+    <!-- Sección de "Mi carrito" -->
+    <div class="column is-two-thirds-desktop is-full-mobile">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">Mi Carrito</p>
+        </header>
+        <div class="card-content">
+          <div class="content">
+            <p><strong>Productos disponibles</strong></p>
+            <div *ngFor="let product of myCart; let i = index">
+              <div class="columns is-mobile cart-item">
+                <div class="column is-3-mobile is-2-tablet">
+                    <figure class="image is-64x64">
+                      <img [src]="getImageProduct(product.FK_Product)" alt="Imagen del producto {{ product.FK_Product }}">
+                    </figure>
+                  </div>                  
+                <div class="column is-6-mobile is-7-tablet">
+                  <p><strong>Producto: {{ getNameProduct(product.FK_Product) }}</strong></p>
+                  <p>Cantidad: {{ product.quantity }}</p>
+                  <p>Precio Unitario: {{ this.currency}}{{ getPriceProduct(product.FK_Product) }}</p>
+                </div>
+                <div class="column is-3 has-text-right">
+                  <p>Subtotal <strong>{{ this.currency}}{{ getSubtotal(product.quantity, product.FK_Product) }}</strong></p>
+                  <div class="control is-inline-flex is-justify-content-center-mobile">
+                    <button class="button is-small" (click)="decreaseQuantity(i)">-</button>
+                    <input class="input is-small" type="text" [value]="product.quantity" size="1" readonly>
+                    <button class="button is-small" (click)="increaseQuantity(i)">+</button>
+                  </div>
+                  <button class="button is-small is-danger mt-2" (click)="removeProduct(i)">🗑️</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de "Resumen" -->
+    <div class="column is-one-third-desktop is-full-mobile">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">Resumen</p>
+        </header>
+        <div class="card-content">
+          <div class="content">
+            <p>Sub Total <strong>{{ this.currency}} {{ getTotal() }}</strong></p>
+            <p>Descuento <strong>- {{ this.currency}}0</strong></p>
+            <p>Total <strong>{{ this.currency}} {{ getTotal() }}</strong></p>
+
+            <button class="button is-primary is-fullwidth"  >Finalizar mi compra</button>
+            <button class="button is-link is-fullwidth" (click)="addOtherProduct()">Agregar otro producto</button>
+            <button class="button is-danger is-fullwidth" (click)="deleteCart()">Limpiar mi carrito</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="!isLoading && myCart.length === 0" class="has-text-centered">
+    <p>El carrito está vacío</p>
+  </div>
+</div>
