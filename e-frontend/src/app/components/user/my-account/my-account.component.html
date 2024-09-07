@@ -1,0 +1,25 @@
+<div class="card">
+    <div class="card-image">
+      <figure class="image is-128x128 is-rounded mx-auto mt-4">
+        <img [src]="user.imageProfile" alt="Profile Image">
+      </figure>
+    </div>
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content has-text-centered">
+          <p class="title is-4">{{ user.name }}</p>
+          <p class="subtitle is-6">{{ user.email }}</p>
+          <button class="button is-primary">Editar perfil</button>
+        </div>
+      </div>
+  
+      <div class="content">
+        <p><strong>Dirección:</strong> {{ user.address }}</p>
+        <p><strong>NIT:</strong> {{ user.nit }}</p>
+        <p><strong>Preferencia de Pago:</strong> {{ user.isPreferedCash ? 'Efectivo' : 'Otro' }}</p>
+        <p><strong>Descripción:</strong></p>
+        <p>{{ user.description }}</p>
+      </div>
+    </div>
+  </div>
+  

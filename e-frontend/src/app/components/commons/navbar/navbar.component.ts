@@ -41,7 +41,8 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = 18;
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = this.user?.id;
 
     // Function to get pages of user by his id
     this.adminService.getPages(userId).subscribe({
@@ -93,6 +94,10 @@ export class NavbarComponent implements OnInit {
 
   toggleSubmenu(module: string) {
     this.activeModule = this.activeModule === module ? null : module;
+  }
+
+  myAccount() {
+    this._router.navigate([`/account/${this.user.username}`]);
   }
 
 }

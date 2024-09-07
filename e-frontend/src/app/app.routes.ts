@@ -9,6 +9,7 @@ import { ProductHomeComponent } from './components/products/product-home/product
 import { GeneralSettingsComponent } from './components/admin/company-settings/general-settings/general-settings.component';
 import { SecuritySettingsComponent } from './components/admin/company-settings/security-settings/security-settings.component';
 import { AppereanceSettingsComponent } from './components/admin/company-settings/appereance-settings/appereance-settings.component';
+import { MyAccountComponent } from './components/user/my-account/my-account.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: 'appereance', component: AppereanceSettingsComponent }
     ]
   },
+  { path: 'account/:username', component: MyAccountComponent },
   {
     path: 'products', children: [
       { path: 'init', component: ProductHomeComponent }
