@@ -129,12 +129,15 @@ const saveImageAdmin = async (req, res) => {
    try{
         conn = await getConnection();
         const paths = req.files.map((file) => {
-            return path.join("public","img", "settings", file.filename);
+            return path.join("img", "settings", file.filename);
         });
 
+        // get keyName from body
+        const keyName = req.body.keyName;
+
         //Save logo
-        const insertImagesAdmin = "INSERT INTO company_settings (key_name, key_value) VALUES (?,?)";
-        await conn.query(insertImagesAdmin, ['company_img', paths[0]]);
+        const insertImagesAdmin = "UPDATE company_settings SET key_value = ? WHERE key_name = ?";
+        await conn.query(insertImagesAdmin, [paths[0], keyName]);
         res.status(201).send({
             message: 'Image uploaded successfully',
             data: paths[0]
