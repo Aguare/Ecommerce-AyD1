@@ -34,28 +34,28 @@ usersController.login = async (req, res) => {
 
 		const passBD = pbkdf2.pbkdf2Sync(password, salt, 1, 32, "sha512").toString("hex");
 
-		// if (user.password !== passBD) {
-		// 	return res.status(400).send({ message: "La contraseña no es correcta." });
-		// }
+		if (user.password !== passBD) {
+			return res.status(400).send({ message: "La contraseña no es correcta." });
+		}
 
-        const queryKey = `SELECT * FROM company_settings WHERE key_name = 'session_key';`;
-        const resultKey = await connection.query(queryKey);
+		const queryKey = `SELECT * FROM company_settings WHERE key_name = 'session_key';`;
+		const resultKey = await connection.query(queryKey);
 
-        if (resultKey.length === 0) {
-            return res.status(400).send({ message: "Error interno al iniciar la sesion" });
-        }
+		if (resultKey.length === 0) {
+			return res.status(400).send({ message: "Error interno al iniciar la sesion" });
+		}
 
-        const key = resultKey[0].key_value;
-        const token = jwt.sign( { id: user.id, username: user.username }, key, { expiresIn: '1h' } );
+		const key = resultKey[0].key_value;
+		const token = jwt.sign({ id: user.id, username: user.username }, key, { expiresIn: "1h" });
 
-        const dateNow = new Date();
-        const timeExpiredHours = 1;
-        const timeExpired = new Date(dateNow.setHours(dateNow.getHours() + timeExpiredHours));
+		const dateNow = new Date();
+		const timeExpiredHours = 1;
+		const timeExpired = new Date(dateNow.setHours(dateNow.getHours() + timeExpiredHours));
 
-        const queryUpdateToken = `UPDATE user SET auth_token = ?, auth_token_expired = ? WHERE id = ?;`;
-        await connection.query(queryUpdateToken, [token, timeExpired, user.id]);
+		const queryUpdateToken = `UPDATE user SET auth_token = ?, auth_token_expired = ? WHERE id = ?;`;
+		await connection.query(queryUpdateToken, [token, timeExpired, user.id]);
 
-        delete user.password;
+		delete user.password;
 		res.status(200).send({ user: user, token: token });
 	} catch (error) {
 		console.log(error);
@@ -69,7 +69,7 @@ usersController.login = async (req, res) => {
 
 /**
  * Update user information or save it if it doesn't exist
- * @returns 
+ * @returns
  */
 usersController.updateUserInformation = async (req, res) => {
 	let connection;
@@ -99,7 +99,6 @@ usersController.updateUserInformation = async (req, res) => {
 		const queryUpdateUserInfo = `UPDATE user_information SET nit = ?, description = ?, image_profile = ?, isPreferCash = ? WHERE FK_User = ?;`;
 		await connection.query(queryUpdateUserInfo, [nit, description, image, isPreferCash, id]);
 		res.status(200).send({ message: "Información actualizada correctamente." });
-
 	} catch (error) {
 		console.log(error);
 		res.status(500).send({ message: "Error al actualizar la información", error: error.message });
@@ -108,7 +107,7 @@ usersController.updateUserInformation = async (req, res) => {
 			connection.end();
 		}
 	}
-}
+};
 
 /**
  * Get user information, username and email from user by username
@@ -128,7 +127,6 @@ usersController.getProfileInformation = async (req, res) => {
 		}
 
 		res.status(200).send({ user: resultUserInfo[0] });
-
 	} catch (error) {
 		console.log(error);
 		res.status(500).send({ message: "Error al obtener la información", error: error.message });
@@ -137,7 +135,7 @@ usersController.getProfileInformation = async (req, res) => {
 			connection.end();
 		}
 	}
-}
+};
 
 usersController.getImageProfile = async (req, res) => {
 	let connection;
@@ -150,10 +148,9 @@ usersController.getImageProfile = async (req, res) => {
 		const resultUserInfo = await connection.query(query, [id]);
 		if (resultUserInfo.length === 0) {
 			return res.status(400).send({ message: "El usuario no existe." });
-	}
+		}
 
 		res.status(200).send({ imageProfile: resultUserInfo[0].image_profile });
-
 	} catch (error) {
 		console.log(error);
 		res.status(500).send({ message: "Error al obtener la información", error: error.message });
@@ -162,6 +159,6 @@ usersController.getImageProfile = async (req, res) => {
 			connection.end();
 		}
 	}
-}
+};
 
 module.exports = usersController;
