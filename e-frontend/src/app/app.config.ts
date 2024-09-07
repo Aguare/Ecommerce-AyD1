@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { principalInterceptor } from './interceptors/principal.interceptor';
 
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
-    provideHttpClient(withInterceptors([principalInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([principalInterceptor])),
     CookieService,
   ]
 };
