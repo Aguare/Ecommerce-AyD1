@@ -5,6 +5,8 @@ const log4js = require("log4js");
 const logger = log4js.getLogger();
 const PORT = process.env.PORT || 3004;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -14,13 +16,15 @@ app.use((req, res, next) => {
     );
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
+    
     next();
 });
 
 app.use(router)
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 
 if (process.env.NODE_ENV === "production") {
     logger.level = "trace";
