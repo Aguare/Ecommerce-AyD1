@@ -51,16 +51,16 @@ export class CategoryCarrousellComponent implements AfterViewInit {
       if (typeof document !== 'undefined') {
         this.productsCart.forEach((cart) => {         
           const splideId = '#category-carrousel-' + cart.category;
-  
           const splide = new Splide(splideId, {
             type: 'loop',
             perPage: 5,
             perMove: 1,
-            gap: '10px',
+            gap: '0',
             padding: {
               right: '0',
               left: '0',
             },
+            pagination: false,
             autoplay: true,
             breakpoints: {
               1024: {

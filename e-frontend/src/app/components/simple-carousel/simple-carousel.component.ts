@@ -51,12 +51,13 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
           type: 'loop',
           perPage: 3,
           perMove: 1,
-          gap: '10px',
+          gap: '0',
           padding: {
             right: '0',
             left: '0',
           },
           autoplay: true,
+          pagination: false,
           breakpoints: {
             1024: {
               perPage: 2, 

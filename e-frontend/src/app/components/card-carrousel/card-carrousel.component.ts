@@ -41,7 +41,7 @@ export class CardCarrouselComponent implements OnInit, AfterViewInit {
       if (typeof document !== 'undefined') {
         new Splide('#image-carousel', {
           type: 'loop',
-          perPage: 3,
+          perPage: 6,
           perMove: 1,
           gap: '20px',
           padding: {
@@ -49,6 +49,7 @@ export class CardCarrouselComponent implements OnInit, AfterViewInit {
             left: '10px',
           },
           autoplay: true,
+          pagination: false,
           breakpoints: {
             1024: {
               perPage: 2,
