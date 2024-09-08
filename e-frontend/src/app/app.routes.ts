@@ -11,6 +11,7 @@ import { EditProfileComponent } from './components/user/edit-profile/edit-profil
 import { StoreBillingComponent } from './components/admin/store-billing/store-billing.component';
 import { SettingsFormComponent } from './components/admin/company-settings/settings-form/settings-form.component';
 import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
+import { ShopCartComponent } from './components/user/shop-cart/shop-cart/shop-cart.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'company-settings/:name', component: SettingsFormComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'account/:username', component: MyAccountComponent },
+  { path: 'shop/cart/:username', component: ShopCartComponent },
   { 
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }

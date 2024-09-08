@@ -7,6 +7,7 @@ import { AdminService, Page, PagesResponse } from '../../../services/admin.servi
 import { CookieService } from 'ngx-cookie-service';
 import { ImagePipe } from '../../../pipes/image.pipe';
 import { LocalStorageService } from '../../../services/local-storage.service';
+import Swal from 'sweetalert2';
 
 interface MenuItem {
   module: string;
@@ -57,6 +58,7 @@ export class NavbarComponent implements OnInit {
       },
       error: (err: any) => {
         console.log('Error:', err);
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Error al obtener las páginas' });
       },
     });
 
@@ -122,6 +124,10 @@ export class NavbarComponent implements OnInit {
 
   myAccount() {
     this._router.navigate([`/account/${this.userName}`]);
+  }
+
+  shopCart() {
+    this._router.navigate([`/shop/cart/${this.userName}`]);
   }
 
 }
