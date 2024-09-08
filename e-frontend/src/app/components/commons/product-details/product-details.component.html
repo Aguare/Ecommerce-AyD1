@@ -1,61 +1,58 @@
-@if(this.isLogged) {
-    <app-navbar></app-navbar>
+@if(isLogged) {
+  <app-navbar></app-navbar>
 }
-@else {
-    <app-navbar-guest></app-navbar-guest>
+  @else {
+  <app-navbar-guest></app-navbar-guest>
 }
 
 <div class="container mt-5">
+  <!-- Carousel de imágenes del producto -->
   <div class="columns is-centered">
-    <div class="column is-one-third">
-      <div class="box" style="height: 100%;">
-        <figure class="image is-3by2 is-align-content-center">
-          <img src="https://www.intelaf.com/images/productos/gran/hubusb-arg-0183.jpg" alt="Producto">
-        </figure>
+    <div class="column is-full">
+      <div class="box" style="height: auto;">
+        <!-- Carousel omitido por ahora -->
       </div>
     </div>
+  </div>
 
+  <div class="columns is-flex is-align-items-stretch">
     <div class="column is-two-thirds">
-      <div class="box" style="height: 100%;">
-        <div class="media-content">
-          <h3 class="title is-4">Notebook IdeaPad 3</h3>
-          <p class="subtitle is-6">Marca Lenovo Procesador AMD Ryzen 7 Version 5700U</p>
-          <ul>
-            <li>RAM: 8GB</li>
-            <li>Almacenamiento: 512GB SSD</li>
-            <li>Pantalla: 14"</li>
-            <li>Sistema Operativo: Windows 11 Home</li>
-          </ul>
-        </div>
+      <div class="box same-height is-flex is-flex-direction-column is-justify-content-space-between">
+        <div>
+          <div class="media-content">
+            <h3 class="title is-4">{{productDetail.name}}</h3>
+            <p class="subtitle is-6">{{productDetail.description}}</p>
+            <ul>
+              <li><strong>Categoría:</strong> {{ productDetail.category }} </li>
+            </ul>
+          </div>
 
-        <div class="content has-text-centered">
-          <p class="has-text-weight-bold">Precio normal: <span class="has-text-grey-light"><s>Q4,624</s></span></p>
-          <p class="has-text-danger is-size-4">Precio con descuento: <span class="has-text-weight-bold">Q4,300</span></p>
+          <div class="content has-text-centered">
+            <p class="has-text-weight-bold">Precio: <span class="has-text-danger is-size-4">Q
+                {{productDetail.price}}</span></p>
+          </div>
         </div>
 
         <div class="buttons is-centered">
           <button class="button is-primary is-fullwidth">¡Comprar ahora!</button>
         </div>
-
-        <div class="content has-text-centered">
-          <p class="has-text-grey">12 Meses de garantía</p>
-          <p class="has-text-grey">Última actualización de inventario: <span>5/9/2024 a las 23:38</span></p>
-          <p class="has-text-grey">Disponibilidad en tienda: <span>No disponible</span></p>
-        </div>
       </div>
     </div>
 
-    <div class="column is-one-quarter">
-      <div class="box" style="height: 100%;">
-        <h4 class="title is-5 has-text-centered is-primary">Disponibilidad en Sucursales</h4>
-        <ul>
-          <li><strong>Tienda Zona 9</strong>: 1 unidad</li>
-          <li><strong>Pradera Z.10</strong>: 1 unidad</li>
-          <li><strong>Xela Interplaza</strong>: 1 unidad</li>
-          <li><strong>Cobán</strong>: No disponible</li>
-          <li><strong>Mazatenango</strong>: No disponible</li>
-          <li><strong>Huehuetenango</strong>: No disponible</li>
-        </ul>
+    <!-- Columna con disponibilidad en sucursales -->
+    <div class="column is-one-third">
+      <div class="box same-height is-flex is-flex-direction-column is-justify-content-space-between">
+        <h4 class="title is-5 has-text-centered">Disponibilidad en Sucursales</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila para mostrar los atributos del producto -->
+  <div class="columns">
+    <div class="column is-full">
+      <div class="box">
+        <h4 class="title is-5">Características del Producto</h4>
+        <!-- Lista de características -->
       </div>
     </div>
   </div>

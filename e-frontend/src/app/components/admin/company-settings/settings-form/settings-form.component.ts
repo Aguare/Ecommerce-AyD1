@@ -61,7 +61,7 @@ export class SettingsFormComponent implements OnInit {
 			}
 		});
 
-		this.settingName = this.route.snapshot.paramMap.get("name") || "";
+		this.settingName = this.route.snapshot.paramMap.get("name") || "General";
 		this.adminService.getSettings(this.settingName).subscribe((response) => {
 			response.forEach((element: any) => {
 				if (element.key_name.includes("img")) {

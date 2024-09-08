@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Product } from '../components/simple-carousel/simple-carousel.component';
 import { Category } from '../components/card-carrousel/card-carrousel.component';
 import { LocalStorageService } from './local-storage.service';
+import { ProductDetail } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -102,5 +103,14 @@ export class ProductService {
     return this.http.delete<any>(`${this.apiCustomer}/deleteProductCart/${id_user}/${id_product}`);
   }
 
+  /**
+   * get Product by id
+   * @param id
+   * @returns
+   */
+
+  getProductById(id: any): Observable<ProductDetail> {
+    return this.http.get<ProductDetail>(`${this.apiProduct}/getProductById/${id}`);
+  }
 }
 

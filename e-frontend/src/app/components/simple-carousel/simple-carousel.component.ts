@@ -12,6 +12,7 @@ import { ProductService } from '../../services/product.service';
 import { ImagePipe } from '../../pipes/image.pipe';
 
 export interface Product {
+  id: number;
   name: string;
   description: string;
   price: number;

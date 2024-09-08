@@ -1,13 +1,13 @@
+/** @format */
+
 .same-height {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-  }
-  
-  .description-box {
-    max-height: 80px;
-    overflow: auto;
-    text-overflow: ellipsis;
-  }
-  
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.description-box {
+	overflow: auto;
+	text-overflow: ellipsis;
+}

@@ -33,4 +33,23 @@
         FK_Product: number;
         created_at: string;
     }
+
+    export interface Attribute {
+        name: string;
+        description: string;
+    }
+
+    export interface ProductDetail {
+        id: number;
+        name: string;
+        description: string;
+        price: number;
+        category: string;
+        page_information: string;
+        isAvailable: boolean;
+        created_at: string;
+        FK_Branch: number;
+        images: Array<ImageProduct>;
+        attributes: Array<Attribute>;
+    }
   
