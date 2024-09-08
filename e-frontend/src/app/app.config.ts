@@ -8,6 +8,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { Inteceptor } from './interceptors/interceptor';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,5 +20,6 @@ export const appConfig: ApplicationConfig = {
     CookieService,
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: Inteceptor, multi: true },
+    provideCharts(withDefaultRegisterables())
   ],
 };

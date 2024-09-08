@@ -36,7 +36,7 @@ export class MyAccountComponent {
         this.user = res.user;
       },
       error: (err: any) => {
-        console.log('Error:', err);
+        this.user.imageProfile = this.localStorageService.getUserPhoto();
       }
       });
   }

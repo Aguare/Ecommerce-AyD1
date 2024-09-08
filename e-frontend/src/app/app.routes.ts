@@ -10,6 +10,7 @@ import { MyAccountComponent } from './components/user/my-account/my-account.comp
 import { EditProfileComponent } from './components/user/edit-profile/edit-profile.component';
 import { StoreBillingComponent } from './components/admin/store-billing/store-billing.component';
 import { SettingsFormComponent } from './components/admin/company-settings/settings-form/settings-form.component';
+import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'store-config', component: StoreConfigComponent },
   { path: 'store-billing', component: StoreBillingComponent },
   { path: 'company-settings/:name', component: SettingsFormComponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'account/:username', component: MyAccountComponent },
   { 
     path: 'edit', children: [

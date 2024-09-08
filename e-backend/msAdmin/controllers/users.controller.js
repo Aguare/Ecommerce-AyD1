@@ -154,7 +154,7 @@ usersController.getImageProfile = async (req, res) => {
 		const query = `SELECT image_profile FROM user_information WHERE FK_User = ?;`;
 		const resultUserInfo = await connection.query(query, [id]);
 		if (resultUserInfo.length === 0) {
-			return res.status(200).send({ imageProfile: 'img/default/profile.jpg'});
+			return res.status(400).send({ message: 'No se encontró al usuario.' });
 		}
 
 		res.status(200).send({ imageProfile: resultUserInfo[0].image_profile });

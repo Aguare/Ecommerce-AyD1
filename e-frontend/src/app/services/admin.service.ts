@@ -44,12 +44,7 @@ export class AdminService {
   }
 
   getUserImageProfile(id: number) : Observable<any> {
-    return this.http.get(`${this.apiUsers}/user/image/${id}`).pipe(
-      catchError((error) => {
-        console.error('Error al obtener la imagen de perfil:', error);
-        return throwError(() => error);  
-      })
-    );
+    return this.http.get(`${this.apiUsers}/user/image/${id}`)
   }
   
   register = (data: any): Observable<any> => {

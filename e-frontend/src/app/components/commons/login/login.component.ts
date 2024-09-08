@@ -138,19 +138,25 @@ export class LoginComponent {
       password: this.loginForm.get('password')?.value
     };
 
-    this._adminService.login(data).subscribe(
-      (response) => {
-        this._localStorage.setUserId(response.user.id);
-        this._localStorage.setUserName(response.user.username);
+    this._adminService.login(data).subscribe({
+      next: (response) => {
+        console.log(response.token);
         this._cookieService.set('token', response.token);
+        this._localStorage.setUserId(response.user.id || "");
+        this._localStorage.setUserName(response.user.username || "");
         this._router.navigate(['/products/init']);
       },
-      (error) => {
-        console.log(error);
+      error: (error) => {
+        Swal.fire({
+          icon: 'error', title: 'Error', text: error.error.message
+        });
         this.isLoading = false;
-        Swal.fire('Error', 'Ocurrió un error al iniciar sesión', 'error');
+      },
+      complete: () => {
+        this.isLoading = false;
       }
-    );
+    }
+    )
   }
 
   getImgSettings() {
