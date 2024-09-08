@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { LocalStorageService } from '../../../services/local-storage.service';
 
 @Component({
   selector: 'app-navbar-guest',
@@ -15,12 +16,13 @@ export class NavbarGuestComponent {
     navbarActive: boolean = false;
 
     constructor(
-      private _router: Router
+      private _router: Router,
+      private localStorageService: LocalStorageService
     ) { }
 
     ngOnInit() {
       const url = this._router.url;
-      this.showButtonsRegister = url === '/home';
+      this.showButtonsRegister = !this.localStorageService.getUserId() && url !== '/login';
     }
 
     toggleNavbar() {

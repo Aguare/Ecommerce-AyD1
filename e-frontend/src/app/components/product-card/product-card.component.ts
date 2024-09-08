@@ -19,7 +19,7 @@ export class ProductCardComponent {
     
   }
 
-  navigateToProductDetail(product: Product) {
-    this.router.navigate(['/product-detail', product.name]);
+  navigateToProductDetails(product: Product) {
+    this.router.navigate(['/product-details', product.name]);
   }
 }
