@@ -5,11 +5,12 @@ import { CategoryCarrousellComponent } from '../../category-carrousell/category-
 import { ProductCarouselComponent } from '../../product-carousel/product-carousel.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { ImageCarrousellComponent } from "../../image-carrousell/image-carrousell.component";
 
 @Component({
   selector: 'app-product-home',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, CardCarrouselComponent, CategoryCarrousellComponent, MatProgressSpinnerModule],
+  imports: [CommonModule, ImageCarrousellComponent, NavbarComponent, CardCarrouselComponent, CategoryCarrousellComponent, MatProgressSpinnerModule, ImageCarrousellComponent],
   templateUrl: './product-home.component.html',
   styleUrls: ['./product-home.component.scss']
 })

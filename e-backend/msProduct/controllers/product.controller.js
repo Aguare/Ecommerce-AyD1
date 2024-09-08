@@ -13,7 +13,7 @@ productController.getProductsByCategory = async (req, res) => {
 		if (!category) {
 			return res.status(400).send({ message: "La categoria es requerida" });
 		}
-                
+
 		const queryMoney = `
             SELECT pr.id, pr.name, pr.description, pr.price, primg.image_path, c.name as category from product pr
                 JOIN product_image primg ON pr.id = primg.FK_Product
@@ -36,7 +36,7 @@ productController.getProductsWithCategory = async (req, res) => {
 	let connection;
 	try {
 		connection = await getConnection();
-               
+
 		const queryMoney = `
             SELECT pr.id, pr.name, pr.description, pr.price, primg.image_path, c.name as category from product pr
                 JOIN product_image primg ON pr.id = primg.FK_Product
@@ -97,7 +97,7 @@ productController.getProductById = async (req, res) => {
 
 		const queryImages = `
 			SELECT image_path from product_image WHERE FK_Product = ?`;
-		
+
 		const resultImages = await connection.query(queryImages, [id]);
 		resultProduct[0].images = resultImages;
 
@@ -116,6 +116,38 @@ productController.getProductById = async (req, res) => {
 			connection.end();
 		}
 	}
-}
+};
+
+productController.getStockProductById = async (req, res) => {
+	let connection;
+	try {
+		const { id } = req.params;
+		connection = await getConnection();
+
+		if (!id) {
+			return res.status(400).send({ message: "El id es requerido" });
+		}
+
+		const queryProduct = `
+		SELECT b.name AS name, b.address AS address, b.city AS city,
+			(SELECT i2.stock
+				FROM inventory i2
+				WHERE i2.FK_Product = 5
+				AND i2.FK_Branch = b.id
+				ORDER BY i2.id DESC
+				LIMIT 1) AS stock
+		FROM branch b;
+			`;
+
+		const resultProduct = await connection.query(queryProduct, [id]);
+		res.status(200).send(resultProduct[0]);
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+};
 
 module.exports = productController;

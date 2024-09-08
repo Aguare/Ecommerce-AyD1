@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { LocalStorageService } from '../../../services/local-storage.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-navbar-guest',
@@ -17,12 +18,18 @@ export class NavbarGuestComponent {
 
     constructor(
       private _router: Router,
-      private localStorageService: LocalStorageService
+      private _localStorage: LocalStorageService,
+      private _cookieService: CookieService
     ) { }
 
     ngOnInit() {
       const url = this._router.url;
-      this.showButtonsRegister = !this.localStorageService.getUserId() && url !== '/login';
+      this.showButtonsRegister = url === '/home';
+      const userId = this._localStorage.getUserId();
+      const token = this._cookieService.get('token');
+      if (userId && token) {
+        this._router.navigate(['/products/init']);
+      }
     }
 
     toggleNavbar() {
