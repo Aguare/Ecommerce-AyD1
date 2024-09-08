@@ -1,9 +1,9 @@
 /** @format */
 
 const express = require("express");
-const cors = require('cors');
+const cors = require("cors");
 const app = express();
-const path = require('path');
+const path = require("path");
 const router = require("./routes/routes");
 const log4js = require("log4js");
 const logger = log4js.getLogger();

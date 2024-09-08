@@ -23,39 +23,35 @@ controller.verifyToken = async (req, res, next) => {
 		}
 
 		jwtKey = result[0].key_value;
-		jwt.verify(token, jwtKey, async (err, decoded) => {
-			if (err) {
-				if (err.name === "TokenExpiredError") {
-					return res.status(401).send({ message: "El token ha expirado. Por favor, inicia sesión de nuevo." });
-				} else {
-					return res.status(401).send({ message: "Token no generado por JWT" });
-				}
-			}
+		let decoded = { name: "TokenExpiredError" };
+		try {
+			decoded = jwt.verify(token, jwtKey);
+		} catch (error) {
+			return res.status(401).send({ message: "Sesión expirada, vuelva a iniciar sesión", error: error.message });
+		}
 
-			const sql = `SELECT * from user WHERE auth_token = ? AND id = ?`;
-			const result_token = await connec.query(sql, [token, decoded.id]);
+		if (decoded.name === "TokenExpiredError") {
+			return res.status(401).send({ message: "El token ha expirado. Por favor, inicia sesión de nuevo." });
+		}
 
-			if (result_token.length === 0) {
-				return res.status(401).send({ message: "Token no existe" });
-			}
+		const sql = `SELECT * from user WHERE auth_token = ? AND id = ?`;
+		const result_token = await connec.query(sql, [token, decoded.id]);
 
-			const dateNow = new Date();
-			const queryExpired = "SELECT auth_token_expired FROM user WHERE id = ?;";
-			const resultExpired = await connec.query(queryExpired, [decoded.id]);
+		if (result_token.length === 0) {
+			return res.status(401).send({ message: "Token no existe" });
+		}
 
-			if (resultExpired.length === 0) {
-				return res.status(401).send({ message: "Token sin expiración" });
-			}
+		const dateNow = new Date();
+		const timeExpired = new Date(decoded.exp * 1000);
+		
+		if (dateNow > timeExpired) {
+			return res.status(401).send({ message: "El token ha expirado. Por favor, inicia sesión de nuevo." });
+		}
 
-			const expired = new Date(resultExpired[0].auth_token_expired);
-			if (dateNow > expired) {
-				return res.status(401).send({ message: "Token expirado" });
-			}
-			next();
-		});
+		next();
 	} catch (error) {
 		console.log(error);
-		return res.status(401).send({ message: "Error al obtener la información", error: error.message });
+		return res.status(401).send({ message: "Sesión expirada, vuelva a iniciar sesión", error: error.message });
 	} finally {
 		if (connec) {
 			connec.end();
