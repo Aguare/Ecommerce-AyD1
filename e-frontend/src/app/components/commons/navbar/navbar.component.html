@@ -36,7 +36,8 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <a class="navbar-item" *ngIf="isClient">
-          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="shopping_cart"></mat-icon>
+          <mat-icon aria-hidden="false" aria-label="Example home icon"
+          (click)="shopCart()" fontIcon="shopping_cart"></mat-icon>
         </a>
         <div class="navbar-item has-dropdown is-hoverable mr-3">
           <a class="navbar-link">

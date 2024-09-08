@@ -140,7 +140,6 @@ export class LoginComponent {
 
     this._adminService.login(data).subscribe({
       next: (response) => {
-        console.log(response.token);
         this._cookieService.set('token', response.token);
         this._localStorage.setUserId(response.user.id || "");
         this._localStorage.setUserName(response.user.username || "");
@@ -162,7 +161,7 @@ export class LoginComponent {
   getImgSettings() {
     this._imageService.getLogoCompany().subscribe((response) => {
       if (response.data === null || response.data === "") {
-        this.logoUrl = this._imageService.getPort() + 'default/logo.jpg';
+        this.logoUrl = this._imageService.getPort() + '/img/default/logo.jpg';
         return;
       }
       this.logoUrl = this._imageService.getPort() + response.data;
