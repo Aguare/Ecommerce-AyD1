@@ -90,9 +90,9 @@ usersController.updateUserInformation = async (req, res) => {
 		const resultUserInfo = await connection.query(queryUserInfo, [id]);
 		if (resultUserInfo.length === 0) {
 			//Create user information
-			const queryCreateUserInfo = `INSERT INTO user_information (nit, description, image_profile, isPreferCash, FK_User) VALUES (?, ?, ?, ?, ?, ?);`;
+			const queryCreateUserInfo = `INSERT INTO user_information (nit, description, image_profile, isPreferCash, FK_User) VALUES (?, ?, ?, ?, ?);`;
 			await connection.query(queryCreateUserInfo, [nit, description, image, isPreferCash, id]);
-			res.status(200).send({ message: "Información actualizada correctamente." });
+			return res.status(200).send({ message: "Información actualizada correctamente." });
 		}
 
 		// Update user information
@@ -144,10 +144,17 @@ usersController.getImageProfile = async (req, res) => {
 		connection = await getConnection();
 
 		// Check if user exists
+		const queryUser = `SELECT * FROM user WHERE id = ?;`;
+		const resultUser = await connection.query(queryUser, [id]);
+		if (resultUser.length === 0) {
+			return res.status(400).send({ message: "El usuario no existe." });
+		}
+
+		// Check if user information exists
 		const query = `SELECT image_profile FROM user_information WHERE FK_User = ?;`;
 		const resultUserInfo = await connection.query(query, [id]);
 		if (resultUserInfo.length === 0) {
-			return res.status(400).send({ message: "El usuario no existe." });
+			return res.status(400).send({ message: 'No se encontró al usuario.' });
 		}
 
 		res.status(200).send({ imageProfile: resultUserInfo[0].image_profile });

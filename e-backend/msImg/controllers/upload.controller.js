@@ -124,30 +124,34 @@ const saveImageClient = async (req, res) => {
 };
 
 const saveImageAdmin = async (req, res) => {
-	let conn;
-	try {
-		conn = await getConnection();
-		const paths = req.files.map((file) => {
-			return path.join("public", "img", "settings", file.filename);
-		});
+   let conn;
+   try{
+        conn = await getConnection();
+        const paths = req.files.map((file) => {
+            return path.join("img", "settings", file.filename);
+        });
 
-		//Save logo
-		const insertImagesAdmin = "INSERT INTO company_settings (key_name, key_value) VALUES (?,?)";
-		await conn.query(insertImagesAdmin, ["company_img", paths[0]]);
-		res.status(201).send({
-			message: "Image uploaded successfully",
-			data: paths[0],
-		});
-	} catch (e) {
-		console.log(e);
-		res.status(500).send({ message: "Internal server error" });
-	} finally {
-		if (conn) {
-			conn.end();
-		}
-	}
-};
+        // get keyName from body
+        const keyName = req.body.keyName;
 
+        //Save logo
+        const insertImagesAdmin = "UPDATE company_settings SET key_value = ? WHERE key_name = ?";
+        await conn.query(insertImagesAdmin, [paths[0], keyName]);
+        res.status(201).send({
+            message: 'Image uploaded successfully',
+            data: paths[0]
+        });
+    
+   }catch(e){
+        console.log(e);
+        res.status(500).send({message: 'Internal server error'});
+   }finally{
+       if (conn){
+           conn.end();
+       }
+   }
+}
+ 
 const getCompanyLogo = async (req, res) => {
 	let conn;
 	try {
