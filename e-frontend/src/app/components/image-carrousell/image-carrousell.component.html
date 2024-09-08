@@ -1,9 +1,28 @@
-<section id="image-carrousell" class="splide" aria-label="Splide Basic HTML Example">
-  <div class="splide__track">
-    <ul class="splide__list">
-      <li class="splide__slide"><img src="https://png.pngtree.com/thumb_back/fh260/background/20230611/pngtree-wolf-animals-images-wallpaper-for-pc-384x480-image_2916211.jpg" alt=""></li>
-      <li class="splide__slide"><img src="https://img.freepik.com/fotos-premium/imagen-fondo_910766-187.jpg" alt=""></li>
-      <li class="splide__slide"><img src="https://png.pngtree.com/background/20230524/original/pngtree-sad-pictures-for-desktop-hd-backgrounds-picture-image_2705986.jpg" alt=""></li>
-    </ul>
+<section class="section">
+  <div class="container">
+    <div class="columns is-vcentered">
+      <!-- Columna para la imagen grande del carrusel -->
+      <div class="column is-two-thirds">
+        <section id="image-carrousell" class="splide" aria-label="Splide Basic HTML Example">
+          <div class="splide__track">
+            <ul class="splide__list">
+              <li class="splide__slide" *ngFor="let image of images">
+                <img [src]="'http://localhost:3002/img/carrousell'+image.path" [alt]="image.alt">
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <!-- Columna para las dos imágenes más pequeñas -->
+      <div class="column is-one-third">
+        <div class="column">
+          <img src="http://localhost:3002/img/carrousell/carrousell-6.jpg" alt="Image 1" class="small-img">
+        </div>
+        <div class="column">
+          <img src="http://localhost:3002/img/carrousell/carrousell-7.jpg" alt="Image 2" class="small-img">
+        </div>
+      </div>
+    </div>
   </div>
 </section>

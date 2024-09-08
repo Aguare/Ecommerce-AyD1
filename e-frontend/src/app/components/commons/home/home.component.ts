@@ -4,12 +4,13 @@ import { SimpleCarouselComponent } from '../../simple-carousel/simple-carousel.c
 import { NavbarGuestComponent } from '../navbar-guest/navbar-guest.component';
 import { CardCarrouselComponent } from '../../card-carrousel/card-carrousel.component';
 import { CategoryCarrousellComponent } from "../../category-carrousell/category-carrousell.component";
+import { ImageCarrousellComponent } from "../../image-carrousell/image-carrousell.component";
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [SimpleCarouselComponent, NavbarGuestComponent, CardCarrouselComponent, CategoryCarrousellComponent],
+  imports: [ImageCarrousellComponent, SimpleCarouselComponent, NavbarGuestComponent, CardCarrouselComponent, CategoryCarrousellComponent, ImageCarrousellComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
