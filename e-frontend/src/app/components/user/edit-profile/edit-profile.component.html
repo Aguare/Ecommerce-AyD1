@@ -1,77 +1,77 @@
 <app-navbar></app-navbar>
 
-<div class="container is-centered card mt-6 p-3">
+<div class="container card mt-6 p-3">
   <h2 class="m-3">Editar Perfil de Usuario</h2>
-    <div class="m-5">
+  <div class="columns mt-3">
+    <div class="column is-half">
       <form [formGroup]="editProfileForm" (ngSubmit)="updateProfile()">
-      
-        <div class="field m-5">
+        <div class="field">
           <label class="label">NIT</label>
           <div class="control">
-            <input formControlName="nit" class="input" type="text" name="nit" placeholder="Número de Identificación Tributaria">
-            <p class="help is-danger">
+            <input formControlName="nit" class="input" type="text" placeholder="Número de Identificación Tributaria">
+            <p class="help is-danger" *ngIf="editProfileForm.controls['nit'].invalid && editProfileForm.controls['nit'].touched">
               Este campo es requerido.
             </p>
           </div>
         </div>
-      
-        <div class="field m-5">
+
+        <div class="field">
           <label class="label">Subir Foto de perfil</label>
           <div class="control">
             <div class="file has-name">
               <label class="file-label">
-                <input
-                  class="file-input"
-                  type="file"
-                  name="imagen"
-                  accept="image/*"
-                  (change)="onFileSelected($event)"
-                />
+                <input class="file-input" type="file" accept="image/*" (change)="onFileSelected($event)">
                 <span class="file-cta">
                   <span class="file-icon">
                     <i class="fas fa-upload"></i>
                   </span>
-                  <span class="file-label"> Selecciona un archivo… </span>
+                  <span class="file-label">Selecciona un archivo…</span>
                 </span>
-                <span class="file-name"> {{editProfileForm.value.image.name ? editProfileForm.value.image.name : 'Foto de perfil...' }} </span>
+                <span class="file-name">{{ selectedFileName || 'Foto de perfil...' }}</span>
               </label>
             </div>
           </div>
-          <p class="help is-danger">
+          <p class="help is-danger" *ngIf="editProfileForm.controls['image'].invalid && editProfileForm.controls['image'].touched">
             Debes subir una imagen.
           </p>
         </div>
-      
-        <div class="field m-5">
+
+        <div class="field">
           <label class="label">Preferencia de Pago</label>
           <div class="control">
             <label class="radio mr-5">
-              <input formControlName="isPreferCash" type="radio" [value]="1">
-              Efectivo
+              <input formControlName="isPreferCash" type="radio" [value]="1"> Efectivo
             </label>
             <label class="radio">
-              <input formControlName="isPreferCash" type="radio" [value]="0">
-              Otro
+              <input formControlName="isPreferCash" type="radio" [value]="0"> Otro
             </label>
           </div>
         </div>
-      
-        <div class="field m-5">
-        <label class="label">Descripción</label>
+
+        <div class="field">
+          <label class="label">Descripción</label>
           <div class="control">
-            <textarea formControlName="description" class="textarea" name="description" placeholder="Descripción del perfil"></textarea>
+            <textarea formControlName="description" class="textarea" placeholder="Descripción del perfil"></textarea>
           </div>
         </div>
-      
-        <div class="field is-grouped m-5">
+
+        <div class="field is-grouped mt-3">
           <div class="control">
-            <button [disabled]="this.editProfileForm.invalid" class="button is-primary" type="submit">Guardar Cambios</button>
+            <button [disabled]="editProfileForm.invalid" class="button is-primary" type="submit">Guardar Cambios</button>
           </div>
           <div class="control">
-            <button (click)="goBack()" routerLinkActive="router-link-active"  class="button is-warn" type="reset">Volver</button>
+            <button (click)="goBack()" class="button is-warning" type="reset">Volver</button>
           </div>
         </div>
       </form>
     </div>
-  
+
+    <div class="column is-half has-text-centered">
+      <h2 class="title is-3">Previsualización de Imagen</h2>
+      <figure class="image is-inline-block">
+        <img *ngIf="imagePreviewUrl" [src]="imagePreviewUrl" alt="Profile Image" class="is-rounded">
+        <img *ngIf="!imagePreviewUrl" src="assets/default-profile.png" alt="Default Image" class="is-rounded">
+      </figure>
+    </div>
+  </div>
 </div>

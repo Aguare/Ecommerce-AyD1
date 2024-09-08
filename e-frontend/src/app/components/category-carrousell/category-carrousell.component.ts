@@ -55,7 +55,7 @@ export class CategoryCarrousellComponent implements AfterViewInit {
             type: 'loop',
             perPage: 5,
             perMove: 1,
-            gap: '0',
+            gap: '0px',
             padding: {
               right: '0',
               left: '0',
