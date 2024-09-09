@@ -69,7 +69,7 @@ const saveImageProduct = async (req, res) => {
 	try {
 		conn = await getConnection();
 		const paths = req.files.map((file) => {
-			return path.join("public", "img", "products", file.filename);
+			return path.join("img", "products", file.filename);
 		});
 		const insertImagesProduct = "INSERT INTO product_image (image_path, FK_Product, created_at) VALUES (?,?,?)";
 

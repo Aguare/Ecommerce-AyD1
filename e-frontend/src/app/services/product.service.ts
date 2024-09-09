@@ -28,6 +28,10 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.apiProduct}/getProductsWithCategory`);
   }
   
+  getProducts(){
+    return this.http.get<Product[]>(`${this.apiProduct}/getProducts`);
+  }
+  
   getCategories(){
     return this.http.get<Category[]>(`${this.apiCategories}/getCategories`);
   }
