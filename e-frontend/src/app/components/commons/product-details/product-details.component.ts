@@ -13,6 +13,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import Swal from 'sweetalert2';
 import { error } from 'console';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-product-details',
@@ -24,7 +25,8 @@ import { MatIconModule } from '@angular/material/icon';
     ImagePipe, 
     ImageCarrousellComponent, 
     MatTooltipModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss'
@@ -47,6 +49,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
     images:  [''],
     attributes: [{name: '', description: ''}]
   };
+
+  isLoading: boolean = true;
 
   stockProducts: StockProduct[] | null = null;
   currency: string = "$";
@@ -77,7 +81,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
 
     this.productService.getProductById(productId).subscribe((product: ProductDetail) => {
       this.productDetail = product;
-      console.log(product);
+      console.log(product)
     });
 
     this.productService.getStockProductById(productId).subscribe((stock: StockProduct[]) => {
@@ -85,20 +89,18 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
       this.currentBranchAvailable = stock.some((stockProduct: StockProduct) => stockProduct.id === this.currentBranchId);
     });
 
-    this.productService.updateViews.subscribe(() => {
-      this.ngOnInit();
-    });
 
-    this.productService.updateViewsLogged.subscribe(() => {
-      this.ngOnInit();
-    });
+    setTimeout(() => {
+      this.isLoading = false;
+    } , 300);
 
   }
 
   ngAfterViewInit() {
     // creating splide carrousel
     setTimeout(() => {
-      if (typeof document !== 'undefined' && this.productDetail.images.length > 1) {
+      console.log('length', this.productDetail.images.length);
+      if (typeof document !== 'undefined' && this.productDetail.images.length > 1 && !this.isLoading) {
         const splideId = '#product-detail-carrousell';
         const splide = new Splide(splideId, {
           type: 'loop',
@@ -126,7 +128,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
         showConfirmButton: false,
         timer: 1500
       });
-      this.ngOnInit();
+      window.location.reload();
     }, error => {
       Swal.fire({
         title: 'Error al agregar el producto al carrito',
@@ -143,7 +145,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
     this.localStorageService.setBranchName(branch.name);
     this.localStorageService.setBranchAddress(branch.address);
     this.currentBranchId = branch.id;
-    this.ngOnInit();
+    window.location.reload();
 
   }
 

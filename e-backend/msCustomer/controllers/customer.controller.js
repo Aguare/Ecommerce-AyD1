@@ -106,7 +106,7 @@ userController.myCart = async (req, res) => {
 		const data = {
 			cart: resultCart,
 			info: resultCartItems,
-			images: resultImagePath,
+			images: resultImagePath[0],
 		};
 
 		return res.status(200).send({ message: "Carrito obtenido correctamente", data: data });
@@ -472,5 +472,38 @@ const checkStockInBranch = async (conn, id_product, id_branch, 	quantity, oldQua
 
 	return resultProduct[0].stock >= quantity + oldQuantity; 
 };
+
+userController.getNumberInCart = async (req, res) => {
+	let conn;
+	try {
+		const { id } = req.params;
+		console.log('params', req.params);
+
+		if (!id) {
+			return res.status(400).send({ message: "Faltan campos por llenar" });
+		}
+
+		conn = await getConnection();
+
+		const queryCart = `SELECT COUNT(*) AS number FROM shop_cart WHERE Fk_User = ?;`;
+		const resultCart = await conn.query(queryCart, [id]);
+		if (resultCart.length === 0) {
+			return res.status(400).send({ message: "El carrito esta vacio" });
+		}
+
+		return res.status(200).send({ message: "Carrito obtenido correctamente", number: resultCart[0].number.toString() });
+	} catch (error) {
+		console.log(error);
+		console.log(error.message);
+		res.status(400).send({
+			message: "Error al obtener el carrito",
+			error: error.message,
+		});
+	} finally {
+		if (conn) {
+			conn.end();
+		}
+	}
+}
 
 module.exports = userController;

@@ -128,5 +128,10 @@ export class ProductService {
   getBranchesWithProduct() {
     return this.http.get<any>(`${this.apiProduct}/getBranchesWithProduct`);
   }
+
+  getNumberInCart(): Observable<any> {
+    const id_user = this.localStorageService.getUserId();
+    return this.http.get<any>(`${this.apiCustomer}/getNumberInCart/${id_user}`);
+  }
 }
 

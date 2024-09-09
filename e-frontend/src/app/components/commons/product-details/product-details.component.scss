@@ -1,11 +1,32 @@
 .splide__slide img {
     width: 20%; /* Asegura que la imagen use todo el ancho del contenedor */
     height: auto; /* Mantiene la proporción de la imagen, ajustando la altura automáticamente */
-    object-fit: fill; /* Asegura que la imagen se ajuste dentro del contenedor sin recortarse */
+    object-fit: cover; /* Asegura que la imagen se ajuste dentro del contenedor sin recortarse */
   }
   
 
 .image-container {
     width: 30%;
     height: auto;
+}
+
+#product-detail-carrousell {
+  .splide__slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img.carousel-image {
+      width: 100%; // Asegura que la imagen ocupe todo el ancho disponible
+      height: auto; // Mantiene la proporción de la imagen
+      max-width: 100%; // Prevenir que exceda el contenedor
+      object-fit: contain; // Hace que la imagen se ajuste sin recortes
+      border-radius: 8px; // Opcional: Si quieres bordes redondeados en las imágenes
+    }
+  }
+
+  .splide__track {
+    overflow: hidden;
+    border-radius: 8px; // Opcional: Si deseas bordes redondeados en el contenedor
+  }
 }

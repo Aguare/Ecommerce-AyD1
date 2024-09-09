@@ -5,108 +5,121 @@
   <app-navbar-guest (update)="updateComponent()"></app-navbar-guest>
 }
 
-<div class="container box image-container m-5 mx-auto">
-  <!-- check if images array is greater than 1 -->
-  @if(productDetail.images.length > 1) {
-    <div class="column is-two-thirds mx-auto">
-      <section id="product-detail-carrousell" class="splide" aria-label="Splide Basic HTML Example">
-        <div class="splide__track">
-          <ul class="splide__list">
-            <li class="splide__slide" *ngFor="let image of productDetail.images">
-              <img [src]="image | imagePipe" [alt]="'image for' + image">
-            </li>
-          </ul>
-        </div>
-      </section>
+@if(isLoading) {
+  <div class="container box columns">
+    <div class="column is-centered">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      <p>Verificando disponibilidad</p>
     </div>
-  }
-  @else {
-    <figure class="image is-4by3 mx-auto">
-      <img [src]="productDetail.images[0] | imagePipe" alt="image for product">
-    </figure>
-  }
-</div>
-
-<div class="container m-5 mx-auto">
-  <div class="columns">
-    <div class="column">
-      <div class="box is-flex is-flex-direction-column is-justify-content-space-between">
-        <div>
-          <div class="media-content">
-            <h3 class="title is-4">{{productDetail.name}}</h3>
-            <p class="subtitle is-6">{{productDetail.description}}</p>
-            <ul>
-              <li><strong>Categoría:</strong> {{ productDetail.category }} </li>
+  </div>
+}
+@if(!isLoading) {
+  <div class="container box image-container m-5 mx-auto">
+    <!-- check if images array is greater than 1 -->
+    @if(productDetail.images.length > 1) {
+      <div class="column mx-auto">
+        <section id="product-detail-carrousell" class="splide" aria-label="Product Images Carousel">
+          <div class="splide__track">
+            <ul class="splide__list">
+              <li class="splide__slide" *ngFor="let image of productDetail.images">
+                <div>
+                  <img class="carousel-image" [src]="image | imagePipe" [alt]="'image for ' + image">
+                </div>
+              </li>
             </ul>
           </div>
-
-          <div class="content has-text-centered">
-            <p class="has-text-weight-bold">Precio: <span class="has-text-danger is-size-4">
-              {{currency}} {{productDetail.price}}</span></p>
+        </section>
+      </div>
+      
+    }
+    @else {
+      <figure class="image is-4by3 mx-auto">
+        <img [src]="productDetail.images[0] | imagePipe" alt="image for product">
+      </figure>
+    }
+  </div>
+  
+  <div class="container m-5 mx-auto">
+    <div class="columns">
+      <div class="column">
+        <div class="box is-flex is-flex-direction-column is-justify-content-space-between">
+          <div>
+            <div class="media-content">
+              <h3 class="title is-4">{{productDetail.name}}</h3>
+              <p class="subtitle is-6">{{productDetail.description}}</p>
+              <ul>
+                <li><strong>Categoría:</strong> {{ productDetail.category }} </li>
+              </ul>
+            </div>
+  
+            <div class="content has-text-centered">
+              <p class="has-text-weight-bold">Precio: <span class="has-text-danger is-size-4">
+                {{currency}} {{productDetail.price}}</span></p>
+            </div>
           </div>
-        </div>
-
-        <div class="buttons is-centered">
-          @if(isLogged) {
-            @if(productDetail.isAvailable && currentBranchAvailable) {
-              <button class="button is-primary is-fullwidth" (click)="addToCart(productDetail)">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add_shopping_cart"></mat-icon>
-                Agregar al Carrito
-              </button>
+  
+          <div class="buttons is-centered">
+            @if(isLogged) {
+              @if(productDetail.isAvailable && currentBranchAvailable) {
+                <button class="button is-primary is-fullwidth" (click)="addToCart(productDetail)">
+                  <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add_shopping_cart"></mat-icon>
+                  Agregar al Carrito
+                </button>
+              }
+              @else {
+                <button disabled class="button is-primary" disabled>Producto No disponible</button>
+              }
             }
             @else {
-              <button disabled class="button is-primary" disabled>Producto No disponible</button>
+              <a class="button is-light" href="/login">Iniciar Sesión</a>
+            }
+          </div>
+        </div>
+        <div class="box mt-5">
+          <h4 class="title is-5">Características del Producto</h4>
+          @if(productDetail.attributes.length > 0) {
+            <div style="max-height: 80%; overflow-y: scroll">
+              @for(attribute of productDetail.attributes; track $index) {
+                <p class="title is-6">{{attribute.name}}</p>
+                <p class="subtitle is-6">{{attribute.description}}</p>
+              }
+            </div>
+          } 
+          @else {
+            <p>No hay características registradas para este producto.</p>
+          }
+        </div>
+      </div>
+      <div class="column box">
+        <h4 class="title has-text-centered mb-3">Disponibilidad en Sucursales</h4>
+        <div style="max-height: 80%; overflow-y: scroll">
+          @if(stockProducts !== null && stockProducts.length > 0) {
+            @for(stockProduct of stockProducts; track $index) {
+              <div class="media p-3">
+                <div 
+                (click)="changeBranchId(stockProduct)" 
+                class="button media-content columns is-justify-content-space-around"
+                
+                matTooltip="Cambiar a esta sucursal"
+                >
+                  <div>
+                    <p class="title is-6">{{stockProduct.name}}</p>
+                    <p class="subtitle is-6">{{stockProduct.address}}</p>
+                  </div>
+                  <div>
+                    <p class="subtitle is-6">{{stockProduct.stock | number: '1.0-0'}} unidad(es)</p>
+                    <p *ngIf="stockProduct.id === currentBranchId" class="subtitle is-6 has-text-success">Sucursal Actual</p>
+                  </div>
+                </div>
+              </div>
             }
           }
           @else {
-            <a class="button is-light" href="/login">Iniciar Sesión</a>
+            <p>No hay sucursales registradas para este producto.</p>
           }
         </div>
       </div>
-      <div class="box mt-5">
-        <h4 class="title is-5">Características del Producto</h4>
-        @if(productDetail.attributes.length > 0) {
-          <div style="max-height: 80%; overflow-y: scroll">
-            @for(attribute of productDetail.attributes; track $index) {
-              <p class="title is-6">{{attribute.name}}</p>
-              <p class="subtitle is-6">{{attribute.description}}</p>
-            }
-          </div>
-        } 
-        @else {
-          <p>No hay características registradas para este producto.</p>
-        }
-      </div>
+      
     </div>
-    <div class="column box">
-      <h4 class="title has-text-centered mb-3">Disponibilidad en Sucursales</h4>
-      <div style="max-height: 80%; overflow-y: scroll">
-        @if(stockProducts !== null && stockProducts.length > 0) {
-          @for(stockProduct of stockProducts; track $index) {
-            <div class="media p-3">
-              <div 
-              (click)="changeBranchId(stockProduct)" 
-              class="button media-content columns is-justify-content-space-around"
-              
-              matTooltip="Cambiar a esta sucursal"
-              >
-                <div>
-                  <p class="title is-6">{{stockProduct.name}}</p>
-                  <p class="subtitle is-6">{{stockProduct.address}}</p>
-                </div>
-                <div>
-                  <p class="subtitle is-6">{{stockProduct.stock | number: '1.0-0'}} unidad(es)</p>
-                  <p *ngIf="stockProduct.id === currentBranchId" class="subtitle is-6 has-text-success">Sucursal Actual</p>
-                </div>
-              </div>
-            </div>
-          }
-        }
-        @else {
-          <p>No hay sucursales registradas para este producto.</p>
-        }
-      </div>
-    </div>
-    
   </div>
-</div>
+}

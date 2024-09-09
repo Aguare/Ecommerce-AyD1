@@ -41,7 +41,7 @@
           {{branchName}}
         </a>
         <a (click)="shopCart()" class="navbar-item" *ngIf="isClient">
-          
+          <span title="Badge top right" class="badge is-danger">{{numberInCart}}</span>
           <mat-icon aria-hidden="false" aria-label="Example home icon"
            fontIcon="shopping_cart"></mat-icon>
         </a>
