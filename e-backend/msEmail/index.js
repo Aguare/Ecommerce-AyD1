@@ -1,4 +1,6 @@
-const PORT = 3001;
+/** @format */
+
+const PORT = 3005;
 
 const express = require("express");
 const app = express();
@@ -12,18 +14,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header(
-	  "Access-Control-Allow-Headers",
-	  "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Content-Length, Content-Disposition, Accept, Access-Control-Allow-Request-Method"
+		"Access-Control-Allow-Headers",
+		"Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Content-Length, Content-Disposition, Accept, Access-Control-Allow-Request-Method"
 	);
 	res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
 	res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
-  
+
 	if (req.method === "OPTIONS") {
 		return res.sendStatus(200);
 	} else {
 		next();
 	}
-  });
+});
 
 app.use(router);
 

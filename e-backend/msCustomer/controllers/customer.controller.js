@@ -3,6 +3,8 @@
 const pbkdf2 = require("pbkdf2");
 const getConnection = require("../../db/db.js");
 require("dotenv").config();
+const emailController = require("../../msEmail/controllers/email.controller.js");
+
 const userController = {};
 /**
  * Sign up a new customer
@@ -44,6 +46,15 @@ userController.signUp = async (req, res) => {
 
 		const insertUserQuery = "INSERT INTO user (email, username, password) VALUE (?, ?, ?)";
 		const result = await conn.query(insertUserQuery, [email, username, encryptedPassword]);
+
+		const insertUserInformationQuery = "INSERT INTO user_information (Fk_User) VALUE (?)";
+		await conn.query(insertUserInformationQuery, [result.insertId]);
+
+		await emailController.sendVerificationEmail(
+			{ body: { email: email, isObject: true } }, 
+			res
+		);
+
 		return res.status(200).send({ message: "Usuario registrado correctamente", data: result.insertId.toString() });
 	} catch (error) {
 		console.log(error);
@@ -54,7 +65,7 @@ userController.signUp = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };

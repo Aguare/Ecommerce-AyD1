@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ export class LocalStorageService {
   COMPANY_LOGO = 'company_logo';
   COMPANY_NAME = 'company_name';
 
-  constructor() { }
+  constructor(
+    private _cookieService: CookieService
+  ) { }
 
   private isLocalStorageAvailable(): boolean {
     return typeof window !== 'undefined' && !!window.localStorage;
@@ -41,6 +44,10 @@ export class LocalStorageService {
     if (this.isLocalStorageAvailable()) {
       localStorage.clear();
     }
+  }
+
+  getToken(): string {
+    return this._cookieService.get('token');
   }
 
   getUserId(): number {

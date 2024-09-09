@@ -13,6 +13,7 @@ import { Router } from "@angular/router";
 import { CookieService } from 'ngx-cookie-service';
 import { ImageService } from "../../../services/image.service";
 import { LocalStorageService } from "../../../services/local-storage.service";
+import { EmailService } from "../../../services/email.service";
 
 @Component({
   selector: "app-login",
@@ -44,7 +45,8 @@ export class LoginComponent {
     private _imageService: ImageService,
     private _router: Router,
     private _cookieService: CookieService,
-    private _localStorage: LocalStorageService
+    private _localStorage: LocalStorageService,
+    private _emailService: EmailService
   ) {
     this.loginForm = this.fb.group({
       usernameOrEmail: ["", Validators.required],
@@ -140,15 +142,51 @@ export class LoginComponent {
 
     this._adminService.login(data).subscribe({
       next: (response) => {
-        this._cookieService.set('token', response.token);
+        this._cookieService.set('token', response.token, 1);
         this._localStorage.setUserId(response.user.id || "");
         this._localStorage.setUserName(response.user.username || "");
         this._router.navigate(['/products/init']);
       },
       error: (error) => {
-        Swal.fire({
-          icon: 'error', title: 'Error', text: error.error.message
-        });
+        if (error.error.isNotVerified) {
+          Swal.fire({
+            title: 'Error',
+            text: 'Usuario no verificado',
+            icon: 'error',
+            confirmButtonText: 'Reenviar verificación'
+          }).then((result) => {
+            if (result.isConfirmed) {
+
+              const data = {
+                email: this.loginForm.get('usernameOrEmail')?.value,
+                isLogin: true
+              };
+
+              this._emailService.sendVerificationEmail(data).subscribe({
+                next: (res: any) => {
+                  Swal.fire({
+                    title: 'Correo de verificación reenviado',
+                    text: 'Por favor, verifica tu correo para poder acceder',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                  });
+                },
+                error: (err: any) => {
+                  Swal.fire({
+                    title: 'Error',
+                    text: 'No se pudo reenviar el correo de verificación' + err.error.message,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                  });
+                }
+              });
+            }
+          });
+        } else {
+          Swal.fire({
+            icon: 'error', title: 'Error', text: error.error.message
+          });
+        }
         this.isLoading = false;
       },
       complete: () => {

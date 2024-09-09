@@ -50,16 +50,11 @@ export class NavbarComponent implements OnInit {
     this.userId = this._localStorage.getUserId();
     this.userName = this._localStorage.getUserName();
 
-    // Function to get pages of user by his id
     this.adminService.getPages(this.userId).subscribe({
       next: (res: PagesResponse) => {
         this.pages = res.result;
         this.pagesNavBar = this.groupPagesByModule(this.pages);
-      },
-      error: (err: any) => {
-        console.log('Error:', err);
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Error al obtener las páginas' });
-      },
+      }
     });
 
 
