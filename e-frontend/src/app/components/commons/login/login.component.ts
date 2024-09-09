@@ -203,6 +203,7 @@ export class LoginComponent {
         return;
       }
       this.logoUrl = this._imageService.getPort() + response.data;
+      this._localStorage.setCompanyLogo(response.data);
     });
   }
 }

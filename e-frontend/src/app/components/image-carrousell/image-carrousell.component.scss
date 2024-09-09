@@ -1,0 +1,41 @@
+img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.splide {
+    width: 100%;
+}
+
+/* Bordes redondeados en las imágenes del carrusel */
+.splide__slide img {
+    border-radius: 20px;
+}
+
+/* Bordes redondeados y separación para las imágenes pequeñas */
+.small-img {
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Asegurar que las columnas estén centradas verticalmente */
+.columns.is-vcentered {
+    align-items: center;
+}
+
+/* Asegurar que las columnas tengan la misma altura */
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Asegurar que ambas secciones estén niveladas */
+.section {
+    padding: 2rem 0;
+}
+
+.columns .column {
+    padding: 0.5rem;
+}

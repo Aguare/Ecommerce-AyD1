@@ -117,7 +117,7 @@ userController.myCart = async (req, res) => {
 		const data = {
 			cart: resultCart,
 			info: resultCartItems,
-			images: resultImagePath,
+			images: resultImagePath[0],
 		};
 
 		return res.status(200).send({ message: "Carrito obtenido correctamente", data: data });
@@ -397,4 +397,124 @@ userController.deleteProductCart = async (req, res) => {
 		}
 	}
 };
+
+/**
+ * Add a product to the cart or update the quantity
+ * - The product is added by the user id and product id
+ */
+userController.addProductCart = async (req, res) => {
+	let conn;
+	try {
+		const { id_user, id_product, id_branch, quantity } = req.body;
+		if (!id_user || !quantity || !id_product) {
+			return res.status(400).send({ message: "Faltan campos por llenar" });
+		}
+
+		conn = await getConnection();
+
+		const queryCart = `SELECT * FROM shop_cart WHERE Fk_User = ? AND FK_Product = ?`;
+		const resultCart = await conn.query(queryCart, [id_user, id_product]);
+
+		if (resultCart.length === 0) {
+			const insertCart = `INSERT INTO shop_cart (quantity, Fk_User, FK_Product, FK_Branch) VALUE (?, ?, ?, ?);`;
+			const resultInsert = await conn.query(insertCart, [quantity, id_user, id_product, id_branch]);
+			return res.status(200).send({ message: "Producto agregado correctamente", data: resultInsert.toString() });
+		} else if (resultCart[0].FK_Branch !== id_branch) {
+
+			// check if the branch have enough stock in the inventory
+			const stock = await checkStockInBranch(conn, id_product, id_branch, quantity, resultCart[0].quantity);
+
+			if (!stock) {
+				return res.status(400).send({ message: "No hay suficiente stock en la sucursal" });
+			}
+
+			// update the branch of the product
+			const updateBranch = `UPDATE shop_cart SET FK_Branch = ?, quantity = quantity + ? WHERE Fk_User = ? AND FK_Product = ?;`;
+			const resultUpdateBranch = await conn.query(updateBranch, [id_branch, quantity, id_user, id_product]);
+			return res
+				.status(200)
+				.send({ message: "Producto actualizado correctamente", data: resultUpdateBranch.toString() });
+		}
+
+		// check if the branch have enough stock in the inventory
+		const stock = await checkStockInBranch(conn, id_product, id_branch, quantity, resultCart[0].quantity);
+
+		if (!stock) {
+			return res.status(400).send({ message: "No hay suficiente stock en la sucursal" });
+		}
+		const updateCart = `UPDATE shop_cart SET quantity = quantity + ? WHERE Fk_User = ? AND FK_Product = ? AND FK_Branch = ?;`;
+		const resultUpdate = await conn.query(updateCart, [quantity, id_user, id_product, id_branch]);
+
+		return res.status(200).send({ message: "Producto actualizado correctamente", data: resultUpdate.toString() });
+	} catch (error) {
+		res.status(400).send({
+			message: "Error al agregar el producto",
+			error: error.message,
+		});
+	} finally {
+		if (conn) {
+			conn.end();
+		}
+	}
+};
+
+/**
+ * Check if the branch have enough stock in the inventory
+ * - The stock is checked by the product id and branch id
+ * @returns {Boolean} - True if the branch have enough stock, false otherwise
+ */
+const checkStockInBranch = async (conn, id_product, id_branch, 	quantity, oldQuantity) => {
+	// check if the branch have enough stock in the inventory
+
+	const queryProduct = ` SELECT b.name, 
+	(SELECT i2.stock 
+	 FROM inventory i2 
+	 WHERE i2.FK_Product = ? 
+	   AND i2.FK_Branch = ? 
+	 ORDER BY i2.id DESC 
+	 LIMIT 1) AS stock
+	FROM branch b
+	WHERE b.id = ?`;
+
+	const resultProduct = await conn.query(queryProduct, [id_product, id_branch, id_branch]);
+	if (resultProduct.length === 0) {
+		return false;
+	}
+
+	return resultProduct[0].stock >= quantity + oldQuantity; 
+};
+
+userController.getNumberInCart = async (req, res) => {
+	let conn;
+	try {
+		const { id } = req.params;
+		console.log('params', req.params);
+
+		if (!id) {
+			return res.status(400).send({ message: "Faltan campos por llenar" });
+		}
+
+		conn = await getConnection();
+
+		const queryCart = `SELECT COUNT(*) AS number FROM shop_cart WHERE Fk_User = ?;`;
+		const resultCart = await conn.query(queryCart, [id]);
+		if (resultCart.length === 0) {
+			return res.status(400).send({ message: "El carrito esta vacio" });
+		}
+
+		return res.status(200).send({ message: "Carrito obtenido correctamente", number: resultCart[0].number.toString() });
+	} catch (error) {
+		console.log(error);
+		console.log(error.message);
+		res.status(400).send({
+			message: "Error al obtener el carrito",
+			error: error.message,
+		});
+	} finally {
+		if (conn) {
+			conn.end();
+		}
+	}
+}
+
 module.exports = userController;

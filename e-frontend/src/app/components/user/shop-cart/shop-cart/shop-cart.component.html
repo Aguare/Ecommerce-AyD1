@@ -20,9 +20,9 @@
             <div *ngFor="let product of myCart; let i = index">
               <div class="columns is-mobile cart-item">
                 <div class="column is-3-mobile is-2-tablet">
-                    <figure class="image is-64x64">
-                      <img [src]="getImageProduct(product.FK_Product)" alt="Imagen del producto {{ product.FK_Product }}">
-                    </figure>
+                  <figure class="image product-image">
+                    <img [src]="getImageProduct(product.FK_Product)" alt="Imagen del producto {{ product.FK_Product }}">
+                  </figure>
                   </div>                  
                 <div class="column is-6-mobile is-7-tablet" >
                   <p><strong>Producto: {{ getNameProduct(product.FK_Product) }}</strong></p>
