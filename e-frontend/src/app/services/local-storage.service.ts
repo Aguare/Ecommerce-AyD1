@@ -117,7 +117,7 @@ export class LocalStorageService {
   }
 
   setCurrency(currency: string): void {
-    this.setItem(this.CURRENCY, currency);
+    this.setItem('currency', currency);
   }
 
   getCurrency(): string {

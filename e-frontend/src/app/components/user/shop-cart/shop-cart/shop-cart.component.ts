@@ -9,6 +9,7 @@ import { ImageService } from '../../../../services/image.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { CartItem, Product, CartResponse, ImageProduct } from '../../../../interfaces/index';
+import { LocalStorageService } from '../../../../services/local-storage.service';
 
 @Component({
   selector: 'app-shop-cart',
@@ -26,20 +27,23 @@ export class ShopCartComponent implements OnInit {
   public isLoading: boolean = true;
   public deliveryOptions: string[] = ['online', 'store'];
 
-  public deliveryOption: string = 'online';
+  public deliveryOption: string = 'store';
   public stores: any[] = []; 
-  public selectedStore: string | null = null; 
+  public selectedStore: string | null = ''; 
   public productStock: { [productId: number]: number } = {};
   public productOutOfStock: { [productId: number]: boolean } = {}; 
+  public isUserChangingStore: boolean = false;
 
   constructor(
     private productService: ProductService,
     private imageService: ImageService,
-    private _router: Router
+    private _router: Router,
+    private _localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
     this.getMyCart();
+    this.getBranchSelected();
   }
 
   getMyCart(): void {
@@ -58,6 +62,15 @@ export class ShopCartComponent implements OnInit {
     });
   }
 
+  getBranchSelected(): void {
+    if(this._localStorageService.getBranchId() !== null){
+      this.changeStore(this._localStorageService.getBranchId().toString());
+    }else{
+      this.selectedStore = "2";
+      this.changeStore(this.selectedStore.toString());
+    }
+  }
+
 
   setDeliveryOption(option: string): void {
     this.deliveryOption = option;
@@ -65,6 +78,10 @@ export class ShopCartComponent implements OnInit {
       this.selectedStore = null;
       this.validateStockOnline();
     }else{
+      this.selectedStore = this.stores[0].id;
+      if(this.selectedStore !== null){
+        this.changeStore(this.selectedStore);
+      }
       Swal.fire('¡Listo!', 'Escoge un store para ver la existencia de tus productos', 'success');
     }
     
@@ -200,7 +217,7 @@ export class ShopCartComponent implements OnInit {
   deleteCart(): void {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: "¡No podrás revertir esto!",
+      text: "¡Se eliminara tu carrito, No podrás revertir esto!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -215,35 +232,63 @@ export class ShopCartComponent implements OnInit {
       }
     });
   }
+  
+  changeStoreUser(selectedStoreId: string): void {
+      this.isUserChangingStore = true;
+      this.changeStore(selectedStoreId);
+  }
+
 
   changeStore(selectedStoreId: string): void {
-    this.selectedStore = selectedStoreId;
+    if(!this.isUserChangingStore) return;
+    this.isUserChangingStore = false;
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡Si cambias de sucursal, se eliminara tu carrito actual y No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cambiarlo!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.selectedStore = selectedStoreId;
 
-    this.productStock = {};
-    this.productOutOfStock = {};
+        this.productStock = {};
+        this.productOutOfStock = {};
 
-    this.myCart.forEach((product, index) => {
-      this.productService.validateStock(product.FK_Product, parseInt(selectedStoreId)).subscribe((data: any) => {
-        if (data && data.data !== undefined && data.data.length > 0) {
-          const stockInfo = data.data[0]; 
-    
-          if (stockInfo.stock === null) {
-            this.productStock[product.FK_Product] = 0; 
-          } else {
-            this.productStock[product.FK_Product] = parseFloat(stockInfo.stock); 
-          }
-    
-          if (product.quantity > this.productStock[product.FK_Product]) {
-            this.productOutOfStock[product.FK_Product] = true; 
-          } else {
-
-            this.productOutOfStock[product.FK_Product] = false; 
-          }
-        } else {
-          this.productOutOfStock[product.FK_Product] = true; 
-        }
-      });
-    });    
+        this.myCart.forEach((product, index) => {
+          this.productService.validateStock(product.FK_Product, parseInt(selectedStoreId)).subscribe((data: any) => {
+            if (data && data.data !== undefined && data.data.length > 0) {
+              const stockInfo = data.data[0]; 
+        
+              if (stockInfo.stock === null || stockInfo.stock === '0') {
+                this.productStock[product.FK_Product] = 0; 
+                this.productOutOfStock[product.FK_Product] = true;
+                this.myCart[index].quantity = 0;
+                this.updateCartForQuantity(this.myCart[index]);
+              } else {
+                this.productStock[product.FK_Product] = parseFloat(stockInfo.stock); 
+                
+                if (product.quantity > this.productStock[product.FK_Product]) {
+                  this.productOutOfStock[product.FK_Product] = true; 
+                  this.myCart[index].quantity = this.productStock[product.FK_Product];
+                  this.updateCartForQuantity(this.myCart[index]);
+                } else {
+                  this.productOutOfStock[product.FK_Product] = false; 
+                }
+              }
+        
+            } else {
+              this.productOutOfStock[product.FK_Product] = true; 
+              this.myCart[index].quantity = 0;
+              this.updateCartForQuantity(this.myCart[index]);
+            }
+          });
+        });    
+      }
+    });
   }
 
   validateStockOnline(): void {
@@ -255,19 +300,27 @@ export class ShopCartComponent implements OnInit {
         if (data && data.data !== undefined && data.data.length > 0) {
           const stockInfo = data.data[0]; 
     
-          if (stockInfo.stock === null) {
+          if (stockInfo.stock === null || stockInfo.stock === '0') {
             this.productStock[product.FK_Product] = 0; 
+            this.productOutOfStock[product.FK_Product] = true;
+            this.myCart[index].quantity = 0;
+            this.updateCartForQuantity(this.myCart[index]);
           } else {
             this.productStock[product.FK_Product] = parseFloat(stockInfo.stock); 
+
+            if (product.quantity > this.productStock[product.FK_Product]) {
+              this.productOutOfStock[product.FK_Product] = true; 
+              this.myCart[index].quantity = this.productStock[product.FK_Product];
+              this.updateCartForQuantity(this.myCart[index]);
+            } else {
+              this.productOutOfStock[product.FK_Product] = false; 
+            }
           }
-    
-          if (product.quantity > this.productStock[product.FK_Product]) {
-            this.productOutOfStock[product.FK_Product] = true; 
-          } else {
-            this.productOutOfStock[product.FK_Product] = false; 
-          }
+  
         } else {
           this.productOutOfStock[product.FK_Product] = true; 
+          this.myCart[index].quantity = 0;
+          this.updateCartForQuantity(this.myCart[index]);
         }
       });
     });

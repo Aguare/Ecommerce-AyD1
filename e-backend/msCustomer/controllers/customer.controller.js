@@ -177,23 +177,31 @@ userController.updateCart = async (req, res) => {
 	let conn;
 	try {
 		const { id_user, id_product, quantity } = req.body;
-		if (!id_user || !quantity || !id_product) {
+
+		if (!id_user || !id_product || quantity === undefined || quantity === null) {
 			return res.status(400).send({ message: "Faltan campos por llenar" });
 		}
 
 		conn = await getConnection();
+		await conn.beginTransaction();
 
 		const queryCart = `SELECT * FROM shop_cart WHERE Fk_User = ? AND FK_Product = ?;`;
 		const resultCart = await conn.query(queryCart, [id_user, id_product]);
 		if (resultCart.length === 0) {
-			return res.status(400).send({ message: "El producto no esta en el carrito" });
+			await conn.rollback();
+			return res.status(400).send({ message: "El producto no está en el carrito" });
 		}
 
 		const updateCart = `UPDATE shop_cart SET quantity = ? WHERE Fk_User = ? AND FK_Product = ?;`;
 		const resultUpdate = await conn.query(updateCart, [quantity, id_user, id_product]);
 
-		return res.status(200).send({ message: "Carrito actualizado correctamente", data: resultUpdate.toString() });
+		await conn.commit();
+		return res.status(200).send({
+			message: "Carrito actualizado correctamente",
+			data: resultUpdate.toString(),
+		});
 	} catch (error) {
+		if (conn) await conn.rollback();
 		res.status(400).send({
 			message: "Error al actualizar el carrito",
 			error: error.message,
@@ -216,17 +224,19 @@ userController.deleteCart = async (req, res) => {
 		const { id } = req.params;
 
 		if (!id) {
-			console.log("Faltan campos por llenar");
 			return res.status(400).send({ message: "Faltan campos por llenar" });
 		}
 
 		conn = await getConnection();
+		await conn.beginTransaction();
 
 		const deleteCart = `DELETE FROM shop_cart WHERE Fk_User = ?;`;
 		const resultDelete = await conn.query(deleteCart, [id]);
 
+		await conn.commit();
 		return res.status(200).send({ message: "Carrito eliminado correctamente", data: resultDelete.toString() });
 	} catch (error) {
+		if (conn) await conn.rollback();
 		res.status(400).send({
 			message: "Error al eliminar el carrito",
 			error: error.message,
@@ -377,16 +387,24 @@ userController.deleteProductCart = async (req, res) => {
 	let conn;
 	try {
 		const { id_user, id_product } = req.params;
+
 		if (!id_user || !id_product) {
 			return res.status(400).send({ message: "Faltan campos por llenar" });
 		}
+
 		conn = await getConnection();
+		await conn.beginTransaction();
 
 		const deleteProduct = `DELETE FROM shop_cart WHERE Fk_User = ? AND FK_Product = ?;`;
 		const resultDelete = await conn.query(deleteProduct, [id_user, id_product]);
 
-		return res.status(200).send({ message: "Producto eliminado correctamente", data: resultDelete.toString() });
+		await conn.commit();
+		return res.status(200).send({
+			message: "Producto eliminado correctamente",
+			data: resultDelete.toString(),
+		});
 	} catch (error) {
+		if (conn) await conn.rollback();
 		res.status(400).send({
 			message: "Error al eliminar el producto",
 			error: error.message,
