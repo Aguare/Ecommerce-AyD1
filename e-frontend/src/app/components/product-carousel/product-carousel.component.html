@@ -30,10 +30,10 @@
                       product.discount > 0 ? 'line-throught' : ''
                     }}"
                   >
-                    ${{ product.price }}
+                    {{currency}} {{ product.price }}
                   </span>
                   <span *ngIf="product.discount > 0" class="span-descuento"
-                    >${{
+                    > {{currency}} {{
                       (
                         product.price -
                         product.price * (product.discount / 100)

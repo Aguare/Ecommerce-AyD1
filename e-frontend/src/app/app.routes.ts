@@ -12,6 +12,7 @@ import { StoreBillingComponent } from './components/admin/store-billing/store-bi
 import { SettingsFormComponent } from './components/admin/company-settings/settings-form/settings-form.component';
 import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 import { ShopCartComponent } from './components/user/shop-cart/shop-cart/shop-cart.component';
+import { ProductDetailsComponent } from './components/commons/product-details/product-details.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,6 +35,7 @@ export const routes: Routes = [
       { path: 'init', component: ProductHomeComponent }
     ]
   },
+  { path: 'product-details/:id', component: ProductDetailsComponent },
   { path: '**', component: NotFoundComponent }
 ];
 
