@@ -27,10 +27,17 @@ export class ProductCarouselComponent implements AfterViewInit, OnInit {
 
    products: Product[] = []
    checkUser = false;
+   currency = "$";
 
   constructor(private productService: ProductService){}
 
   ngOnInit(): void {
+
+    this.productService.getCurrency().subscribe((currency: any) => {
+      console.log(currency);
+      this.currency = currency.data.currency
+    });
+
     this.productService.getProductsForCart().subscribe({
       next: (res: Product[]) => {
         this.products = res;

@@ -9,7 +9,11 @@
 </div>
 
 <div class="container" *ngIf="!spinner">
+
+  
   <h3 class="mt-5 ml-3">Categorias</h3>
   <app-card-carrousel></app-card-carrousel>
+  <app-image-carrousell [images]="homeImages"></app-image-carrousell>
+  <app-simple-carousel></app-simple-carousel>
   <app-category-carrousell></app-category-carrousell>
 </div>

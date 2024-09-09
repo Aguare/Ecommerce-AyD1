@@ -10,8 +10,10 @@ import Splide from '@splidejs/splide';
 //Mis Importaciones
 import { ProductService } from '../../services/product.service';
 import { ImagePipe } from '../../pipes/image.pipe';
+import { Router } from '@angular/router';
 
 export interface Product {
+  id: number;
   name: string;
   description: string;
   price: number;
@@ -30,10 +32,19 @@ export interface Product {
 })
 export class SimpleCarouselComponent implements AfterViewInit, OnInit {
   products: Product[] = [];
+  currency = "$";
 
-  constructor(private productService: ProductService){}
+  constructor(
+    private productService: ProductService,
+    private router: Router
+  ){}
 
   ngOnInit(): void {
+
+    this.productService.getCurrency().subscribe((currency: any) => {
+      this.currency = currency.data.currency
+    });
+
     this.productService.getProductsForCart().subscribe({
       next: (res: Product[]) => {
         this.products = res;       
@@ -51,12 +62,13 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
           type: 'loop',
           perPage: 3,
           perMove: 1,
-          gap: '10px',
+          gap: '0',
           padding: {
             right: '0',
             left: '0',
           },
           autoplay: true,
+          pagination: false,
           breakpoints: {
             1024: {
               perPage: 2, 
@@ -74,4 +86,9 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
     }, 500)
   }
   
+
+  navigateToProductDetails(product: Product) {
+    console.log('product ', product);
+    this.router.navigate(['/product-details', product.id]);
+  }
 }

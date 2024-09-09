@@ -19,10 +19,10 @@ app.use((req, res, next) => {
 	res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
   
 	if (req.method === "OPTIONS") {
-	  return res.sendStatus(200);
+		return res.sendStatus(200);
+	} else {
+		next();
 	}
-  
-	next();
   });
 
 app.use(router);

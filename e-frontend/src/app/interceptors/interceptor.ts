@@ -24,19 +24,17 @@ export class Inteceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((errorResponse: any) => {
         if (errorResponse instanceof HttpErrorResponse) {
-          if (errorResponse.status === 401 && errorResponse.error) {
-            const { status, message } = errorResponse.error;
-            if (status === 5) {
-              this._localStorage.clear();
-              this._cookieService.deleteAll();
-              Swal.fire({
-                title: "Error",
-                text: message,
-                icon: "error",
-                confirmButtonText: "Ok",
-              });
-              this.router.navigate(["/home"]);
-            }
+          if (errorResponse.status === 401 || errorResponse.status === 403) {
+            const { message } = errorResponse.error;
+            this._localStorage.clear();
+            this._cookieService.deleteAll();
+            Swal.fire({
+              title: "Error",
+              text: message,
+              icon: "error",
+              confirmButtonText: "Ok",
+            });
+            this.router.navigate(["/home"]);
           }
         }
         return throwError(() => errorResponse);

@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { ImagePipe } from '../../pipes/image.pipe';
 import { ProductCardComponent } from '../product-card/product-card.component';
+import { Router } from '@angular/router';
 
 
 export interface ProductCart {
@@ -30,10 +31,19 @@ export interface ProductCart {
 export class CategoryCarrousellComponent implements AfterViewInit {
   products: Product[] = [];
   productsCart: ProductCart[] = [];
+  currency = '$';
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+
+    this.productService.getCurrency().subscribe((res: any) => {
+      this.currency = res.data.currency;
+    });
+
     this.productService.getProductsWithCategory().subscribe({
       next: (res: Product[]) => {
         this.products = res;
@@ -51,16 +61,16 @@ export class CategoryCarrousellComponent implements AfterViewInit {
       if (typeof document !== 'undefined') {
         this.productsCart.forEach((cart) => {         
           const splideId = '#category-carrousel-' + cart.category;
-  
           const splide = new Splide(splideId, {
             type: 'loop',
             perPage: 5,
             perMove: 1,
-            gap: '10px',
+            gap: '0px',
             padding: {
               right: '0',
               left: '0',
             },
+            pagination: false,
             autoplay: true,
             breakpoints: {
               1024: {
@@ -99,4 +109,9 @@ export class CategoryCarrousellComponent implements AfterViewInit {
 
     return Object.values(groupedProducts);
   };
+
+  navigateToProductDetails(product: Product) {
+    console.log('product ', product);
+    this.router.navigate(['/product-details', product.id]);
+  }
 }

@@ -19,6 +19,10 @@ export class ImageService {
     return this.httpClient.post(this.portImage + 'upload/client', image);
   }
 
+  saveCompanyImage(body: any) : Observable<any> {
+    return this.httpClient.post(this.portImage + 'upload/admin', body);
+  }
+  
   getLogoCompany(): Observable<any> {
     return this.httpClient.get(this.portImage + 'company/logo');
   }

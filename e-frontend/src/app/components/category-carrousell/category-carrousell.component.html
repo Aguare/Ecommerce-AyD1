@@ -8,11 +8,10 @@
     <div class="splide__track px-4">
       <div class="splide__list">
         <div class="splide__slide card" *ngFor="let product of productCart.products">
-          <app-product-card [product]="product"></app-product-card>
+          <app-product-card [product]="product" [currency]="currency"></app-product-card>
         </div>
       </div>
     </div>
   </section>
 </div>
-
 

@@ -2,8 +2,9 @@
 <div class="container mx-auto mt-5">
   <h1 class="title is-2 has-text-centered">Mi cuenta</h1>
   <div class="columns is-centered">
+    <!-- Sección de perfil -->
     <div class="column is-one-quarter same-height">
-      <div class="box has-text-centered">
+      <div class="box has-text-centered has-shadow has-background-light">
         <figure class="image is-128x128 is-inline-block">
           <img class="is-rounded" [src]="user.imageProfile | imagePipe" alt="Profile Image">
         </figure>
@@ -11,22 +12,25 @@
         <h3 class="subtitle is-6"> {{user.email}} </h3>
       </div>
     </div>
-  
+
+    <!-- Sección de información -->
     <div class="column is-half">
       <div class="box same-height">
         <div class="content">
           <p><strong>Nit:</strong> {{user.nit}} </p>
           <p><strong>Preferencia de pago:</strong> {{user.isPreferCash === 1? 'Efectivo' : 'Otro'}} </p>
           <p><strong>Descripción:</strong></p>
-          <div class="description-box">
-            <p>
-              {{user.description ? user.description : 'No hay descripción'}}
-            </p>
+          <div class="description-box has-background-light p-3">
+            <p>{{user.description ? user.description : 'No hay descripción'}}</p>
           </div>
         </div>
-        <div class="has-text-centered">
-          <button [routerLink]="['/edit/profile']" routerLinkActive="router-link-active"
-            class="button is-primary">Editar</button>
+        <div class="has-text-centered mt-4">
+          <button [routerLink]="['/edit/profile']" routerLinkActive="router-link-active" class="button is-primary is-fullwidth">
+            <span class="icon">
+              <i class="fas fa-edit"></i>
+            </span>
+            <span>Editar</span>
+          </button>
         </div>
       </div>
     </div>
