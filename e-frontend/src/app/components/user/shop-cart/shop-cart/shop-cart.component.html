@@ -68,21 +68,21 @@
         <!-- Sección para elegir la forma de entrega -->
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title">Forma de Entrega</p>
+            <p class="card-header-title">Sucursal</p>
           </header>
           <div class="card-content">
             <div class="content">
               <div class="field">
-                <label class="label">Elige una opción de entrega</label>
+                <label class="label">Elige tu sucursal</label>
                 <div class="control">
-                  <label class="radio">
+              <!---    <label class="radio">
                     <input type="radio" name="deliveryOption" (click)="setDeliveryOption('online')" checked>
                     A domicilio
                   </label>
                   <label class="radio">
                     <input type="radio" name="deliveryOption" (click)="setDeliveryOption('store')">
                     Entrega en tienda
-                  </label>
+                  </label>-->
                 </div>
               </div>
   
@@ -90,7 +90,7 @@
                 <label class="label">Selecciona una tienda</label>
                 <div class="control">
                   <div class="select">
-                    <select [(ngModel)]="selectedStore" (ngModelChange)="changeStore($event)">
+                    <select [(ngModel)]="selectedStore" (ngModelChange)="changeStoreUser($event)">
                         <option *ngFor="let store of stores" [value]="store.id">{{ store.name }}</option>
                       </select>
                   </div>
