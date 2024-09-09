@@ -6,11 +6,23 @@ import { ProductCarouselComponent } from '../../product-carousel/product-carouse
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { ImageCarrousellComponent } from "../../image-carrousell/image-carrousell.component";
+import { LocalStorageService } from '../../../services/local-storage.service';
+import { SimpleCarouselComponent } from '../../simple-carousel/simple-carousel.component';
+import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-product-home',
   standalone: true,
-  imports: [CommonModule, ImageCarrousellComponent, NavbarComponent, CardCarrouselComponent, CategoryCarrousellComponent, MatProgressSpinnerModule, ImageCarrousellComponent],
+  imports: [
+    CommonModule, 
+    ImageCarrousellComponent, 
+    NavbarComponent, 
+    CardCarrouselComponent, 
+    CategoryCarrousellComponent, 
+    MatProgressSpinnerModule, 
+    ImageCarrousellComponent,
+    SimpleCarouselComponent
+  ],
   templateUrl: './product-home.component.html',
   styleUrls: ['./product-home.component.scss']
 })
@@ -26,12 +38,16 @@ export class ProductHomeComponent implements OnInit {
     'img/carrousell/carrousell-5.jpg',
   ]
   
-  constructor() { }
+  constructor(private productService: ProductService) { }
 
   ngOnInit() {
     setTimeout(() => {
       this.spinner = false;
-    },700)    
+    },700)
+
+    this.productService.updateViewsLogged.subscribe(() =>{
+      this.ngOnInit();
+    });
   }
 
 }

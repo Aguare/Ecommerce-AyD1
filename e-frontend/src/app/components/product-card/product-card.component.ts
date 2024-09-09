@@ -15,19 +15,16 @@ import { ProductService } from '../../services/product.service';
 })
 export class ProductCardComponent implements OnInit {
   @Input() product!: Product;
-  currency = "$";
+  @Input() currency = '$';
 
-  constructor(private router: Router, private productService: ProductService) {
+  constructor(private router: Router) {
     
   }
   ngOnInit(): void {
-    this.productService.getCurrency().subscribe((currency: any) => {
-      this.currency = currency.data.currency
-    });
+
   }
 
-  navigateToProductDetails(product: Product) {
-    console.log('product ', product);
-    this.router.navigate(['/product-details', product.id]);
+  navigateToProductDetails(id: number): void {
+    this.router.navigate(['/product-details', id]);
   }
 }

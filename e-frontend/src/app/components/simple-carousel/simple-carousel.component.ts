@@ -10,6 +10,7 @@ import Splide from '@splidejs/splide';
 //Mis Importaciones
 import { ProductService } from '../../services/product.service';
 import { ImagePipe } from '../../pipes/image.pipe';
+import { Router } from '@angular/router';
 
 export interface Product {
   id: number;
@@ -33,7 +34,10 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
   products: Product[] = [];
   currency = "$";
 
-  constructor(private productService: ProductService){}
+  constructor(
+    private productService: ProductService,
+    private router: Router
+  ){}
 
   ngOnInit(): void {
 
@@ -82,4 +86,9 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
     }, 500)
   }
   
+
+  navigateToProductDetails(product: Product) {
+    console.log('product ', product);
+    this.router.navigate(['/product-details', product.id]);
+  }
 }

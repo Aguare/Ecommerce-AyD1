@@ -7,7 +7,7 @@
     <div class="splide__track px-4">
       <div class="splide__list">
         <div class="splide__slide card" *ngFor="let product of products">
-          <mat-card class="example-card" appearance="outlined">
+          <mat-card class="example-card is-clickable" appearance="outlined" (click)="navigateToProductDetails(product)">
             <div class="card-content-container">
               <div class="card-text-content">
                 <h4 class="card-title">{{ product.name }}</h4>

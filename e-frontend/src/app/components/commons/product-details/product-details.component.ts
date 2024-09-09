@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { NavbarGuestComponent } from '../navbar-guest/navbar-guest.component';
 import { LocalStorageService } from '../../../services/local-storage.service';
@@ -12,18 +12,28 @@ import Splide from '@splidejs/splide';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import Swal from 'sweetalert2';
 import { error } from 'console';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, NavbarGuestComponent, ImagePipe, ImageCarrousellComponent, MatTooltipModule],
+  imports: [
+    CommonModule, 
+    NavbarComponent, 
+    NavbarGuestComponent, 
+    ImagePipe, 
+    ImageCarrousellComponent, 
+    MatTooltipModule,
+    MatIconModule
+  ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss'
 })
-export class ProductDetailsComponent implements OnInit{
+export class ProductDetailsComponent implements OnInit, AfterViewInit{
 
   isLogged: boolean = false;
   currentBranchId: number = 0;
+  currentBranchAvailable: boolean = false;
   productDetail: ProductDetail = {
     id: 0,
     name: '',
@@ -53,6 +63,7 @@ export class ProductDetailsComponent implements OnInit{
 
     const userId = this.localStorageService.getUserId();
     const productId = this.route.snapshot.paramMap.get('id');
+    this.currentBranchId = this.localStorageService.getBranchId();
 
     if (!productId) {
       this.router.navigate(['/']);
@@ -71,11 +82,20 @@ export class ProductDetailsComponent implements OnInit{
 
     this.productService.getStockProductById(productId).subscribe((stock: StockProduct[]) => {
       this.stockProducts = stock;
-      if(stock.length > 0) {
-        this.currentBranchId = stock[0].id;
-      }
+      this.currentBranchAvailable = stock.some((stockProduct: StockProduct) => stockProduct.id === this.currentBranchId);
     });
 
+    this.productService.updateViews.subscribe(() => {
+      this.ngOnInit();
+    });
+
+    this.productService.updateViewsLogged.subscribe(() => {
+      this.ngOnInit();
+    });
+
+  }
+
+  ngAfterViewInit() {
     // creating splide carrousel
     setTimeout(() => {
       if (typeof document !== 'undefined' && this.productDetail.images.length > 1) {
@@ -90,7 +110,6 @@ export class ProductDetailsComponent implements OnInit{
         splide.mount();
       }
     }, 500 );
-
   }
 
   addToCart(productDetail: ProductDetail) {
@@ -119,7 +138,16 @@ export class ProductDetailsComponent implements OnInit{
     });
   }
 
-  changeBranchId(branchId: number) {
-    this.currentBranchId = branchId;
+  changeBranchId(branch: any) {
+    this.localStorageService.setBranchId(branch.id);
+    this.localStorageService.setBranchName(branch.name);
+    this.localStorageService.setBranchAddress(branch.address);
+    this.currentBranchId = branch.id;
+    this.ngOnInit();
+
+  }
+
+  updateComponent() {
+    // this.ngOnInit();
   }
 }

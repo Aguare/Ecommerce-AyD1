@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../components/simple-carousel/simple-carousel.component';
 import { Category } from '../components/card-carrousel/card-carrousel.component';
@@ -11,6 +11,8 @@ import { ProductDetail } from '../interfaces';
 })
 export class ProductService {
 
+  updateViews = new EventEmitter();
+  updateViewsLogged = new EventEmitter();
   private apiProduct = 'http://localhost:3004/product';
   private apiCategories = 'http://localhost:3004/categories';
   private apiCustomer = 'http://localhost:3003/customer'; 
@@ -22,11 +24,13 @@ export class ProductService {
   }
   
   getProductsByCategory(category: string){
-    return this.http.post<Product[]>(`${this.apiProduct}/getProductsByCategory`,{category});
+    const id_branch = this.localStorageService.getBranchId();
+    return this.http.post<Product[]>(`${this.apiProduct}/getProductsByCategory`,{category, id_branch});
   }
   
   getProductsWithCategory(){
-    return this.http.get<Product[]>(`${this.apiProduct}/getProductsWithCategory`);
+    const id_branch = this.localStorageService.getBranchId();
+    return this.http.get<Product[]>(`${this.apiProduct}/getProductsWithCategory/${id_branch}`);
   }
   
   getCategories(){
@@ -119,6 +123,10 @@ export class ProductService {
 
   addProductToCart(id_user: number, id_branch:number, id_product: number, quantity: number): Observable<any> {
     return this.http.post<any>(`${this.apiCustomer}/addProductCart`, {id_user, id_product, id_branch, quantity});
+  }
+
+  getBranchesWithProduct() {
+    return this.http.get<any>(`${this.apiProduct}/getBranchesWithProduct`);
   }
 }
 

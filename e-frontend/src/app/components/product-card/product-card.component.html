@@ -1,4 +1,4 @@
-<mat-card class="example-card" appearance="outlined" (click)="navigateToProductDetails(product)">
+<mat-card class="example-card" appearance="outlined" (click)="navigateToProductDetails(product.id)">
     <div *ngIf="product.discount > 0" class="discount-tag">
       {{ product.discount }}% off
     </div>

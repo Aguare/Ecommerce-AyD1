@@ -2,7 +2,7 @@
   <app-navbar></app-navbar>
 }
   @else {
-  <app-navbar-guest></app-navbar-guest>
+  <app-navbar-guest (update)="updateComponent()"></app-navbar-guest>
 }
 
 <div class="container box image-container m-5 mx-auto">
@@ -27,7 +27,7 @@
   }
 </div>
 
-<div class="container mt-5">
+<div class="container m-5 mx-auto">
   <div class="columns">
     <div class="column">
       <div class="box is-flex is-flex-direction-column is-justify-content-space-between">
@@ -48,8 +48,11 @@
 
         <div class="buttons is-centered">
           @if(isLogged) {
-            @if(productDetail.isAvailable && currentBranchId !== 0) {
-              <button class="button is-primary" (click)="addToCart(productDetail)">Agregar al Carrito</button>
+            @if(productDetail.isAvailable && currentBranchAvailable) {
+              <button class="button is-primary is-fullwidth" (click)="addToCart(productDetail)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add_shopping_cart"></mat-icon>
+                Agregar al Carrito
+              </button>
             }
             @else {
               <button disabled class="button is-primary" disabled>Producto No disponible</button>
@@ -63,11 +66,12 @@
       <div class="box mt-5">
         <h4 class="title is-5">Características del Producto</h4>
         @if(productDetail.attributes.length > 0) {
-          <ul>
+          <div style="max-height: 80%; overflow-y: scroll">
             @for(attribute of productDetail.attributes; track $index) {
-              <li>{{attribute}}</li>
+              <p class="title is-6">{{attribute.name}}</p>
+              <p class="subtitle is-6">{{attribute.description}}</p>
             }
-          </ul>
+          </div>
         } 
         @else {
           <p>No hay características registradas para este producto.</p>
@@ -81,7 +85,7 @@
           @for(stockProduct of stockProducts; track $index) {
             <div class="media p-3">
               <div 
-              (click)="changeBranchId(stockProduct.id)" 
+              (click)="changeBranchId(stockProduct)" 
               class="button media-content columns is-justify-content-space-around"
               
               matTooltip="Cambiar a esta sucursal"
@@ -91,7 +95,7 @@
                   <p class="subtitle is-6">{{stockProduct.address}}</p>
                 </div>
                 <div>
-                  <p class="subtitle is-6">{{stockProduct.stock}} en unidad(es)</p>
+                  <p class="subtitle is-6">{{stockProduct.stock | number: '1.0-0'}} unidad(es)</p>
                   <p *ngIf="stockProduct.id === currentBranchId" class="subtitle is-6 has-text-success">Sucursal Actual</p>
                 </div>
               </div>
