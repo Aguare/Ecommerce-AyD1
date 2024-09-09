@@ -15,11 +15,11 @@ productController.getProductsByCategory = async (req, res) => {
 		}
 
 		// const queryMoney = `
-        //     SELECT pr.id, pr.name, pr.description, pr.price, primg.image_path, c.name as category from product pr
-        //         JOIN product_image primg ON pr.id = primg.FK_Product
-        //         JOIN product_has_category phc ON pr.id = phc.FK_Product
-        //         JOIN category c ON phc.FK_Category = c.id
-        //         WHERE c.name = ? AND b.id = ?`;
+		//     SELECT pr.id, pr.name, pr.description, pr.price, primg.image_path, c.name as category from product pr
+		//         JOIN product_image primg ON pr.id = primg.FK_Product
+		//         JOIN product_has_category phc ON pr.id = phc.FK_Product
+		//         JOIN category c ON phc.FK_Category = c.id
+		//         WHERE c.name = ? AND b.id = ?`;
 
 		const queryMoney = `
 		SELECT pr.id, pr.name, pr.description, pr.price, pi.image_path, c.name AS category FROM inventory i
@@ -49,17 +49,16 @@ productController.getProductsByCategory = async (req, res) => {
 productController.getProductsWithCategory = async (req, res) => {
 	let connection;
 	try {
-
 		const { id_branch } = req.params;
 
 		connection = await getConnection();
 
 		// const queryMoney = `
-        //     SELECT pr.id, pr.name, pr.description, pr.price, primg.image_path, c.name as category from product pr
-        //         JOIN product_image primg ON pr.id = primg.FK_Product
-        //         JOIN product_has_category phc ON pr.id = phc.FK_Product
+		//     SELECT pr.id, pr.name, pr.description, pr.price, primg.image_path, c.name as category from product pr
+		//         JOIN product_image primg ON pr.id = primg.FK_Product
+		//         JOIN product_has_category phc ON pr.id = phc.FK_Product
 		// 		JOIN branch b ON pr.FK_Branch = b.id
-        //         JOIN category c ON phc.FK_Category = c.id
+		//         JOIN category c ON phc.FK_Category = c.id
 		// 		`;
 
 		const queryMoney = `
@@ -92,14 +91,23 @@ productController.getProductsForCart = async (req, res) => {
 	try {
 		connection = await getConnection();
 
+		const { id } = req.params;
 		const queryMoney = `
-            SELECT pr.id, pr.name, pr.description, pr.price, primg.image_path, c.name as category from product pr
-                JOIN product_image primg ON pr.id = primg.FK_Product
-                JOIN product_has_category phc ON pr.id = phc.FK_Product
-                JOIN category c ON phc.FK_Category = c.id 
-                LIMIT 15`;
+           SELECT pr.id, pr.name, pr.description, pr.price, pi.image_path, c.name as category FROM inventory i
+			JOIN (
+				SELECT FK_Branch, MAX(created_at) AS MaxDate
+				FROM inventory
+				GROUP BY FK_Branch, FK_Product
+			) i2 ON i.FK_Branch = i2.FK_Branch AND i.created_at = i2.MaxDate
+			JOIN product pr ON i.FK_Product = pr.id
+			JOIN product_image pi ON pr.id = pi.FK_Product
+			JOIN product_has_category phc ON pr.id = phc.FK_Product
+			JOIN category c ON phc.FK_Category = c.id
+			JOIN branch b ON i.FK_Branch = b.id
+			WHERE i.FK_Branch = ? AND i.stock != 0
+			LIMIT 15;`;
 
-		const result = await connection.query(queryMoney);
+		const result = await connection.query(queryMoney, [id]);
 		res.status(200).send(result);
 	} catch (error) {
 		res.status(500).send({ message: "Error al obtener los productos. 2", error: error.message });
@@ -190,7 +198,6 @@ productController.getBranchesWithProduct = async (req, res) => {
 	try {
 		connection = await getConnection();
 
-
 		const queryProduct = `
 		SELECT b.id as id, b.name as name, b.address as address
         FROM inventory i1
@@ -212,6 +219,6 @@ productController.getBranchesWithProduct = async (req, res) => {
 			connection.end();
 		}
 	}
-}
+};
 
 module.exports = productController;

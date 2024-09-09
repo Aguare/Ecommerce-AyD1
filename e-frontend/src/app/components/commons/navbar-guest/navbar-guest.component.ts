@@ -43,23 +43,29 @@ export class NavbarGuestComponent {
 	) {}
 
 	ngOnInit() {
-		this.productService.getBranchesWithProduct().subscribe((res: any) => {
-			this.branches = res;
-			this._localStorage.setBranchId(res[0].id);
-			this._localStorage.setBranchName(res[0].name);
-			this._localStorage.setBranchAddress(res[0].address);
-			this.currentBranchId = this._localStorage.getBranchId();
-			this.branchName = this._localStorage.getBranchName();
-		});
+		const branchId = this._localStorage.getBranchId();
+        if(!branchId || branchId === null) {
 
-      const url = this._router.url;
-      const userId = this._localStorage.getUserId();
-      this.showButtonsRegister = userId ? false : true;
-      this.showButtonsRegister = !url.includes('verify-email');
-      const token = this._cookieService.get('token');
-      if (userId && token) {
-        this._router.navigate(['/products/init']);
-      }
+            this.productService.getBranchesWithProduct().subscribe((res: any) => {
+                this.branches = res;
+                this._localStorage.setBranchId(res[0].id);
+                this._localStorage.setBranchName(res[0].name);
+                this._localStorage.setBranchAddress(res[0].address);
+                this.currentBranchId = this._localStorage.getBranchId();
+                this.branchName = this._localStorage.getBranchName();
+            });
+        } else {
+            this.currentBranchId = branchId;
+            this.branchName = this._localStorage.getBranchName();
+        }
+
+		const userId = this._localStorage.getUserId();
+        const url = this._router.url;
+        this.showButtonsRegister = !userId && url !== "/login";
+        const token = this._cookieService.get("token");
+        if (userId && token) {
+            this._router.navigate(["/products/init"]);
+        }
     }
 
 	toggleNavbar() {
@@ -84,5 +90,6 @@ export class NavbarGuestComponent {
 		}
 
 		window.location.reload();
+		
 	}
 }

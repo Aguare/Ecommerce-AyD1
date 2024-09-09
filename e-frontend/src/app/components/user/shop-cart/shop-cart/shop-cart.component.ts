@@ -57,7 +57,6 @@ export class ShopCartComponent implements OnInit {
       this.getCurrency();
     },
     (error) => {
-      Swal.fire({ icon: 'error', title: 'Error', text: 'Carrito Vacio' });
       this.isLoading = false;
     });
   }

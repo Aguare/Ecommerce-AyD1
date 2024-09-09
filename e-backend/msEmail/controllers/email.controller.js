@@ -27,8 +27,6 @@ emailController.sendVerificationEmail = async (req, res) => {
 			}
 		}
 
-		console.log(email);
-
 		const queryDataCompany = `SELECT key_name, key_value FROM company_settings WHERE key_name IN ('company_name', 'company_state', 'company_address', 'company_img', 'email', 'email_password');`;
 		const resultDataCompany = await connection.query(queryDataCompany);
 
@@ -87,7 +85,6 @@ emailController.sendVerificationEmail = async (req, res) => {
 				console.log(error);
 				res.status(500).send({ message: "Error al enviar el correo" });
 			} else {
-				console.log("Email sent: " + info.response);
 				if (res) {
 					res.status(200).send({ message: "Correo enviado" });
 				} else {

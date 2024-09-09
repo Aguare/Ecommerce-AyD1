@@ -20,12 +20,17 @@ export class ProductService {
   constructor(private http: HttpClient, private localStorageService: LocalStorageService) { }
 
   getProductsForCart(){
-    return this.http.post<Product[]>(`${this.apiProduct}/getProductsForCart`,{});
+    let branchId = this.localStorageService.getBranchId();
+    if(!this.localStorageService.getBranchId()){
+     branchId = 2;
+    }
+    return this.http.get<Product[]>(`${this.apiProduct}/getProductsForCart/${branchId}`);
   }
   
   getProductsByCategory(category: string){
     const id_branch = this.localStorageService.getBranchId();
     return this.http.post<Product[]>(`${this.apiProduct}/getProductsByCategory`,{category, id_branch});
+  
   }
   
   getProductsWithCategory(){

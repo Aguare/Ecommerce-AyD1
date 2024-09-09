@@ -47,13 +47,13 @@ userController.signUp = async (req, res) => {
 		const insertUserQuery = "INSERT INTO user (email, username, password) VALUE (?, ?, ?)";
 		const result = await conn.query(insertUserQuery, [email, username, encryptedPassword]);
 
+		const queryRole = `INSERT INTO user_has_role (Fk_User, Fk_Role) VALUE (?, 2);`;
+		await conn.query(queryRole, [result.insertId]);
+
 		const insertUserInformationQuery = "INSERT INTO user_information (Fk_User) VALUE (?)";
 		await conn.query(insertUserInformationQuery, [result.insertId]);
 
-		await emailController.sendVerificationEmail(
-			{ body: { email: email, isObject: true } }, 
-			res
-		);
+		await emailController.sendVerificationEmail({ body: { email: email, isObject: true } }, res);
 
 		return res.status(200).send({ message: "Usuario registrado correctamente", data: result.insertId.toString() });
 	} catch (error) {
@@ -438,7 +438,6 @@ userController.addProductCart = async (req, res) => {
 			const resultInsert = await conn.query(insertCart, [quantity, id_user, id_product, id_branch]);
 			return res.status(200).send({ message: "Producto agregado correctamente", data: resultInsert.toString() });
 		} else if (resultCart[0].FK_Branch !== id_branch) {
-
 			// check if the branch have enough stock in the inventory
 			const stock = await checkStockInBranch(conn, id_product, id_branch, quantity, resultCart[0].quantity);
 
@@ -481,7 +480,7 @@ userController.addProductCart = async (req, res) => {
  * - The stock is checked by the product id and branch id
  * @returns {Boolean} - True if the branch have enough stock, false otherwise
  */
-const checkStockInBranch = async (conn, id_product, id_branch, 	quantity, oldQuantity) => {
+const checkStockInBranch = async (conn, id_product, id_branch, quantity, oldQuantity) => {
 	// check if the branch have enough stock in the inventory
 
 	const queryProduct = ` SELECT b.name, 
@@ -499,14 +498,13 @@ const checkStockInBranch = async (conn, id_product, id_branch, 	quantity, oldQua
 		return false;
 	}
 
-	return resultProduct[0].stock >= quantity + oldQuantity; 
+	return resultProduct[0].stock >= quantity + oldQuantity;
 };
 
 userController.getNumberInCart = async (req, res) => {
 	let conn;
 	try {
 		const { id } = req.params;
-		console.log('params', req.params);
 
 		if (!id) {
 			return res.status(400).send({ message: "Faltan campos por llenar" });
@@ -533,6 +531,6 @@ userController.getNumberInCart = async (req, res) => {
 			conn.end();
 		}
 	}
-}
+};
 
 module.exports = userController;

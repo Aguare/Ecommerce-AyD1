@@ -49,7 +49,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     const branchId = this._localStorage.getBranchId();
 
-    console.log('branchId', branchId);
     if(!branchId) {
       this.productService.getBranchesWithProduct().subscribe((res: any) => {
         this._localStorage.setBranchId(res[0].id);

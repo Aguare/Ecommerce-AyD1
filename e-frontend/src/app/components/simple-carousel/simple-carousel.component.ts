@@ -11,6 +11,7 @@ import Splide from '@splidejs/splide';
 import { ProductService } from '../../services/product.service';
 import { ImagePipe } from '../../pipes/image.pipe';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 export interface Product {
   id: number;
@@ -36,11 +37,20 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
 
   constructor(
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private _localStorage: LocalStorageService
   ){}
 
   ngOnInit(): void {
+    const branchId = this._localStorage.getBranchId();
 
+    if(!branchId) {
+      this.productService.getBranchesWithProduct().subscribe((res: any) => {
+        this._localStorage.setBranchId(res[0].id);
+        this._localStorage.setBranchName(res[0].name);
+        this._localStorage.setBranchAddress(res[0].address);
+      });
+    }
     this.productService.getCurrency().subscribe((currency: any) => {
       this.currency = currency.data.currency
     });
