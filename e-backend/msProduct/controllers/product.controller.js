@@ -88,7 +88,7 @@ productController.getProductById = async (req, res) => {
 		}
 
 		const queryProduct = `
-			SELECT pr.id, pr.name, pr.description, pr.price, c.name as category from product pr
+			SELECT pr.id, pr.name, pr.description, pr.isAvailable, pr.price, c.name as category from product pr
 				JOIN product_has_category phc ON pr.id = phc.FK_Product
 				JOIN category c ON phc.FK_Category = c.id
 				WHERE pr.id = ?`;
@@ -99,7 +99,7 @@ productController.getProductById = async (req, res) => {
 			SELECT image_path from product_image WHERE FK_Product = ?`;
 
 		const resultImages = await connection.query(queryImages, [id]);
-		resultProduct[0].images = resultImages;
+		resultProduct[0].images = resultImages.map((image) => image.image_path);
 
 		const queryAttribute = `
 			SELECT a.name, a.description from attribute a
@@ -129,18 +129,20 @@ productController.getStockProductById = async (req, res) => {
 		}
 
 		const queryProduct = `
-		SELECT b.name AS name, b.address AS address, b.city AS city,
-			(SELECT i2.stock
-				FROM inventory i2
-				WHERE i2.FK_Product = 5
-				AND i2.FK_Branch = b.id
-				ORDER BY i2.id DESC
-				LIMIT 1) AS stock
-		FROM branch b;
-			`;
+		SELECT b.id as id, b.name as name, b.address as address, i1.stock as stock
+		FROM inventory i1
+		JOIN (
+			SELECT FK_Branch, MAX(created_at) AS MaxDate
+			FROM inventory
+			WHERE FK_Product = ?
+			GROUP BY FK_Branch
+		) i2 ON i1.FK_Branch = i2.FK_Branch AND i1.created_at = i2.MaxDate
+		JOIN branch b ON i1.FK_Branch = b.id
+		WHERE i1.FK_Product = ?;
+		`;
 
-		const resultProduct = await connection.query(queryProduct, [id]);
-		res.status(200).send(resultProduct[0]);
+		const resultProduct = await connection.query(queryProduct, [id, id]);
+		res.status(200).send(resultProduct);
 	} catch (error) {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {

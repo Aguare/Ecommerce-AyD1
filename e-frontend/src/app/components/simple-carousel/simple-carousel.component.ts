@@ -31,10 +31,16 @@ export interface Product {
 })
 export class SimpleCarouselComponent implements AfterViewInit, OnInit {
   products: Product[] = [];
+  currency = "$";
 
   constructor(private productService: ProductService){}
 
   ngOnInit(): void {
+
+    this.productService.getCurrency().subscribe((currency: any) => {
+      this.currency = currency.data.currency
+    });
+
     this.productService.getProductsForCart().subscribe({
       next: (res: Product[]) => {
         this.products = res;       

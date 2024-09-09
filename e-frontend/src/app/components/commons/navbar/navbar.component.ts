@@ -38,6 +38,7 @@ export class NavbarComponent implements OnInit {
   userImage: string = '';
   isActive: boolean = false;
   activeModule: string | null = null;
+  logo: string = '';
 
   constructor(
     private adminService: AdminService,
@@ -49,6 +50,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.userId = this._localStorage.getUserId();
     this.userName = this._localStorage.getUserName();
+    this.logo = this._localStorage.getCompanyLogo();
 
     // Function to get pages of user by his id
     this.adminService.getPages(this.userId).subscribe({

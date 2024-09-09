@@ -1,8 +1,8 @@
 <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <div class="navbar-item">
-      <span class="icon is-large">
-        <img src="https://i.pinimg.com/originals/75/fa/9b/75fa9b17f632646e5ae7fae3cf837761.jpg" alt="Logo" />
+    <div class="navbar-item" [routerLink]="['/products/init']" routerLinkActive="router-link-active" >
+      <span class="image is-32x32">
+        <img [src]="this.logo | imagePipe" alt="Logo" />
       </span>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
          [ngClass]="{'is-active': isActive}"

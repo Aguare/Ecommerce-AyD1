@@ -18,6 +18,14 @@ export class ProductHomeComponent implements OnInit {
 
   spinner = true;
 
+  homeImages: string[] = [
+    'img/carrousell/carrousell-1.jpg',
+    'img/carrousell/carrousell-2.jpg',
+    'img/carrousell/carrousell-3.jpg',
+    'img/carrousell/carrousell-4.jpg',
+    'img/carrousell/carrousell-5.jpg',
+  ]
+  
   constructor() { }
 
   ngOnInit() {

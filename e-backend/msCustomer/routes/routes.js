@@ -10,6 +10,8 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
 router.post("/customer/sign-up", CustomerController.signUp);
+router.get("/customer/getCurrency", CustomerController.getCurrency);
+
 
 router.use("/customer", [middleware.verifyToken], customerRoutes);
 

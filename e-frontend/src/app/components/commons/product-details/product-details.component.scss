@@ -1,14 +1,11 @@
-/** @format */
+.splide__slide img {
+    width: 20%; /* Asegura que la imagen use todo el ancho del contenedor */
+    height: auto; /* Mantiene la proporción de la imagen, ajustando la altura automáticamente */
+    object-fit: fill; /* Asegura que la imagen se ajuste dentro del contenedor sin recortarse */
+  }
+  
 
-.same-height {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	height: 100%;
-}
-
-.availability-box {
-	max-height: 80px;
-	overflow: auto;
-	text-overflow: ellipsis;
+.image-container {
+    width: 30%;
+    height: auto;
 }

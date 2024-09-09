@@ -23,9 +23,9 @@ export class NavbarGuestComponent {
     ) { }
 
     ngOnInit() {
-      const url = this._router.url;
-      this.showButtonsRegister = url === '/home';
       const userId = this._localStorage.getUserId();
+      const url = this._router.url;
+      this.showButtonsRegister = !userId && url !== '/login';
       const token = this._cookieService.get('token');
       if (userId && token) {
         this._router.navigate(['/products/init']);

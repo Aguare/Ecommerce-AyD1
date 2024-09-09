@@ -49,7 +49,14 @@
         isAvailable: boolean;
         created_at: string;
         FK_Branch: number;
-        images: Array<ImageProduct>;
+        images: Array<string>;
         attributes: Array<Attribute>;
+    }
+
+    export interface StockProduct {
+        id: number;
+        name: string;
+        address: string;
+        stock: number;
     }
   

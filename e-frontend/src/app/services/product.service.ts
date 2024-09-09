@@ -112,5 +112,13 @@ export class ProductService {
   getProductById(id: any): Observable<ProductDetail> {
     return this.http.get<ProductDetail>(`${this.apiProduct}/getProductById/${id}`);
   }
+
+  getStockProductById(id: any): Observable<any> {
+    return this.http.get<any>(`${this.apiProduct}/getStockProductById/${id}`);
+  }
+
+  addProductToCart(id_user: number, id_branch:number, id_product: number, quantity: number): Observable<any> {
+    return this.http.post<any>(`${this.apiCustomer}/addProductCart`, {id_user, id_product, id_branch, quantity});
+  }
 }
 
