@@ -14,6 +14,5 @@ router.delete("/deleteProductCart/:id_user/:id_product", CustomerController.dele
 router.post("/addProductCart", CustomerController.addProductCart);
 router.get("/getDeliveryCost", CustomerController.getCompanyShipment);
 router.get("/getDataForCheckout/:id", CustomerController.getUserData);
-router.post("/saveOrder", CustomerController.saveOrder);
 
 module.exports = router;

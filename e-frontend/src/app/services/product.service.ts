@@ -16,6 +16,7 @@ export class ProductService {
   private apiProduct = 'http://localhost:3004/product';
   private apiCategories = 'http://localhost:3004/categories';
   private apiCustomer = 'http://localhost:3003/customer'; 
+  private apiOrder = 'http://localhost:3003/order';
 
   constructor(private http: HttpClient, private localStorageService: LocalStorageService) { }
 
@@ -159,7 +160,7 @@ export class ProductService {
    * Save order
    */
   saveOrder(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiCustomer}/saveOrder`, data);
+    return this.http.post<any>(`${this.apiOrder}/saveOrder`, data);
   }
 }
 
