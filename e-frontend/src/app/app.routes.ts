@@ -14,6 +14,7 @@ import { DashboardComponent } from './components/admin/dashboard/dashboard.compo
 import { ShopCartComponent } from './components/user/shop-cart/shop-cart/shop-cart.component';
 import { ViewProductsComponent } from './components/products/view-products/view-products.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
+import { EditProductComponent } from './components/products/edit-product/edit-product.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,6 +37,7 @@ export const routes: Routes = [
       { path: 'init', component: ProductHomeComponent },
       { path: 'view', component: ViewProductsComponent },
       { path: 'addProduct', component: AddProductComponent },
+      { path: 'editProduct', component: EditProductComponent },
     ]
   },
   { path: '**', component: NotFoundComponent }

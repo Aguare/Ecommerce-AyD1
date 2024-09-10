@@ -45,7 +45,9 @@ export class ViewProductsComponent implements OnInit{
   }
 
   editProduct(id: number) {
-    console.log('Edit product with ID:', id);
+    this.router.navigate(['/products/editProduct'],{
+      queryParams: { idProducto: id },
+    })
   }
 
   addProduct(){

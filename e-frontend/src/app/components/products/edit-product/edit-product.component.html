@@ -1,0 +1,100 @@
+<div class="container mt-5">
+    <h1 class="title">Editar Producto</h1>
+  
+    
+    <div class="buttons">
+      <button class="button is-info mb-3" (click)="toggleSection('data')">Editar Datos del Producto</button>
+      <button class="button is-info mb-3" (click)="toggleSection('attributes')">Editar Atributos del Producto</button>
+      <button class="button is-info mb-3" (click)="toggleSection('images')">Editar Imágenes del Producto</button>
+    </div>
+  
+    <div *ngIf="sectionVisible.data">
+      <form [formGroup]="productForm" (ngSubmit)="submitProductForm()">
+        <div class="field">
+          <label class="label">Nombre</label>
+          <div class="control">
+            <input class="input" formControlName="name" type="text" placeholder="Nombre del Producto" />
+            <p class="help is-danger" *ngIf="
+              productForm.get('name')?.touched && productForm.get('name')?.invalid">El nombre es requerido.</p>
+          </div>
+        </div>
+  
+        <div class="field">
+          <label class="label">Descripción</label>
+          <div class="control">
+            <textarea class="textarea" formControlName="description" placeholder="Descripción del Producto"></textarea>
+            <p class="help is-danger" *ngIf="
+              productForm.get('description')?.touched && productForm.get('description')?.invalid">La descripción es requerida.</p>
+          </div>
+        </div>
+  
+        <div class="field">
+          <label class="label">Precio</label>
+          <div class="control">
+            <input class="input" formControlName="price" type="number" placeholder="Precio" />
+            <p class="help is-danger" *ngIf="
+              productForm.get('price')?.touched && productForm.get('price')?.invalid">El precio es requerido y debe ser válido.</p>
+          </div>
+        </div>
+  
+        <div class="field">
+          <label class="label">Marca</label>
+          <div class="control">
+            <div class="select">
+              <select formControlName="brand">
+                <option value="">-- Seleccione una opcion --</option>
+                <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+  
+        <div class="field">
+          <label class="label">Categoría</label>
+          <div class="control">
+            <div class="select">
+              <select formControlName="category">
+                <option value="">-- Seleccione una opcion --</option>
+                <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+  
+        <button class="button is-primary mt-3" type="submit" [disabled]="productForm.invalid">Guardar Cambios</button>
+      </form>
+    </div>
+  
+    <!-- Editar Atributos del Producto -->
+    <div *ngIf="sectionVisible.attributes">
+      <form [formGroup]="attributeForm" (ngSubmit)="submitAttributeForm()">
+        <div *ngFor="let attribute of attributes.controls; let i = index" [formGroupName]="i">
+          <div class="field">
+            <label class="label">Nombre del Atributo</label>
+            <input class="input" formControlName="name" type="text" placeholder="Atributo" />
+          </div>
+          <div class="field">
+            <label class="label">Valor del Atributo</label>
+            <input class="input" formControlName="value" type="text" placeholder="Valor" />
+          </div>
+          <button class="button is-danger" type="button" (click)="removeAttribute(i)">Eliminar Atributo</button>
+        </div>
+        <button class="button is-link" type="button" (click)="addAttribute()">Agregar Atributo</button>
+        <button class="button is-primary" type="submit">Guardar Atributos</button>
+      </form>
+    </div>
+  
+    <!-- Editar Imágenes del Producto -->
+    <div *ngIf="sectionVisible.images">
+      <div class="columns is-multiline">
+        <div class="column is-one-quarter" *ngFor="let image of images; let i = index">
+          <figure class="image is-4by3">
+            <img [src]="image.url" alt="Imagen del producto" />
+          </figure>
+          <button class="button is-danger" (click)="removeImage(i)">Eliminar</button>
+        </div>
+      </div>
+      <button class="button is-link" (click)="addImage()">Agregar Nueva Imagen</button>
+    </div>
+  </div>
+  

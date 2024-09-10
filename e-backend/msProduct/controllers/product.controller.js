@@ -155,4 +155,33 @@ productController.saveProduct = async (req, res) => {
 	}
 };
 
+productController.getProductById = async (req, res) => {
+	let connection;
+	try {
+
+		const {id} = req.query;
+		if(!id){
+			return res.status(400).send({message: 'El id es obligatorio'})
+		}
+
+		connection = await getConnection();
+
+		const queryMoney = `
+            SELECT p.id, p.name, p.description, p.price, b.id as brandId, b.name as brand, c.id as categoryId, c.name as category FROM product p
+    			LEFT JOIN brand b ON p.FK_Brand = b.id
+    			LEFT JOIN product_has_category phc ON p.id = phc.FK_Product
+    			LEFT JOIN category c ON phc.FK_Category = c.id
+    			WHERE p.id = ?`;
+
+		const productData = await connection.query(queryMoney, id);
+		res.status(200).send({productData: productData[0]});
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener producto", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+};
+
 module.exports = productController;

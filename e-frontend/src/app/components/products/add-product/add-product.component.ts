@@ -15,6 +15,7 @@ import { Category } from '../../card-carrousel/card-carrousel.component';
 import { Brand } from '../view-products/view-products.component';
 import { ImageService } from '../../../services/image.service';
 import { get } from 'http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-product',
@@ -40,7 +41,8 @@ export class AddProductComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private router: Router
   ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
@@ -258,5 +260,9 @@ export class AddProductComponent implements OnInit {
     } else {
       Swal.fire('Guardado!', 'Faltan campos por agregar', 'warning');
     }
+  }
+
+  returnProducts(){
+    this.router.navigate(['products/view'])
   }
 }

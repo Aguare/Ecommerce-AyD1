@@ -46,6 +46,10 @@ export class ProductService {
     return this.http.post(`${this.apiProduct}/saveProduct`, body);
   }
   
+  getProductById(id:number){
+    return this.http.get(`${this.apiProduct}/getProductById?id=${id}`);
+  }
+  
   saveBrand(body:any){
     return this.http.post(`${this.apiBrands}/saveBrand`, body);
   }
