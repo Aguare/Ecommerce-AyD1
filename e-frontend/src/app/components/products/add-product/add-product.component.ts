@@ -12,6 +12,9 @@ import { log } from 'console';
 import Swal from 'sweetalert2';
 import { ProductService } from '../../../services/product.service';
 import { Category } from '../../card-carrousel/card-carrousel.component';
+import { Brand } from '../view-products/view-products.component';
+import { ImageService } from '../../../services/image.service';
+import { get } from 'http';
 
 @Component({
   selector: 'app-add-product',
@@ -20,15 +23,25 @@ import { Category } from '../../card-carrousel/card-carrousel.component';
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.scss',
 })
-export class AddProductComponent implements OnInit{
+export class AddProductComponent implements OnInit {
   productForm: FormGroup;
+
+  brandForm: FormGroup;
+  isBrandModalActive = false;
+  isEditMode = false;
+  selectedBrand?: Brand;
+
   imagePreviews: string[] = [];
   images: File[] = [];
 
-  categories : Category[] = [];
-  brands = ['Samsung', 'Apple', 'Lenovo', 'LG'];
+  categories: Category[] = [];
+  brands: Brand[] = [];
 
-  constructor(private fb: FormBuilder, private productService: ProductService) {
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private imageService: ImageService
+  ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -37,17 +50,90 @@ export class AddProductComponent implements OnInit{
       brand: ['', Validators.required],
       attributes: this.fb.array([]),
     });
+
+    this.brandForm = this.fb.group({
+      name: ['', Validators.required],
+    });
   }
 
   ngOnInit(): void {
     this.productService.getCategories().subscribe({
       next: (res: Category[]) => {
-        this.categories = res;     
+        this.categories = res;
       },
       error: (err: any) => {
         console.log('Error:', err);
       },
     });
+
+    this.getBrands();
+  }
+
+  getBrands() {
+    this.productService.getBrands().subscribe({
+      next: (res: Brand[]) => {
+        this.brands = res;
+      },
+      error: (err: any) => {
+        console.log('Error:', err);
+      },
+    });
+  }
+
+  onBrandSelect() {
+    const selectedBrandId = this.productForm.get('brand')?.value;
+    this.selectedBrand =
+      this.brands.find((brand) => brand.id == selectedBrandId);
+
+      
+  }
+
+  openBrandModal() {
+    this.isEditMode = false; 
+    this.isBrandModalActive = true;
+    this.productForm.get('brand')?.setValue('');
+  }
+
+  openEditBrandModal() {
+    if (this.selectedBrand) {
+      this.isEditMode = true; 
+      this.brandForm.patchValue({ name: this.selectedBrand.name });
+      this.isBrandModalActive = true;
+    }
+  }
+
+  closeBrandModal() {
+    this.isBrandModalActive = false;
+    this.brandForm.reset();
+    this.selectedBrand = undefined;
+  }
+
+  submitBrandForm() {
+    if (this.brandForm.valid) {
+      const brandData = this.brandForm.value;
+
+      if (this.isEditMode && this.selectedBrand) {
+        
+      } else {
+        // add new brand
+        this.productService.saveBrand(brandData).subscribe({
+          next: (res: any) => {
+            Swal.fire('Guardado!', res.message, 'success');
+            this.getBrands(); // Refrescar lista de marcas
+          },
+          error: (error) => console.error(error),
+        });
+      }
+
+      this.closeBrandModal();
+    }
+  }
+
+  deleteBrand() {
+    if (this.selectedBrand) {
+      console.log(this.selectedBrand);
+      
+    }
   }
 
   get attributes() {
@@ -87,20 +173,26 @@ export class AddProductComponent implements OnInit{
     }
   }
 
-  removeImage(index: number){
+  removeImage(index: number) {
     this.imagePreviews.splice(index, 1);
-    this.images.splice(index,1)
+    this.images.splice(index, 1);
   }
 
   submitForm() {
-    
     if (this.productForm.valid && this.images.length > 0) {
-      console.log('Producto enviado:', this.productForm.value);
-      
+      const body = this.productForm.value;
+      //body.images = this.images;
+
+      console.log(body);
+
+      this.productService.saveProduct(body).subscribe({
+        next: (res) => {},
+        error: (error) => {
+          console.log(error);
+        },
+      });
     } else {
       console.log('invalido');
-      
     }
   }
-
 }

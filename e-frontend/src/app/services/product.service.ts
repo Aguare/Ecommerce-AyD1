@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Product } from '../components/simple-carousel/simple-carousel.component';
 import { Category } from '../components/card-carrousel/card-carrousel.component';
 import { LocalStorageService } from './local-storage.service';
+import { Brand } from '../components/products/view-products/view-products.component';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class ProductService {
 
   private apiProduct = 'http://localhost:3004/product';
   private apiCategories = 'http://localhost:3004/categories';
+  private apiBrands = 'http://localhost:3004/brand';
   private apiCustomer = 'http://localhost:3003/customer'; 
 
   constructor(private http: HttpClient, private localStorageService: LocalStorageService) { }
@@ -36,7 +38,17 @@ export class ProductService {
     return this.http.get<Category[]>(`${this.apiCategories}/getCategories`);
   }
   
+  getBrands(){
+    return this.http.get<Brand[]>(`${this.apiBrands}/getBrands`);
+  }
   
+  saveProduct(body: any){
+    return this.http.post(`${this.apiProduct}/saveProduct`, body);
+  }
+  
+  saveBrand(body:any){
+    return this.http.post(`${this.apiBrands}/saveBrand`, body);
+  }
   // METHODS FOR CUSTOMER CART
   /**
    *  Get the cart of the user

@@ -5,6 +5,11 @@ import { ProductService } from '../../../services/product.service';
 import { Product } from '../../simple-carousel/simple-carousel.component';
 import { Router } from '@angular/router';
 
+export interface Brand {
+  id: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-view-products',
   standalone: true,

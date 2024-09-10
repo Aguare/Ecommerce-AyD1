@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ImagePipe } from '../../pipes/image.pipe';
 
 export interface Category {
+  id: number
   name: string;
   image: string;
 }

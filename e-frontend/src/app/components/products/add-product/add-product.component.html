@@ -12,8 +12,22 @@
               class="input"
               type="text"
               placeholder="Nombre del producto"
+              [ngClass]="{
+                'is-danger':
+                  productForm.get('name')?.touched &&
+                  productForm.get('name')?.invalid
+              }"
             />
           </div>
+          <p
+            *ngIf="
+              productForm.get('name')?.touched &&
+              productForm.get('name')?.invalid
+            "
+            class="help is-danger"
+          >
+            El nombre del producto es requerido.
+          </p>
         </div>
 
         <div class="field">
@@ -23,8 +37,22 @@
               formControlName="description"
               class="textarea"
               placeholder="Descripción del producto"
+              [ngClass]="{
+                'is-danger':
+                  productForm.get('description')?.touched &&
+                  productForm.get('description')?.invalid
+              }"
             ></textarea>
           </div>
+          <p
+            *ngIf="
+              productForm.get('description')?.touched &&
+              productForm.get('description')?.invalid
+            "
+            class="help is-danger"
+          >
+            La descripción es requerida.
+          </p>
         </div>
 
         <div class="field">
@@ -35,36 +63,101 @@
               class="input"
               type="number"
               placeholder="Precio del producto"
+              [ngClass]="{
+                'is-danger':
+                  productForm.get('price')?.touched &&
+                  productForm.get('price')?.invalid
+              }"
             />
           </div>
+          <p
+            *ngIf="
+              productForm.get('price')?.touched &&
+              productForm.get('price')?.invalid
+            "
+            class="help is-danger"
+          >
+            El precio es requerido y debe ser mayor a 0.
+          </p>
         </div>
 
         <div class="field">
           <label class="label">Categoría</label>
           <div class="control">
             <div class="select">
-              <select formControlName="category">
-                <option value="">-- Seleccione una Opcion --</option>
-                <option *ngFor="let category of categories" [value]="category.name">
+              <select
+                formControlName="category"
+                [ngClass]="{
+                  'is-danger':
+                    productForm.get('category')?.touched &&
+                    productForm.get('category')?.invalid
+                }"
+              >
+                <option value="">-- Seleccione una Opción --</option>
+                <option
+                  *ngFor="let category of categories"
+                  [value]="category.id"
+                >
                   {{ category.name }}
                 </option>
               </select>
             </div>
           </div>
+          <p
+            *ngIf="
+              productForm.get('category')?.touched &&
+              productForm.get('category')?.invalid
+            "
+            class="help is-danger"
+          >
+            La categoría es requerida.
+          </p>
         </div>
 
         <div class="field">
           <label class="label">Marca</label>
-          <div class="control">
+          <div class="control is-flex is-align-items-center">
             <div class="select">
-              <select formControlName="brand">
-                <option value="">-- Seleccione una Opcion --</option>
-                <option *ngFor="let brand of brands" [value]="brand">
-                  {{ brand }}
+              <select
+                formControlName="brand"
+                [ngClass]="{
+                  'is-danger':
+                    productForm.get('brand')?.touched &&
+                    productForm.get('brand')?.invalid
+                }"
+                (change)="onBrandSelect()"
+              >
+                <option value="">-- Seleccione una Opción --</option>
+                <option *ngFor="let brand of brands" [value]="brand.id">
+                  {{ brand.name }}
                 </option>
               </select>
             </div>
+            <button
+              type="button"
+              class="button is-primary is-small ml-2"
+              (click)="openBrandModal()"
+            >
+              Agregar Marca
+            </button>
+            <button
+              type="button"
+              class="button is-info is-small ml-2"
+              (click)="openEditBrandModal()"
+              [disabled]="!selectedBrand"
+            >
+              Editar Marca
+            </button>
           </div>
+          <p
+            *ngIf="
+              productForm.get('brand')?.touched &&
+              productForm.get('brand')?.invalid
+            "
+            class="help is-danger"
+          >
+            La marca es requerida.
+          </p>
         </div>
 
         <div class="field mt-3">
@@ -90,9 +183,9 @@
           </div>
         </div>
 
+        <!-- Campo de Atributos -->
         <div class="field mt-3">
           <h4>Atributos</h4>
-
           <div class="control">
             <button
               type="button"
@@ -114,14 +207,42 @@
                   formControlName="attributeName"
                   class="input"
                   placeholder="Nombre del atributo"
+                  [ngClass]="{
+                    'is-danger':
+                      attribute.get('attributeName')?.touched &&
+                      attribute.get('attributeName')?.invalid
+                  }"
                 />
+                <p
+                  *ngIf="
+                    attribute.get('attributeName')?.touched &&
+                    attribute.get('attributeName')?.invalid
+                  "
+                  class="help is-danger"
+                >
+                  Nombre del atributo es requerido.
+                </p>
               </div>
               <div class="control is-expanded">
                 <input
                   formControlName="attributeValue"
                   class="input"
                   placeholder="Descripción del atributo"
+                  [ngClass]="{
+                    'is-danger':
+                      attribute.get('attributeValue')?.touched &&
+                      attribute.get('attributeValue')?.invalid
+                  }"
                 />
+                <p
+                  *ngIf="
+                    attribute.get('attributeValue')?.touched &&
+                    attribute.get('attributeValue')?.invalid
+                  "
+                  class="help is-danger"
+                >
+                  Descripción del atributo es requerida.
+                </p>
               </div>
               <div class="control">
                 <button
@@ -154,18 +275,86 @@
     </div>
 
     <div class="column is-half">
-        <h4 class="title is-5">Previsualización de Imágenes</h4>
-        <div class="columns is-multiline">
-          <div *ngFor="let image of imagePreviews; let i = index" class="column is-one-quarter">
-            <figure class="image is-100x100">
-              <img [src]="image" alt="Preview Image" class="image-preview" />
-            </figure>
-            <!-- Botón para eliminar la imagen -->
-            <button class="button is-danger is-small mt-2" (click)="removeImage(i)">
-              X
-            </button>
-          </div>
+      <h4 class="title is-5">Previsualización de Imágenes</h4>
+      <div class="columns is-multiline">
+        <div
+          *ngFor="let image of imagePreviews; let i = index"
+          class="column is-one-quarter"
+        >
+          <figure class="image is-100x100">
+            <img [src]="image" alt="Preview Image" class="image-preview" />
+          </figure>
+          <button
+            class="button is-danger is-small mt-2"
+            (click)="removeImage(i)"
+          >
+            X
+          </button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal to add/edit brand -->
+<div class="modal" [ngClass]="{ 'is-active': isBrandModalActive }">
+  <div class="modal-background" (click)="closeBrandModal()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">
+        {{ isEditMode ? "Editar Marca" : "Agregar Nueva Marca" }}
+      </p>
+      <button
+        class="delete"
+        aria-label="close"
+        (click)="closeBrandModal()"
+      ></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Form to add or update brand-->
+      <form [formGroup]="brandForm">
+        <div class="field">
+          <label class="label">Nombre de la Marca</label>
+          <div class="control">
+            <input
+              formControlName="name"
+              class="input"
+              type="text"
+              placeholder="Nombre de la Marca"
+              [ngClass]="{
+                'is-danger':
+                  brandForm.get('name')?.touched &&
+                  brandForm.get('name')?.invalid
+              }"
+            />
+          </div>
+          <p
+            *ngIf="
+              brandForm.get('name')?.touched && brandForm.get('name')?.invalid
+            "
+            class="help is-danger"
+          >
+            El nombre de la marca es requerido.
+          </p>
+        </div>
+      </form>
+    </section>
+    <footer class="modal-card-foot">
+        <button
+        [disabled]="brandForm.invalid"
+        class="button is-primary m-1"
+        (click)="submitBrandForm()"
+        >
+        {{ isEditMode ? "Actualizar" : "Guardar" }}
+    </button>
+    <button
+      *ngIf="isEditMode"
+      class="button is-danger m-1"
+      (click)="deleteBrand()"
+    >
+      Borrar
+    </button>
+    <!-- <button class="button m-1" (click)="closeBrandModal()">Cancelar</button> -->
+    </footer>
   </div>
 </div>

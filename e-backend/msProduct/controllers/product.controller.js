@@ -106,4 +106,53 @@ productController.getProducts = async (req, res) => {
 	}
 };
 
+productController.saveProduct = async (req, res) => {
+	let connection;
+	try {
+		const { attributes, brand, category, description,  name, price } = req.body;
+		console.log(req.body);
+		
+		
+		if(!attributes || !brand || !category || !description || !name || !price){
+			return res.status(400).send({message: 'Faltan campos por llenar'})
+		}
+
+		connection = await getConnection();
+		await connection.beginTransaction();
+
+		const queryProduct = `INSERT INTO product (name, description, price, FK_Brand) VALUES (?,?,?,?)`;
+		const result = await connection.query(queryProduct, [name, description, price, brand]);
+		const productId = Number(result.insertId);
+		console.log("ID:",productId);
+
+		await connection.commit();
+
+		const queryCategory = `INSERT INTO product_has_category (FK_Product, FK_Category) VALUES (?,?)`
+		const resultCategory = await connection.query(queryCategory, [productId, category]);
+
+		await connection.commit();
+
+		const queryAttribute = `INSERT INTO attribute (name, description) VALUES (?,?)`
+		const queryPhA = `INSERT INTO product_has_attribute (FK_Product, FK_Attribute) VALUES (?,?)`
+
+		attributes.forEach(async attribute => {
+			const r1 = await connection.query(queryAttribute, [attribute.attributeName, attribute.attributeValue]);
+			const attributeId = Number(r1.insertId);
+			await connection.commit();
+			
+			const r2 = await connection.query(queryPhA, [productId, attributeId]);
+			await connection.commit();
+		});
+
+		res.status(200).send({ message: "Producto creado exitosamente", productId });
+	} catch (error) {
+		await connection.rollback();
+		res.status(500).send({ message: "Error al guardar producto", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+};
+
 module.exports = productController;
