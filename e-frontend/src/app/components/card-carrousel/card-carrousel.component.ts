@@ -34,7 +34,7 @@ export class CardCarrouselComponent implements AfterViewInit {
   }
 
   scrollToCategory(categoryName: string): void {
-    const categoryElement = document.getElementById('category-carrousel-' + categoryName);
+    const categoryElement = document.getElementById('title-carrousel-' + categoryName);
     if (categoryElement) {
       categoryElement.scrollIntoView({ behavior: 'smooth' });
     }
@@ -45,7 +45,7 @@ export class CardCarrouselComponent implements AfterViewInit {
     setTimeout(()=>{
       if (typeof document !== 'undefined') {
         new Splide('#image-carousel', {
-          type: 'loop',
+          
           perPage: 6,
           perMove: 1,
           gap: '20px',
