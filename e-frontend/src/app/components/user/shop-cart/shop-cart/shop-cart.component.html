@@ -1,7 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="cart-container">
-
+ <div class="cart-container">
   <div *ngIf="isLoading" class="has-text-centered">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     <p>Cargando...</p>
@@ -107,3 +106,128 @@
     <p>El carrito está vacío</p>
   </div>
 </div>
+
+<!-- Modal de pago -->
+<div *ngIf="isModalActive" class="modal is-active">
+  <div class="modal-background" (click)="closeModal()"></div>
+  <div class="modal-card" style="max-width: 1000px;">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Checkout</p>
+      <button class="delete" aria-label="close" (click)="closeModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      <form>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">NIT de Factura</label>
+              <div class="control has-icons-left">
+                <input class="input is-fullwidth" type="text" placeholder="Ingresa tu NIT" name="nitBill" [(ngModel)]="nitBill">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-id-card"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="field">
+              <label class="label">Nombre de Factura</label>
+              <div class="control has-icons-left">
+                <input class="input is-fullwidth" type="text" placeholder="Ingresa tu nombre completo" name="nameBill" [(ngModel)]="nameBill">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Dirección de Factura</label>
+              <div class="control has-icons-left">
+                <input class="input is-fullwidth" type="text" placeholder="Ingresa tu dirección" name="addressBill" [(ngModel)]="addressBill">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-map-marker-alt"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="field" *ngIf="deliveryOption !== 'store'">
+              <label class="label">Referencia de Dirección</label>
+              <div class="control has-icons-left">
+                <input class="input is-fullwidth" type="text" placeholder="Referencia de la dirección" name="referenceAddress" [(ngModel)]="referenceAddress">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-map-marker"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Método de entrega</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select name="deliveryOption" [(ngModel)]="deliveryOption" (ngModelChange)="updateDeliveryOption($event)">
+                <option value="store">Recoger en tienda</option>
+                <option value="delivery">Entrega a domicilio</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mostrar detalles de la tienda si se elige "Recoger en tienda" -->
+        <div *ngIf="deliveryOption === 'store'" class="mt-4">
+          <div class="field">
+            <label class="label">Nombre de la tienda</label>
+            <div class="control">
+              <input class="input is-fullwidth is-disabled" type="text" [value]="branchName" disabled>
+            </div>
+          </div>
+
+          <div class="field mt-4">
+            <label class="label">Dirección de la tienda</label>
+            <div class="control">
+              <input class="input is-fullwidth is-disabled" type="text" [value]="branchAddress" disabled>
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo de costo de entrega si la opción es 'Entrega a domicilio' -->
+        <div *ngIf="deliveryOption === 'delivery'" class="field">
+          <label class="label">Costo de Entrega</label>
+          <div class="control has-icons-left">
+            <input class="input is-fullwidth" type="number" [value]="deliveryCost" readonly name="deliveryCost">
+            <span class="icon is-left" style="margin-left: -35px;">{{ currency }}</span>
+          </div>
+        </div>
+
+        <div class="field mt-4">
+          <label class="label">Total a Pagar</label>
+          <div class="control has-icons-left">
+            <input class="input is-fullwidth" type="number" [value]="total" readonly name="total">
+            <span class="icon is-left" style="margin-left: -10px;">{{ currency }}</span>
+          </div>
+        </div>
+
+        <div class="field is-grouped is-grouped-centered mt-4">
+          <p class="control mt-2">
+            <button class="button is-primary" (click)="submitCheckout()">Confirmar</button>
+          </p>
+          <p class="control mt-2">
+            <button class="button is-light" (click)="closeModal()">Cancelar</button>
+          </p>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+
+
+
+

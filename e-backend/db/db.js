@@ -9,16 +9,16 @@ const pool = mariadb.createPool({
 	user: data.user,
 	password: data.password,
 	database: data.database,
-	connectionLimit: 3,
+	connectionLimit: 1,
 });
 
 async function getConnection() {
 	try {
-        const connection = await pool.getConnection();
-        return connection;
-    } catch (error) {
-        throw new Error('No se pudo establecer una conexión con la base de datos.');
-    }
+		const connection = await pool.getConnection();
+		return connection;
+	} catch (error) {
+		throw new Error("No se pudo establecer una conexión con la base de datos.");
+	}
 }
 
 module.exports = getConnection;
