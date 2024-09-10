@@ -1,32 +1,45 @@
-.splide__slide img {
-    width: 20%; /* Asegura que la imagen use todo el ancho del contenedor */
-    height: auto; /* Mantiene la proporción de la imagen, ajustando la altura automáticamente */
-    object-fit: cover; /* Asegura que la imagen se ajuste dentro del contenedor sin recortarse */
-  }
-  
+/** @format */
 
 .image-container {
-    width: 30%;
-    height: auto;
+	width: 45%;
+	height: auto;
 }
 
 #product-detail-carrousell {
-  .splide__slide {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	.splide__slide {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
-    img.carousel-image {
-      width: 100%; // Asegura que la imagen ocupe todo el ancho disponible
-      height: auto; // Mantiene la proporción de la imagen
-      max-width: 100%; // Prevenir que exceda el contenedor
-      object-fit: contain; // Hace que la imagen se ajuste sin recortes
-      border-radius: 8px; // Opcional: Si quieres bordes redondeados en las imágenes
-    }
+		img.carousel-image {
+			width: 100%;
+			height: auto; 
+			max-width: 100%; 
+			object-fit: scale-down;
+			border-radius: 8px; 
+		}
+	}
+
+	.splide__track {
+		overflow: hidden;
+		border-radius: 8px;
+	}
+}
+
+@media (max-width: 768px) {
+  .image-container {
+    width: 100%;
   }
 
-  .splide__track {
-    overflow: hidden;
-    border-radius: 8px; // Opcional: Si deseas bordes redondeados en el contenedor
+  #product-detail-carrousell {
+    .splide__slide {
+      img.carousel-image {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+      }
+    }
   }
 }

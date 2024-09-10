@@ -7,7 +7,7 @@ const adminController = {} ;
 adminController.getPages = async (req, res) => {
 	let connection;
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         connection = await getConnection();
 
         if (!id) {

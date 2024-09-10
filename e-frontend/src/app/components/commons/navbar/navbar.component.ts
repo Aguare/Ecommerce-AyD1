@@ -77,6 +77,7 @@ export class NavbarComponent implements OnInit {
 					this._localStorage.setBranchId(res[0].id);
 					this._localStorage.setBranchName(res[0].name);
 					this._localStorage.setBranchAddress(res[0].address);
+					this.currentBranchId = res[0].id;
 				},
 				error: (err: any) => {
 					Swal.fire({ icon: "error", title: "Error", text: "Error al obtener la sucursal" });
@@ -85,6 +86,7 @@ export class NavbarComponent implements OnInit {
 		} else {
 			this.branchName = this._localStorage.getBranchName();
 			this.branchAddress = this._localStorage.getBranchAddress();
+			this.currentBranchId = branchId;
 		}
 
 		// Function to get pages of user by his id

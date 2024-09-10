@@ -28,7 +28,7 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   getPages(id: number): Observable<PagesResponse> {
-    return this.http.post<PagesResponse>(`${this.apiAdmin}/getPages`, { id });
+    return this.http.get<PagesResponse>(`${this.apiAdmin}/getPages/${id}`);
   }
 
   login(data: any): Observable<any> {

@@ -69,7 +69,13 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
     const productId = this.route.snapshot.paramMap.get('id');
     this.currentBranchId = this.localStorageService.getBranchId();
 
-    if (!productId) {
+    if (!productId || isNaN(Number(productId))) {
+      Swal.fire({
+        title: 'No se encontró el producto',
+        icon: 'question',
+        showConfirmButton: false,
+        timer: 1500
+      });
       this.router.navigate(['/']);
     }
 
@@ -81,12 +87,27 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
 
     this.productService.getProductById(productId).subscribe((product: ProductDetail) => {
       this.productDetail = product;
-      console.log(product)
+    }, error => {
+      Swal.fire({
+        title: 'No se encontró el producto',
+        icon: 'question',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      this.router.navigate(['/']);
     });
 
     this.productService.getStockProductById(productId).subscribe((stock: StockProduct[]) => {
       this.stockProducts = stock;
       this.currentBranchAvailable = stock.some((stockProduct: StockProduct) => stockProduct.id === this.currentBranchId);
+    }, error => {
+      Swal.fire({
+        title: 'Error al cargar el stock del producto',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      this.router.navigate(['/']);
     });
 
 
@@ -99,7 +120,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
   ngAfterViewInit() {
     // creating splide carrousel
     setTimeout(() => {
-      console.log('length', this.productDetail.images.length);
       if (typeof document !== 'undefined' && this.productDetail.images.length > 1 && !this.isLoading) {
         const splideId = '#product-detail-carrousell';
         const splide = new Splide(splideId, {
