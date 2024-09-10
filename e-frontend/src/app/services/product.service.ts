@@ -16,6 +16,7 @@ export class ProductService {
   private apiProduct = 'http://localhost:3004/product';
   private apiCategories = 'http://localhost:3004/categories';
   private apiCustomer = 'http://localhost:3003/customer'; 
+  private apiOrder = 'http://localhost:3003/order';
 
   constructor(private http: HttpClient, private localStorageService: LocalStorageService) { }
 
@@ -137,6 +138,29 @@ export class ProductService {
   getNumberInCart(): Observable<any> {
     const id_user = this.localStorageService.getUserId();
     return this.http.get<any>(`${this.apiCustomer}/getNumberInCart/${id_user}`);
+  }
+
+  /**
+   * get delivery cost
+   */
+  getDeliveryCost(): Observable<any> {
+    return this.http.get<any>(`${this.apiCustomer}/getDeliveryCost`);
+  }
+
+  /** 
+   * get data for checkout
+   */
+
+  getDataForCheckout(): Observable<any> {
+    const id_user = this.localStorageService.getUserId();
+    return this.http.get<any>(`${this.apiCustomer}/getDataForCheckout/${id_user}`);
+  }
+
+  /** 
+   * Save order
+   */
+  saveOrder(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiOrder}/saveOrder`, data);
   }
 }
 

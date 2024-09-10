@@ -533,4 +533,93 @@ userController.getNumberInCart = async (req, res) => {
 	}
 };
 
+/**
+ * get company_shipment
+ * - get the company shipment
+ */
+
+userController.getCompanyShipment = async (req, res) => {
+	let conn;
+	try {
+		conn = await getConnection();
+
+		const queryShipment = "SELECT key_value FROM company_settings WHERE key_name = 'delivery_cost';";
+		const resultShipment = await conn.query(queryShipment);
+		if (resultShipment.length === 0) {
+			return res.status(400).send({ message: "No se encontro el costo de envio" });
+		}
+
+		return res
+			.status(200)
+			.send({ message: "Envio obtenido correctamente", data: { delivery_cost: resultShipment[0].key_value } });
+	} catch (error) {
+		console.log(error);
+		console.log(error.message);
+		res.status(400).send({
+			message: "Error al obtener el envio",
+			error: error.message,
+		});
+	} finally {
+		if (conn) {
+			conn.end();
+		}
+	}
+};
+
+/**
+ * get data of the user
+ * - get the data of the user
+ */
+
+userController.getUserData = async (req, res) => {
+	const { id } = req.params;
+
+	if (!id) {
+		return res.status(400).send({ message: "Faltan campos por llenar" });
+	}
+
+	let conn;
+
+	try {
+		conn = await getConnection();
+		await conn.beginTransaction();
+
+		const query = `SELECT * FROM user WHERE id = ?;`;
+		const [result] = await conn.query(query, [id]);
+
+		if (result.length === 0) {
+			await conn.rollback();
+			return res.status(400).send({ message: "No se encontró el usuario" });
+		}
+
+		const querys = `SELECT * FROM user_information WHERE Fk_User = ?;`;
+		const [resultInformation] = await conn.query(querys, [id]);
+
+		await conn.commit();
+
+		const data = {
+			user: result,
+			info: resultInformation,
+		};
+		return res.status(200).send({
+			message: "Usuario obtenido correctamente",
+			data: data,
+		});
+	} catch (error) {
+		console.log(error);
+		console.log(error.message);
+		if (conn) {
+			await conn.rollback();
+		}
+		res.status(400).send({
+			message: "Error al obtener el usuario",
+			error: error.message,
+		});
+	} finally {
+		if (conn) {
+			conn.end();
+		}
+	}
+};
+
 module.exports = userController;
