@@ -65,7 +65,7 @@ userController.signUp = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.release();
+			conn.end();
 		}
 	}
 };
