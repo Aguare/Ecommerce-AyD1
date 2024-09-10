@@ -12,9 +12,9 @@
     <mat-card-content>
       <div class="card-content">
         <div class="card-title">
-          <mat-card-subtitle>{{ product.name }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ product.name | slice : 0 : 50}}</mat-card-subtitle>
         </div>
-        <p>
+        <p class="mt-1">
           <span
             class="span-price {{ product.discount > 0 ? 'line-throught' : '' }}"
           >

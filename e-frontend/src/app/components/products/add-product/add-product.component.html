@@ -183,7 +183,6 @@
           </div>
         </div>
 
-        <!-- Campo de Atributos -->
         <div class="field mt-3">
           <h4>Atributos</h4>
           <div class="control">
@@ -340,21 +339,21 @@
       </form>
     </section>
     <footer class="modal-card-foot">
-        <button
+      <button
         [disabled]="brandForm.invalid"
         class="button is-primary m-1"
         (click)="submitBrandForm()"
-        >
+      >
         {{ isEditMode ? "Actualizar" : "Guardar" }}
-    </button>
-    <button
-      *ngIf="isEditMode"
-      class="button is-danger m-1"
-      (click)="deleteBrand()"
-    >
-      Borrar
-    </button>
-    <!-- <button class="button m-1" (click)="closeBrandModal()">Cancelar</button> -->
+      </button>
+      <button
+        *ngIf="isEditMode"
+        class="button is-danger m-1"
+        (click)="deleteBrand()"
+      >
+        Borrar
+      </button>
+      <!-- <button class="button m-1" (click)="closeBrandModal()">Cancelar</button> -->
     </footer>
   </div>
 </div>

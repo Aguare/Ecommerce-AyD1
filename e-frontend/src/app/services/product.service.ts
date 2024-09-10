@@ -49,6 +49,14 @@ export class ProductService {
   saveBrand(body:any){
     return this.http.post(`${this.apiBrands}/saveBrand`, body);
   }
+
+  updateBrand(body:any){
+    return this.http.put(`${this.apiBrands}/updateBrand`, body);
+  }
+
+  deleteBrand(id:number){
+    return this.http.delete(`${this.apiBrands}/deleteBrand?id=${id}`);
+  }
   // METHODS FOR CUSTOMER CART
   /**
    *  Get the cart of the user

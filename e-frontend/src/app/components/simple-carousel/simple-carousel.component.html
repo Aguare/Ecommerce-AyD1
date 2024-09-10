@@ -10,7 +10,7 @@
           <mat-card class="example-card" appearance="outlined">
             <div class="card-content-container">
               <div class="card-text-content">
-                <h4 class="card-title">{{ product.name }}</h4>
+                <h4 class="card-title">{{ product.name | slice : 0 : 50}}</h4>
                 <p class="card-price">Precio: <span>{{ product.price }}</span></p>
               </div>
               <div class="card-image-content">

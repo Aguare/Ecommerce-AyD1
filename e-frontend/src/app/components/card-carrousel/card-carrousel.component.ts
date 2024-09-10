@@ -18,7 +18,7 @@ export interface Category {
   templateUrl: './card-carrousel.component.html',
   styleUrl: './card-carrousel.component.scss',
 })
-export class CardCarrouselComponent implements OnInit, AfterViewInit {
+export class CardCarrouselComponent implements AfterViewInit {
 
   categories: Category[] = [];
 
@@ -33,9 +33,13 @@ export class CardCarrouselComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {
-    
+  scrollToCategory(categoryName: string): void {
+    const categoryElement = document.getElementById('category-carrousel-' + categoryName);
+    if (categoryElement) {
+      categoryElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }
+
 
   ngAfterViewInit(): void {
     setTimeout(()=>{

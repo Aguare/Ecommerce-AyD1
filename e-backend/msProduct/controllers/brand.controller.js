@@ -48,6 +48,8 @@ brandController.updateBrand = async (req, res) => {
 	try {
 
         const {id, name} = req.body;
+		console.log(req.body);
+		
 		connection = await getConnection();
 		const queryMoney = `UPDATE brand SET name = ? WHERE id = ?`;
 		const result = await connection.query(queryMoney, [name, id]);

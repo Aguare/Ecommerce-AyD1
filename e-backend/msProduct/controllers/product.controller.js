@@ -41,7 +41,7 @@ productController.getProductsWithCategory = async (req, res) => {
             SELECT pr.id, pr.name, pr.description, pr.price,
        (SELECT primg.image_path
         FROM product_image primg
-        WHERE pr.id = primg.FK_ProductP
+        WHERE pr.id = primg.FK_Product
         ORDER BY primg.id ASC
         LIMIT 1) AS image_path,
        c.name AS category
@@ -110,7 +110,7 @@ productController.saveProduct = async (req, res) => {
 	let connection;
 	try {
 		const { attributes, brand, category, description,  name, price } = req.body;
-		console.log(req.body);
+
 		
 		
 		if(!attributes || !brand || !category || !description || !name || !price){
@@ -123,7 +123,7 @@ productController.saveProduct = async (req, res) => {
 		const queryProduct = `INSERT INTO product (name, description, price, FK_Brand) VALUES (?,?,?,?)`;
 		const result = await connection.query(queryProduct, [name, description, price, brand]);
 		const productId = Number(result.insertId);
-		console.log("ID:",productId);
+		
 
 		await connection.commit();
 

@@ -106,6 +106,7 @@ export class AddProductComponent implements OnInit {
     this.isBrandModalActive = false;
     this.brandForm.reset();
     this.selectedBrand = undefined;
+    this.productForm.get('brand')?.setValue('');
   }
 
   submitBrandForm() {
@@ -113,13 +114,32 @@ export class AddProductComponent implements OnInit {
       const brandData = this.brandForm.value;
 
       if (this.isEditMode && this.selectedBrand) {
-        
+        // update brand
+
+        const body = this.selectedBrand;
+        body.name = brandData.name;
+
+        this.productService.updateBrand(this.selectedBrand).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: res.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            this.getBrands();
+             
+          },
+          error: (error) => console.error(error),
+        });
+
       } else {
         // add new brand
         this.productService.saveBrand(brandData).subscribe({
           next: (res: any) => {
             Swal.fire('Guardado!', res.message, 'success');
-            this.getBrands(); // Refrescar lista de marcas
+            this.getBrands();
           },
           error: (error) => console.error(error),
         });
@@ -131,7 +151,21 @@ export class AddProductComponent implements OnInit {
 
   deleteBrand() {
     if (this.selectedBrand) {
-      console.log(this.selectedBrand);
+      this.productService.deleteBrand(this.selectedBrand.id).subscribe({
+        next: (res:any)=> {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: res.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.getBrands();
+          this.closeBrandModal();
+        },
+        error: (err)=> {console.log(err);
+        }
+      })
       
     }
   }
@@ -179,20 +213,50 @@ export class AddProductComponent implements OnInit {
   }
 
   submitForm() {
+
     if (this.productForm.valid && this.images.length > 0) {
       const body = this.productForm.value;
-      //body.images = this.images;
 
       console.log(body);
 
       this.productService.saveProduct(body).subscribe({
-        next: (res) => {},
+        next: (res: any) => {
+
+          this.images.forEach(img => {
+            const formData = new FormData();
+            formData.append('image', img);
+            formData.append('productId', res.productId);
+            this.imageService.saveProductImage(formData).subscribe({
+              next: (res: any) => {
+                console.log(res);
+              },
+              error: (error) => {
+                console.log(error);
+              },
+            });
+          })
+
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Producto Agregado con Exito',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+          this.productForm.reset()
+          this.imagePreviews = [];
+          this.images = [];
+
+        },
         error: (error) => {
           console.log(error);
         },
       });
+
+      
     } else {
-      console.log('invalido');
+      Swal.fire('Guardado!', 'Faltan campos por agregar', 'warning');
     }
   }
 }
