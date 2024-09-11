@@ -14,6 +14,7 @@ import { ProductService } from "../../../services/product.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatBadgeModule } from "@angular/material/badge";
+import { SearchInputComponent } from "../search-input/search-input.component";
 
 interface MenuItem {
 	module: string;
@@ -29,7 +30,7 @@ interface PageItem {
 @Component({
 	selector: "app-navbar",
 	standalone: true,
-	imports: [CommonModule, MatIconModule, RouterLink, ImagePipe, MatTooltipModule, MatBadgeModule],
+	imports: [CommonModule, MatIconModule, RouterLink, ImagePipe, MatTooltipModule, MatBadgeModule, SearchInputComponent],
 	templateUrl: "./navbar.component.html",
 	styleUrl: "./navbar.component.scss",
 	providers: [CookieService],
