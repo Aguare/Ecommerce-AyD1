@@ -95,8 +95,7 @@ export class NavbarComponent implements OnInit {
 				this.pagesNavBar = this.groupPagesByModule(this.pages);
 			},
 			error: (err: any) => {
-				console.log("Error:", err);
-				Swal.fire({ icon: "error", title: "Error", text: "Error al obtener las páginas" });
+
 			},
 		});
 
