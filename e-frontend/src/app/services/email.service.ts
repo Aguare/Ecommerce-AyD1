@@ -17,4 +17,12 @@ export class EmailService {
   sendVerificationEmail(data: any): any {
     return this.http.post(`${this.apiEmail}/sendVerificationEmail`, data);
   }
+
+  sendRecoveryPasswordEmail(data: any): any {
+    return this.http.post(`${this.apiEmail}/sendRecoveryPasswordEmail`, data);
+  }
+
+  validateEmail(data: any): any {
+    return this.http.post(`${this.apiEmail}/validateEmail`, data);
+  }
 }

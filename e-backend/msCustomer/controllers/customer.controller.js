@@ -65,10 +65,78 @@ userController.signUp = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
+
+userController.verifyRecoveryPassword = async (req, res) => {
+	let connection;
+
+	const { token, email, password } = req.body;
+
+	console.log(token, email, password);
+
+	try {
+		connection = await getConnection();
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send({ message: "Error al conectar con la base de datos" });
+	}
+
+	try {
+		const queryToken = `SELECT * FROM email_verification WHERE email = ? AND token = ?;`;
+		const resultToken = await connection.query(queryToken, [email, token]);
+
+		if (resultToken.length === 0) {
+			return res.status(400).send({ message: "Token inválido" });
+		}
+
+		if (resultToken[0].isResetPassword === 0) {
+			return res.status(400).send({ message: "Token inválido" });
+		}
+
+		const result = await updatePassword(email, password, connection);
+
+		if (result) {
+			const queryDeleteToken = `DELETE FROM email_verification WHERE email = ?;`;
+			await connection.query(queryDeleteToken, [email]);
+
+			return res.status(200).send({ message: "Contraseña actualizada correctamente" });
+		} else {
+			return res.status(400).send({ message: "Error al actualizar la contraseña" });
+		}
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send({ message: "Error al verificar la contraseña" });
+	} finally {
+		if (connection) {
+			connection.release();
+		}
+	}
+};
+
+async function updatePassword(email, password, connection) {
+	try {
+		const querySalt = `SELECT * FROM company_settings WHERE key_name = 'password_salt';`;
+		const resultSalt = await connection.query(querySalt);
+
+		if (resultSalt.length === 0) {
+			return false;
+		}
+
+		const salt = resultSalt[0].key_value;
+		const encryptedPassword = pbkdf2.pbkdf2Sync(password.toString(), salt, 1, 32, "sha512").toString("hex");
+
+		const updatePasswordQuery = "UPDATE user SET password = ? WHERE email = ?;";
+		await connection.query(updatePasswordQuery, [encryptedPassword, email]);
+
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+}
 
 /**
  * Get the cart of the customer
@@ -130,7 +198,7 @@ userController.myCart = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -162,7 +230,7 @@ userController.getCurrency = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -208,7 +276,7 @@ userController.updateCart = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -243,7 +311,7 @@ userController.deleteCart = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -275,7 +343,7 @@ userController.getStore = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -321,7 +389,7 @@ userController.validateStock = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -373,7 +441,7 @@ userController.validateStockOnline = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -411,7 +479,7 @@ userController.deleteProductCart = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -470,7 +538,7 @@ userController.addProductCart = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -528,7 +596,7 @@ userController.getNumberInCart = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -561,7 +629,7 @@ userController.getCompanyShipment = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -617,7 +685,7 @@ userController.getUserData = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };

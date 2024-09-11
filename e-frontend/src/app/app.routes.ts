@@ -20,6 +20,8 @@ import { VerifyEmailComponent } from './components/commons/verify-email/verify-e
 import { AddHelperComponent } from './components/admin/add-helper/add-helper.component';
 import { OrdersComponent } from './components/admin/orders/orders.component';
 import { PurchasesComponent } from './components/user/purchases/purchases.component';
+import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './components/commons/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,7 +36,9 @@ export const routes: Routes = [
   { path: 'purchases', component: PurchasesComponent },
   { path: 'account/:username', component: MyAccountComponent },
   { path: 'shop/cart/:username', component: ShopCartComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
+  { path: 'reset-password/:token/:email', component: ResetPasswordComponent },
   { path: 'add-helper', component: AddHelperComponent},
   {
     path: 'edit', children: [

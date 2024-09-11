@@ -97,7 +97,7 @@ emailController.sendVerificationEmail = async (req, res) => {
 		});
 
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	} catch (error) {
 		console.log(error);
@@ -141,7 +141,7 @@ emailController.verifyEmail = async (req, res) => {
 		}
 
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	} catch (error) {
 		res.status(500).send({ message: "Error al verificar el correo" });
@@ -153,7 +153,7 @@ emailController.sendRecoveryPasswordEmail = async (req, res) => {
 
 	let { email, isObject } = req.body;
 	const tokenGenerated = uuidv4();
-	const website = "http://localhost:4200/recovery-password";
+	const website = "http://localhost:4200/reset-password";
 
 	try {
 		connection = await getConnection();
@@ -237,7 +237,7 @@ emailController.sendRecoveryPasswordEmail = async (req, res) => {
 		});
 
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 
 		return { message: "Correo enviado" };
@@ -248,6 +248,36 @@ emailController.sendRecoveryPasswordEmail = async (req, res) => {
 		} else {
 			res.status(500).send({ message: "Error al conectar con la base de datos" });
 		}
+	}
+};
+
+emailController.validateEmailUser = async (req, res) => {
+	let connection;
+
+	try {
+		const { email } = req.body;
+
+		if (!email) {
+			return res.status(400).send({ message: "Faltan campos" });
+		}
+
+		connection = await getConnection();
+
+		const queryUser = `SELECT email FROM user WHERE email = ?;`;
+		const resultUser = await connection.query(queryUser, [email]);
+
+		if (resultUser.length === 0) {
+			return res.status(400).send({ success: false, message: "El usuario no existe." });
+		}
+
+		if (connection) {
+			connection.release();
+		}
+
+		return res.status(200).send({ success: true, message: "Usuario encontrado" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ message: "Error al conectar con la base de datos" });
 	}
 };
 
