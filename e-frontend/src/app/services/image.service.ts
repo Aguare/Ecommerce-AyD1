@@ -23,7 +23,15 @@ export class ImageService {
     return this.httpClient.post(this.portImage + 'upload/admin', body);
   }
   
+  saveProductImage(body: any) : Observable<any> {
+    return this.httpClient.post(this.portImage + 'upload/product', body);
+  }
+  
   getLogoCompany(): Observable<any> {
     return this.httpClient.get(this.portImage + 'company/logo');
+  }
+
+  deleteImage(id:number): Observable<any> {
+    return this.httpClient.delete(`${this.portImage}img/deleteImage/${id}`);
   }
 }

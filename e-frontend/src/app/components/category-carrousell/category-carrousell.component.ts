@@ -62,7 +62,7 @@ export class CategoryCarrousellComponent implements AfterViewInit {
         this.productsCart.forEach((cart) => {         
           const splideId = '#category-carrousel-' + cart.category;
           const splide = new Splide(splideId, {
-            type: 'loop',
+            
             perPage: 5,
             perMove: 1,
             gap: '0px',

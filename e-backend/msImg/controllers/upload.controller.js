@@ -7,6 +7,7 @@ const path = require("path");
 const fs = require("fs");
 
 const getConnection = require("../../db/db.js");
+const { log } = require("console");
 
 const app = express();
 
@@ -69,7 +70,7 @@ const saveImageProduct = async (req, res) => {
 	try {
 		conn = await getConnection();
 		const paths = req.files.map((file) => {
-			return path.join("public", "img", "products", file.filename);
+			return path.join("img", "products", file.filename);
 		});
 		const insertImagesProduct = "INSERT INTO product_image (image_path, FK_Product, created_at) VALUES (?,?,?)";
 
@@ -173,8 +174,48 @@ const getCompanyLogo = async (req, res) => {
 	}
 };
 
+const deleteImage = async (req, res) => {
+	let conn;
+	try {
+		const {id} = req.params;
+
+		if(!id){
+			res.status(500).send({ message: "No se encontro el id" }); 
+		}
+
+		conn = await getConnection();
+
+		const queryImage = `SELECT image_path FROM product_image WHERE id = ?`;
+		const result = await conn.query(queryImage, id);
+
+		const {image_path} = result[0];
+
+		const fullPath = path.join(__dirname, '../public',image_path);
+
+		if(fs.existsSync(fullPath)){
+			
+			const deleteQuery = `DELETE FROM product_image WHERE id = ?`
+			const resultDelete = await conn.query(deleteQuery, id);
+			
+			fs.unlinkSync(fullPath);
+			res.status(200).send({ message: 'Imagen eliminada de la base de datos'});
+		} else {
+			res.status(400).send({ message: 'La imagen no existe en el servidor'});
+		}
+				
+	} catch (e) {
+		console.log(e);
+		res.status(500).send({ message: "Internal server error" });
+	} finally {
+		if (conn) {
+			conn.end();
+		}
+	}
+};
+
+
 const uploadImageP = uploadImage("products");
 const uploadImageC = uploadImage("profiles");
 const uploadImageA = uploadImage("settings");
 
-module.exports = { uploadImage, uploadImageP, uploadImageC, uploadImageA, getCompanyLogo };
+module.exports = { uploadImage, uploadImageP, uploadImageC, uploadImageA, getCompanyLogo, deleteImage };

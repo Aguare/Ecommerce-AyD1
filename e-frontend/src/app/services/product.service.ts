@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Product } from '../components/simple-carousel/simple-carousel.component';
 import { Category } from '../components/card-carrousel/card-carrousel.component';
 import { LocalStorageService } from './local-storage.service';
+import { Brand } from '../components/products/view-products/view-products.component';
 import { Order, OrderProduct, ProductDetail } from '../interfaces';
 
 @Injectable({
@@ -15,6 +16,7 @@ export class ProductService {
   updateViewsLogged = new EventEmitter();
   private apiProduct = 'http://localhost:3004/product';
   private apiCategories = 'http://localhost:3004/categories';
+  private apiBrands = 'http://localhost:3004/brand';
   private apiCustomer = 'http://localhost:3003/customer';
   private apiOrder = 'http://localhost:3003/order';
   sendOrder: EventEmitter<Order | null> = new EventEmitter<Order | null>();
@@ -40,11 +42,45 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.apiProduct}/getProductsWithCategory/${id_branch}`);
   }
   
+  getProducts(){
+    return this.http.get<Product[]>(`${this.apiProduct}/getProducts`);
+  }
+  
   getCategories(){
     return this.http.get<Category[]>(`${this.apiCategories}/getCategories`);
   }
   
+  getBrands(){
+    return this.http.get<Brand[]>(`${this.apiBrands}/getBrands`);
+  }
   
+  saveProduct(body: any){
+    return this.http.post(`${this.apiProduct}/saveProduct`, body);
+  }
+  
+  getProductById(id:number){
+    return this.http.get(`${this.apiProduct}/getProductById?id=${id}`);
+  }
+  
+  updateDataProduct(body: any){
+    return this.http.put(`${this.apiProduct}/updateDataProduct`, body);
+  }
+  
+  updateAttributesProduct(body: any){
+    return this.http.put(`${this.apiProduct}/updateAttributesProduct`, body);
+  }
+  
+  saveBrand(body:any){
+    return this.http.post(`${this.apiBrands}/saveBrand`, body);
+  }
+
+  updateBrand(body:any){
+    return this.http.put(`${this.apiBrands}/updateBrand`, body);
+  }
+
+  deleteBrand(id:number){
+    return this.http.delete(`${this.apiBrands}/deleteBrand?id=${id}`);
+  }
   // METHODS FOR CUSTOMER CART
   /**
    *  Get the cart of the user

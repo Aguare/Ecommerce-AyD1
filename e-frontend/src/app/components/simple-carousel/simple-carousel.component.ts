@@ -14,14 +14,14 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from '../../services/local-storage.service';
 
 export interface Product {
-  id: number;
+  id: number
   name: string;
   description: string;
   price: number;
   image_path: string;
   category: string;
   discount: number;
-  
+  brand: string;
 }
 
 @Component({

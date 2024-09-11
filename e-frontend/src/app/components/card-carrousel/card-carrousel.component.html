@@ -1,26 +1,28 @@
 <div class="container mt-5">
-    <section
-      id="image-carousel"
-      class="splide"
-      aria-label="Splide Basic HTML Example"
-    >
-      <div class="splide__track">
-        <ul class="splide__list">
-          <li class="splide__slide" *ngFor="let category of categories">
-            <div class="card is-shadowless">
-              <div class="card-content">
-                <figure class="image is-3by2">
-                  <img
-                    [src]="category.image | imagePipe"
-                    [alt]="'Imagen de ' + category.name"
-                  />
-                </figure>
-                <div class="category-label">{{category.name}}</div>
-              </div>
+  <section
+    id="image-carousel"
+    class="splide"
+    aria-label="Splide Basic HTML Example"
+  >
+    <div class="splide__track">
+      <ul class="splide__list">
+        <li class="splide__slide" *ngFor="let category of categories">
+          <div
+            class="card is-shadowless"
+            (click)="scrollToCategory(category.name)"
+          >
+            <div class="card-content">
+              <figure class="image is-3by2">
+                <img
+                  [src]="category.image | imagePipe"
+                  [alt]="'Imagen de ' + category.name"
+                />
+              </figure>
+              <div class="category-label">{{ category.name }}</div>
             </div>
-          </li>
-        </ul>
-      </div>
-    </section>
-  </div>
-  
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>
