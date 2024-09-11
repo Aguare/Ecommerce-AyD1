@@ -14,6 +14,8 @@ import { DashboardComponent } from './components/admin/dashboard/dashboard.compo
 import { ShopCartComponent } from './components/user/shop-cart/shop-cart/shop-cart.component';
 import { ProductDetailsComponent } from './components/commons/product-details/product-details.component';
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
+import { OrdersComponent } from './components/admin/orders/orders.component';
+import { PurchasesComponent } from './components/user/purchases/purchases.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -24,6 +26,8 @@ export const routes: Routes = [
   { path: 'store-billing', component: StoreBillingComponent },
   { path: 'company-settings/:name', component: SettingsFormComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'orders', component: OrdersComponent },
+  { path: 'purchases', component: PurchasesComponent },
   { path: 'account/:username', component: MyAccountComponent },
   { path: 'shop/cart/:username', component: ShopCartComponent },
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },

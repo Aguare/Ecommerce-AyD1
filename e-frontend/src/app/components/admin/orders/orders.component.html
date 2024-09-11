@@ -1,0 +1,46 @@
+<app-navbar></app-navbar>
+
+<div class="container m-5 mx-auto">
+    <h2 class="title has-text-centered is-2">Pedidos</h2>
+    <div class="field m-3 is-full">
+        <div class="container box">
+            <div class="field m-3">
+                <label class="label">Filtrar por Sucursal</label>
+                <div class="select mx-5">
+                    <select [formControl]="branchIdControl">
+                        <option selected value="0">Todas</option>
+                        @for(branch of branches; track $index) {
+                        <option [value]="branch.id">{{ branch.name }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="field m-3">
+                <label class="label">Filtrar por Estado</label>
+                <div class="select mx-5">
+                    <select [formControl]="statusControl">
+                        <option value="all">Todos</option>
+                        @for(status of orderStatus; track $index) {
+                        <option [value]="status.status">{{ enumOrderStatus[status.status] }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <button (click)="filter()" class="button is-primary">Filtrar</button>
+        </div>
+
+        @if(orderSelected !== null) {
+        <app-order-details [order]="orderSelected"></app-order-details>
+        }
+        @if(currentOrders.length > 0) {
+            <div class="grid is-gap-3">
+                @for(order of currentOrders; track $index) {
+                <app-order-card class="cell is-col-span-2" [order]="order" [showAdminOptions]="true"></app-order-card>
+                }
+            </div>
+        } @else {
+            <div class="box">
+                <p>No hay pedidos</p>
+            </div>
+        }
+    </div>
