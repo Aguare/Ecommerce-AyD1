@@ -166,7 +166,7 @@ productController.getProductDetailById = async (req, res) => {
 		connection = await getConnection();
 
 		const queryMoney = `
-            SELECT p.id, p.name, p.description, p.price, b.id as brandId, b.name as brand, c.id as categoryId, c.name as category FROM product p
+            SELECT p.id, p.name, p.description, p.isAvailable, p.price, b.id as brandId, b.name as brand, c.id as categoryId, c.name as category FROM product p
     			LEFT JOIN brand b ON p.FK_Brand = b.id
     			LEFT JOIN product_has_category phc ON p.id = phc.FK_Product
     			LEFT JOIN category c ON phc.FK_Category = c.id
@@ -187,8 +187,6 @@ productController.getProductDetailById = async (req, res) => {
 		`;
 
 		const productImages = await connection.query(queryImage, id);
-
-		console.log(productImages);
 
 		productData[0].attributes = productAttributes;
 		productData[0].images = productImages.map((image) => image.image_path);
@@ -452,7 +450,7 @@ productController.getProductsLike = async (req, res) => {
 
 			// find categories
 			const queryCategory = `
-			SELECT c.name as category FROM category c
+			SELECT c.name as name FROM category c
 			JOIN product_has_category phc ON c.id = phc.FK_Category
 			WHERE phc.FK_Product = ?;`;
 
