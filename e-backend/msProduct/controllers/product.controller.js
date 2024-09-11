@@ -405,7 +405,6 @@ productController.getProductsLike = async (req, res) => {
 	let connection;
 	try {
 		const { name, id } = req.params;
-		console.log(name, id);
 		connection = await getConnection();
 
 		if (!name) {
