@@ -99,17 +99,16 @@ const saveImageClient = async (req, res) => {
 			return path.join("img", "profiles", file.filename);
 		});
 		const oldPath = "SELECT image_profile FROM user_information WHERE FK_user = ?";
-		const oldPathResult = await conn.query(oldPath, [req.body.userId]);
+		const oldPathResult = await conn.query(oldPath, [req.body.id]);
 
 		//Delete old image
-		if (oldPathResult.length > 0 && oldPathResult[0].image_profile !== "") {
-			console.log("entro al if");
-			fs.unlinkSync(path.join(__dirname, "../public", "img", oldPathResult[0].image_profile));
+		if (oldPathResult[0].image_profile !== "img/default/profile2.jpg") {
+			fs.unlinkSync(path.join(__dirname, "../public", oldPathResult[0].image_profile));
 		}
 
 		//Save new image
 		const insertImagesClient = "UPDATE user_information SET image_profile = ? WHERE FK_user = ?";
-		await conn.query(insertImagesClient, [paths[0], req.body.userId]);
+		await conn.query(insertImagesClient, [paths[0], req.body.id]);
 		res.status(201).send({
 			message: "Image uploaded successfully",
 			data: paths[0],

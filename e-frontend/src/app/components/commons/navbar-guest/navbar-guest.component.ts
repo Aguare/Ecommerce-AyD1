@@ -17,11 +17,12 @@ import {
 	MatDialogRef,
 	MatDialogTitle,
 } from "@angular/material/dialog";
+import { SearchInputComponent } from "../search-input/search-input.component";
 
 @Component({
 	selector: "app-navbar-guest",
 	standalone: true,
-	imports: [CommonModule, RouterLink, MatIconModule, RegisterModalComponent],
+	imports: [CommonModule, RouterLink, MatIconModule, RegisterModalComponent, SearchInputComponent],
 	templateUrl: "./navbar-guest.component.html",
 	styleUrl: "./navbar-guest.component.scss",
 })

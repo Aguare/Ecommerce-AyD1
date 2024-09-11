@@ -18,5 +18,6 @@ router.get('/getProductById', productController.getProductById);
 router.put('/updateDataProduct', productController.updateDataProduct);
 router.put('/updateAttributesProduct', productController.updateAttributesProduct);
 router.get("/getBranchesWithProduct", productController.getBranchesWithProduct);
+router.get("/getProductsLike/:name/:id", productController.getProductsLike);
 
 module.exports = router;

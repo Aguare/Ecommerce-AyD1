@@ -31,10 +31,10 @@ export class EditProfileComponent implements OnInit {
 	  private localStorageService: LocalStorageService
 	) {
 	  this.editProfileForm = this.formBuilder.group({
-		nit: ["", [Validators.required, Validators.minLength(6), Validators.maxLength(10)]],
+		nit: [""],
 		description: [""],
 		isPreferCash: [1],
-		image: ["", Validators.required],
+		image: [""],
 	  });
 	}
   
@@ -72,6 +72,7 @@ export class EditProfileComponent implements OnInit {
 		  this.imagePreviewUrl = e.target.result;
 		};
 		reader.readAsDataURL(file);
+		this.editProfileForm.markAsTouched();
 	  }
 	}
   
@@ -81,19 +82,28 @@ export class EditProfileComponent implements OnInit {
 	}
   
 	updateProfile() {
-	  if (this.editProfileForm.invalid) {
+	  if (this.editProfileForm.untouched) {
 		Swal.fire({
-		  icon: "error",
-		  title: "Error",
-		  text: "Por favor, llena todos los campos correctamente",
+		  icon: "question",
+		  title: "Ups!",
+		  text: "No se han modificado los datos.",
 		});
 		return;
 	  }
 
-	  const id = this.localStorageService.getUserId()
+	  const id: any = this.localStorageService.getUserId()
+
+	  if(!id) {
+		Swal.fire({
+		  icon: "error",
+		  title: "Error",
+		  text: "No se ha encontrado el usuario",
+		});
+	  }
   
 	  const formData = new FormData();
 	  formData.append("image", this.editProfileForm.get("image")?.value);
+	  formData.append('id', id);
 
 	  let image:string = '';
 	  if (typeof this.editProfileForm.get("image")?.value === 'string'){
