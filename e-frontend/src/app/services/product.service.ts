@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { Product } from '../components/simple-carousel/simple-carousel.component';
 import { Category } from '../components/card-carrousel/card-carrousel.component';
 import { LocalStorageService } from './local-storage.service';
-import { ProductDetail } from '../interfaces';
+import { Brand } from '../components/products/view-products/view-products.component';
+import { Order, OrderProduct, ProductDetail } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,10 @@ export class ProductService {
   updateViewsLogged = new EventEmitter();
   private apiProduct = 'http://localhost:3004/product';
   private apiCategories = 'http://localhost:3004/categories';
-  private apiCustomer = 'http://localhost:3003/customer'; 
+  private apiBrands = 'http://localhost:3004/brand';
+  private apiCustomer = 'http://localhost:3003/customer';
   private apiOrder = 'http://localhost:3003/order';
+  sendOrder: EventEmitter<Order | null> = new EventEmitter<Order | null>();
 
   constructor(private http: HttpClient, private localStorageService: LocalStorageService) { }
 
@@ -39,11 +42,45 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.apiProduct}/getProductsWithCategory/${id_branch}`);
   }
   
+  getProducts(){
+    return this.http.get<Product[]>(`${this.apiProduct}/getProducts`);
+  }
+  
   getCategories(){
     return this.http.get<Category[]>(`${this.apiCategories}/getCategories`);
   }
   
+  getBrands(){
+    return this.http.get<Brand[]>(`${this.apiBrands}/getBrands`);
+  }
   
+  saveProduct(body: any){
+    return this.http.post(`${this.apiProduct}/saveProduct`, body);
+  }
+  
+  getProductById(id:number){
+    return this.http.get(`${this.apiProduct}/getProductById?id=${id}`);
+  }
+  
+  updateDataProduct(body: any){
+    return this.http.put(`${this.apiProduct}/updateDataProduct`, body);
+  }
+  
+  updateAttributesProduct(body: any){
+    return this.http.put(`${this.apiProduct}/updateAttributesProduct`, body);
+  }
+  
+  saveBrand(body:any){
+    return this.http.post(`${this.apiBrands}/saveBrand`, body);
+  }
+
+  updateBrand(body:any){
+    return this.http.put(`${this.apiBrands}/updateBrand`, body);
+  }
+
+  deleteBrand(id:number){
+    return this.http.delete(`${this.apiBrands}/deleteBrand?id=${id}`);
+  }
   // METHODS FOR CUSTOMER CART
   /**
    *  Get the cart of the user
@@ -119,8 +156,8 @@ export class ProductService {
    * @returns
    */
 
-  getProductById(id: any): Observable<ProductDetail> {
-    return this.http.get<ProductDetail>(`${this.apiProduct}/getProductById/${id}`);
+  getProductDetailById(id: any): Observable<ProductDetail> {
+    return this.http.get<ProductDetail>(`${this.apiProduct}/getProductDetailById/${id}`);
   }
 
   getStockProductById(id: any): Observable<any> {
@@ -140,6 +177,29 @@ export class ProductService {
     return this.http.get<any>(`${this.apiCustomer}/getNumberInCart/${id_user}`);
   }
 
+  // Returns data array
+  getAllOrders() : Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiOrder}/getAllOrders`);
+  }
+
+  getProductsByOrderId(id: number, limit: number, offset: number) : Observable<OrderProduct[]> {
+    return this.http.get<OrderProduct[]>(`${this.apiOrder}/getProductsByOrderId/${id}/${limit}/${offset}`);
+  }
+
+  getOrderStatus() : Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiOrder}/getOrderStatus`);
+  }
+
+  getOrdersByUserId() : Observable<Order[]> {
+    const id_user = this.localStorageService.getUserId();
+    return this.http.get<Order[]>(`${this.apiOrder}/getOrdersByUserId/${id_user}`);
+  }
+
+  updateOrderStatus(id: number, status: string) : Observable<any> {
+    const user_id = this.localStorageService.getUserId();
+    return this.http.put<any>(`${this.apiOrder}/updateOrderStatus/${id}`, {status, user_id});
+  }
+  
   /**
    * get delivery cost
    */
@@ -150,7 +210,6 @@ export class ProductService {
   /** 
    * get data for checkout
    */
-
   getDataForCheckout(): Observable<any> {
     const id_user = this.localStorageService.getUserId();
     return this.http.get<any>(`${this.apiCustomer}/getDataForCheckout/${id_user}`);

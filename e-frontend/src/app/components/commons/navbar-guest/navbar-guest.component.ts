@@ -1,7 +1,7 @@
 /** @format */
 
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, inject, Output, TemplateRef } from "@angular/core";
+import { Component, EventEmitter, inject, Input, Output, TemplateRef } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { LocalStorageService } from "../../../services/local-storage.service";
 import { CookieService } from "ngx-cookie-service";
@@ -33,7 +33,6 @@ export class NavbarGuestComponent {
 	readonly dialog = inject(MatDialog);
 	branches: any[] = [];
 	dialogRef: MatDialogRef<any> | null = null;
-	@Output() update = new EventEmitter<any>();
 
 	constructor(
 		private _router: Router,

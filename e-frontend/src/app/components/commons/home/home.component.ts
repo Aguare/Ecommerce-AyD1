@@ -39,7 +39,8 @@ export class HomeComponent implements OnInit {
     'img/carrousell/carrousell-3.jpg',
     'img/carrousell/carrousell-4.jpg',
     'img/carrousell/carrousell-5.jpg',
-  ]
+  ];
+  currentBranchId: number = 0;
 
   constructor(
     private _localStorage: LocalStorageService,
@@ -56,6 +57,7 @@ export class HomeComponent implements OnInit {
         this._localStorage.setBranchAddress(res[0].address);
       });
     }
+    this.currentBranchId = branchId;
 
     this.productService.getCurrency().subscribe((res: any) => {
       this._localStorage.setCurrency(res.data.currency);

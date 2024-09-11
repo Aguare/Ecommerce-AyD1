@@ -85,7 +85,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
       this.currency = currency.data.currency
     });
 
-    this.productService.getProductById(productId).subscribe((product: ProductDetail) => {
+    this.productService.getProductDetailById(productId).subscribe((product: ProductDetail) => {
+      console.log('product detail', product);
       this.productDetail = product;
     }, error => {
       Swal.fire({

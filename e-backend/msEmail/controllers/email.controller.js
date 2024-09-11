@@ -54,30 +54,29 @@ emailController.sendVerificationEmail = async (req, res) => {
 		const mailOptions = {
 			from: "no-reply@gmail.com",
 			to: email,
-			subject: "Verificación de correo electrónico",
+			subject: "Verificación de Correo Electrónico",
 			html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; border-radius: 10px;">
-          <h2 style="text-align: center; color: #333;">¡Bienvenido a nuestro sitio!</h2>
-          <p style="color: #555; font-size: 16px;">Gracias por registrarte. Para completar el proceso, por favor verifica tu correo electrónico haciendo clic en el botón de abajo.</p>
-          
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${website}/${tokenGenerated}/${email}" 
-               style="display: inline-block; padding: 15px 25px; font-size: 18px; color: #fff; background-color: #28a745; text-decoration: none; border-radius: 5px;">
-               Verificar correo electrónico
-            </a>
-          </div>
-      
-          <p style="color: #555; font-size: 14px;">Si no solicitaste este correo, simplemente ignóralo.</p>
-      
-          <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-          
-          <div style="text-align: center;">
-            <img src="https://i.ibb.co/8mc8BTF/Logo-Company.webp" alt="Logo de la empresa" style="max-width: 100px; margin-bottom: 10px;">
-          </div>
-          
-          <p style="color: #999; font-size: 12px; text-align: center;">&copy; 2024 ${dataCompany.company_name}. Todos los derechos reservados.</p>
-        </div>
-      `,
+				<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; border-radius: 10px;">
+				<h2 style="text-align: center; color: #333;">¡Bienvenido a nuestro sitio!</h2>
+				<p style="color: #555; font-size: 16px;">Gracias por registrarte. Para completar el proceso, por favor verifica tu correo electrónico haciendo clic en el botón de abajo.</p>
+				
+				<div style="text-align: center; margin: 30px 0;">
+					<a href="${website}/${tokenGenerated}/${email}" 
+					style="display: inline-block; padding: 15px 25px; font-size: 18px; color: #fff; background-color: #28a745; text-decoration: none; border-radius: 5px;">
+					Verificar correo electrónico
+					</a>
+				</div>
+			
+				<p style="color: #555; font-size: 14px;">Si no solicitaste este correo, simplemente ignóralo.</p>
+			
+				<hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+				
+				<div style="text-align: center;">
+					<img src="https://i.ibb.co/8mc8BTF/Logo-Company.webp" alt="Logo de la empresa" style="max-width: 100px; margin-bottom: 10px;">
+				</div>
+				
+				<p style="color: #999; font-size: 12px; text-align: center;">&copy; 2024 ${dataCompany.company_name}. Todos los derechos reservados.</p>
+				</div>`,
 		};
 
 		transporter.sendMail(mailOptions, function (error, info) {

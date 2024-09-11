@@ -1,5 +1,5 @@
 <div class="container m-5" *ngFor="let productCart of productsCart">
-  <h4>Categoria de {{ productCart.category }}</h4>
+  <h4 id="{{'title-carrousel-'+productCart.category}}">Categoria de {{ productCart.category }}</h4>
   <section
     id="{{ 'category-carrousel-' + productCart.category }}"
     class="splide"

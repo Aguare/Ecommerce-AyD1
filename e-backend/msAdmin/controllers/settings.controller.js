@@ -11,7 +11,7 @@ settingsController.getSettings = async (req, res) => {
         const queryMoney = `
             SELECT c.* FROM company_settings c
             inner join tab t on t.id = c.FK_tab
-            where t.name = ?
+            where t.name = ? AND c.is_Available = 1
             `;
 
         const result = await connection.query(queryMoney, [name]);
