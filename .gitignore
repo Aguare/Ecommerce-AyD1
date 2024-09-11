@@ -132,3 +132,5 @@ dist
 e-frontend/.vscode/
 
 e-backend/.vscode/
+
+e-backend/config/db-credentials.js
