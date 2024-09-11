@@ -1,0 +1,20 @@
+// Define your brand colors
+$blue: #005792;
+$orange: #FD5F00;
+$dark-blue: #13334C;
+$beige-light: #d0d1cd;
+$beige-lighter: #F6F6E9;
+
+// Path to Bulma's sass folder
+@use "bulma/sass" with (
+  $family-primary: '"Nunito", sans-serif',
+  $grey-dark: $dark-blue,  // Usar variable $dark-blue definida previamente
+  $grey-light: $beige-light, // Usar variable $beige-light definida previamente
+  $primary: $blue,    // Usar variable $blue definida previamente
+  $link: $orange,     // Usar variable $orange definida previamente
+  $control-border-width: 2px,
+  $input-shadow: none
+);
+
+// import bulmas badge component
+@import "@creativebulma/bulma-badge";

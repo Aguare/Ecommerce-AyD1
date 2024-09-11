@@ -1,0 +1,70 @@
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" [routerLink]="['/home']">
+      <span class="icon is-large">
+        <img src="https://i.pinimg.com/originals/75/fa/9b/75fa9b17f632646e5ae7fae3cf837761.jpg" alt="Logo" />
+      </span>
+      <div class="navbar-item">
+        <p>Bienvenido a nuestro sistema</p>
+      </div>
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"
+      (click)="toggleNavbar()">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu" [ngClass]="{ 'is-active': navbarActive }">
+    <div class="navbar-start">
+      <div class="navbar-item">
+
+      </div>
+    </div>
+
+    <div class="navbar-end" *ngIf="showButtonsRegister">
+      <div class="navbar-item">
+        <app-search-input></app-search-input>
+      </div>
+      <div class="navbar-item">
+        <a (click)="openModal(changeBranchTemplate)" matTooltip="Sucursales" class="button is-primary">
+          <mat-icon aria-hidden="false" aria-label="Branch Icon" fontIcon="location_on"></mat-icon>
+          <span class="ml-2">{{branchName}}</span>
+        </a>
+      </div>
+      <div class="navbar-item">
+        <a class="button is-light" href="/login">Ingreso/Registro</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<ng-template #changeBranchTemplate let-data>
+  <div class="container box p-5">
+    <h4 class="title has-text-centered mb-3">Seleccione otra Sucursal</h4>
+    <div class="p-5" style="max-height: 80%; overflow-y: scroll">
+      @if(data.length > 0) {
+      @for(branch of data; track $index) {
+      <div class="media">
+        <div (click)="changeBranchId(branch)" class="button media-content columns is-justify-content-space-between"
+          matTooltip="Cambiar a esta sucursal">
+          <div>
+            <p class="title is-6">{{branch.name}}</p>
+            <p class="subtitle is-6">{{branch.address}}</p>
+          </div>
+          <div>
+            <p *ngIf="branch.id === currentBranchId" class="subtitle is-6 has-text-success">Actual</p>
+          </div>
+        </div>
+      </div>
+      }
+      }
+      @else {
+      <p>No hay sucursales disponibles</p>
+      }
+    </div>
+  </div>
+</ng-template>

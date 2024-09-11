@@ -1,0 +1,97 @@
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <div class="navbar-item is-clickable" routerLinkActive="router-link-active" >
+      <span class="image is-32x32" [routerLink]="['/products/init']">
+        <img [src]="this.logo | imagePipe" alt="Logo" />
+      </span>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+         [ngClass]="{'is-active': isActive}"
+         (click)="toggleNavbar()">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu" [ngClass]="{'is-active': isActive}">
+    <div class="navbar-start">
+      <ng-container *ngFor="let module of pagesNavBar">
+        <div class="navbar-item has-dropdown" [ngClass]="{'is-active': activeModule === module.module}">
+          <a class="navbar-link" (click)="toggleSubmenu(module.module)">
+            {{ module.module }}
+            <span class="icon">
+              <i [ngClass]="{'fa-angle-down': activeModule !== module.module, 'fa-angle-up': activeModule === module.module}" class="fas"></i>
+            </span>
+          </a>
+          <div class="navbar-dropdown" *ngIf="activeModule === module.module">
+            <a class="navbar-item" *ngFor="let page of module.pages" [routerLink]="[page.direction]">
+              {{ page.pageName }}
+            </a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <app-search-input></app-search-input>
+      </div>
+      <div class="navbar-item">
+        <a (click)="openModal(changeBranchTemplate)" matTooltip="Sucursales" class="button is-primary">
+          <mat-icon aria-hidden="false" aria-label="Branch Icon" fontIcon="location_on"></mat-icon>
+          <span class="ml-2">{{branchName}}</span>
+        </a>
+      </div>
+      <div class="navbar-item">
+        <a (click)="shopCart()" class="button is-primary" *ngIf="isClient">
+          <span title="Badge top right" class="badge is-danger">{{numberInCart}}</span>
+          <mat-icon aria-hidden="false" aria-label="Example home icon"
+           fontIcon="shopping_cart"></mat-icon>
+        </a>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable mr-3">
+        <a class="navbar-link">
+          <figure class="image is-32x32 is-align-content-center">
+            <img class="is-rounded" [src]="this.userImage | imagePipe" alt="profile image" />
+          </figure>
+          {{ this.userName }}
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" (click)="myAccount()">Mi Cuenta</a>
+          <hr class="navbar-divider" />
+          <a class="navbar-item" (click)="logout()">Salir</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<ng-template #changeBranchTemplate let-data>
+  <div class="container box p-5">
+    <h4 class="title has-text-centered mb-3">Seleccione otra Sucursal</h4>
+    <div class="p-5" style="max-height: 80%; overflow-y: scroll">
+      @if(data.length > 0) {
+        @for(branch of data; track $index) {
+        <div class="media">
+          <div (click)="changeBranchId(branch)" class="button media-content columns is-justify-content-space-between"
+            matTooltip="Cambiar a esta sucursal">
+            <div>
+              <p class="title is-6">{{branch.name}}</p>
+              <p class="subtitle is-6">{{branch.address}}</p>
+            </div>
+            <div>
+              <p *ngIf="branch.id === currentBranchId" class="subtitle is-6 has-text-success">Actual</p>
+            </div>
+          </div>
+        </div>
+        }
+      }
+      @else {
+        <p>No hay sucursales disponibles</p>
+      }
+    </div>
+  </div>
+</ng-template>

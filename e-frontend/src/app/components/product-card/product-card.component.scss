@@ -1,0 +1,79 @@
+.example-card {
+  max-width: 220px;
+  height: auto;
+  background-color: white; 
+  margin: 5px; 
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none; 
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); 
+  border-radius: 8px; 
+
+  &:hover {
+    transform: scale(1.05); 
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.25); 
+  }
+}
+
+.span-price {
+  font-weight: bold;
+  margin-right: 5px;
+  color: #FD5F00; 
+  font-size: 1.1em;
+}
+
+.span-descuento {
+  background-color: red;
+  color: white;
+  text-decoration: underline;
+  font-weight: bold;
+  padding: 0 5px;
+  font-size: 1.1em;
+}
+
+.line-throught {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.card-image {
+  width: 100%;
+  height: 150px; /* Reducir la altura de la imagen */
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  position: relative;
+}
+
+.card-title {
+  width: 200px;
+  height: 40px; /* Reducir la altura del título */
+}
+
+.card-content {
+  padding: 0%;
+  margin-top: 5px; /* Reducir el margen */
+}
+
+.card-content p {
+  font-size: small;
+}
+
+.discount-tag {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: 2px 8px; 
+  font-size: 0.9em; 
+  position: absolute;
+  top: 8px; 
+  left: 8px; 
+  border-radius: 5px; 
+  z-index: 10;
+}
+
+.description {
+  width: 200px;
+  height: 60px; 
+  overflow: hidden;
+}

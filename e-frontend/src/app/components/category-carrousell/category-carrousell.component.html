@@ -1,0 +1,17 @@
+<div class="container m-5" *ngFor="let productCart of productsCart">
+  <h4 id="{{'title-carrousel-'+productCart.category}}">Categoria de {{ productCart.category }}</h4>
+  <section
+    id="{{ 'category-carrousel-' + productCart.category }}"
+    class="splide"
+    aria-label="Splide Basic HTML Example"
+  >
+    <div class="splide__track px-4">
+      <div class="splide__list">
+        <div class="splide__slide card" *ngFor="let product of productCart.products">
+          <app-product-card [product]="product" [currency]="currency"></app-product-card>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+

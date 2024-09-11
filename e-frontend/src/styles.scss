@@ -1,12 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
-/* Importing bulma elements and components */
-// Load Bulma's base styles and themes (including the minireset)
-
-// Load other Bulma components
-@import 'bulma/css/bulma.css';
-
-// Import splideJs
+/* Import splideJs */
 @import "@splidejs/splide/css";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Set global styles */
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+/* Import custom theme */
+@import "./custom-theme.scss";

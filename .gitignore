@@ -79,6 +79,12 @@ web_modules/
 .env.production.local
 .env.local
 
+# dev.env environment variable files into backend directory
+e-backend/config/db-credentials.js
+e-backend/msImg/config/dev.env
+e-backend/msAdmin/config/dev.env
+e-backend/msCustomer/config/dev.env
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -133,4 +139,8 @@ e-frontend/.vscode/
 
 e-backend/.vscode/
 
-e-backend/config/db-credentials.js
+# ignorar imagenes carpeta public
+# e-backend/msImg/public
+
+
+e-backend/config/

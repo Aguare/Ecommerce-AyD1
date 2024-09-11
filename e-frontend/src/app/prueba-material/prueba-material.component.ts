@@ -10,7 +10,6 @@ import {MatCardModule} from '@angular/material/card';
 
 // SplideJs
 import Splide from '@splidejs/splide';
-import { After } from 'v8';
 
 
 

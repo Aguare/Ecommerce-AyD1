@@ -1,0 +1,265 @@
+<div class="container mt-5">
+  <h1 class="title">Editar Producto</h1>
+
+  <div class="buttons">
+    <button class="button is-info mb-3" (click)="toggleSection('data')">
+      Editar Datos del Producto
+    </button>
+    <button class="button is-info mb-3" (click)="toggleSection('attributes')">
+      Editar Atributos del Producto
+    </button>
+    <button class="button is-info mb-3" (click)="toggleSection('images')">
+      Editar Imágenes del Producto
+    </button>
+    <button class="button is-warning mb-3" (click)="turnBack()">
+      Volver
+    </button>
+  </div>
+
+  <div *ngIf="sectionVisible.data">
+    <form [formGroup]="productForm" (ngSubmit)="submitProductForm()">
+      <div class="field">
+        <label class="label">Nombre</label>
+        <div class="control">
+          <input
+            class="input"
+            formControlName="name"
+            type="text"
+            placeholder="Nombre del Producto"
+          />
+          <p
+            class="help is-danger"
+            *ngIf="
+              productForm.get('name')?.touched &&
+              productForm.get('name')?.invalid
+            "
+          >
+            El nombre es requerido.
+          </p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Descripción</label>
+        <div class="control">
+          <textarea
+            class="textarea"
+            formControlName="description"
+            placeholder="Descripción del Producto"
+          ></textarea>
+          <p
+            class="help is-danger"
+            *ngIf="
+              productForm.get('description')?.touched &&
+              productForm.get('description')?.invalid
+            "
+          >
+            La descripción es requerida.
+          </p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Precio</label>
+        <div class="control">
+          <input
+            class="input"
+            formControlName="price"
+            type="number"
+            placeholder="Precio"
+          />
+          <p
+            class="help is-danger"
+            *ngIf="
+              productForm.get('price')?.touched &&
+              productForm.get('price')?.invalid
+            "
+          >
+            El precio es requerido y debe ser válido.
+          </p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Marca</label>
+        <div class="control">
+          <div class="select">
+            <select formControlName="brand">
+              <option value="">-- Seleccione una opcion --</option>
+              <option *ngFor="let brand of brands" [value]="brand.id">
+                {{ brand.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Categoría</label>
+        <div class="control">
+          <div class="select">
+            <select formControlName="category">
+              <option value="">-- Seleccione una opcion --</option>
+              <option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="button is-primary mt-3"
+        type="submit"
+        [disabled]="productForm.invalid"
+      >
+        Guardar Cambios
+      </button>
+    </form>
+  </div>
+
+  <!-- Editar Atributos del Producto -->
+  <div *ngIf="sectionVisible.attributes">
+    <div class="container mt-5">
+      <h1 class="title">Atributos del Producto</h1>
+
+      <form [formGroup]="attributeForm" (ngSubmit)="submitAttributeForm()">
+        <div
+          *ngFor="let attribute of attributesFormArray.controls; let i = index"
+          [formGroup]="attributeFormGroup(i)"
+          class="box"
+        >
+          <!-- Campo de Nombre del Atributo -->
+          <div class="field">
+            <label class="label">Nombre del Atributo</label>
+            <div class="control">
+              <input
+                class="input"
+                formControlName="name"
+                type="text"
+                placeholder="Nombre del Atributo"
+              />
+            </div>
+            <p
+              class="help is-danger"
+              *ngIf="
+                attribute.get('name')?.invalid && attribute.get('name')?.touched
+              "
+            >
+              El nombre es requerido.
+            </p>
+          </div>
+
+          <!-- Campo de Descripción del Atributo -->
+          <div class="field">
+            <label class="label">Descripción del Atributo</label>
+            <div class="control">
+              <input
+                class="input"
+                formControlName="description"
+                type="text"
+                placeholder="Descripción del Atributo"
+              />
+            </div>
+            <p
+              class="help is-danger"
+              *ngIf="
+                attribute.get('description')?.invalid &&
+                attribute.get('description')?.touched
+              "
+            >
+              La descripción es requerida.
+            </p>
+          </div>
+
+          <!-- Botón para eliminar el atributo -->
+          <button
+            class="button is-danger"
+            type="button"
+            (click)="removeAttribute(i)"
+          >
+            Eliminar Atributo
+          </button>
+        </div>
+
+        <!-- Botón para agregar un nuevo atributo -->
+        <button
+          class="button is-link m-3"
+          type="button"
+          (click)="addAttribute()"
+        >
+          Agregar Atributo
+        </button>
+
+        <!-- Botón de enviar -->
+        <button
+          class="button is-primary m-3"
+          type="submit"
+          [disabled]="attributeForm.invalid"
+        >
+          Guardar Atributos
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Editar Imágenes del Producto -->
+  <div *ngIf="sectionVisible.images">
+    <h4>Imagenes del producto</h4>
+    <div class="columns is-multiline">
+      <div
+        class="column is-one-quarter"
+        *ngFor="let image of images; let i = index"
+      >
+        <figure class="image is-4by3">
+          <img [src]="image.image_path | imagePipe" alt="Imagen del producto" />
+        </figure>
+        <button class="button is-danger" (click)="removeImage(i)">
+          Eliminar
+        </button>
+      </div>
+    </div>
+    <div *ngIf="imagesToDB.length > 0">
+      <h4>Imagenes nuevas</h4>
+      <div class="columns is-multiline">
+        <div
+          *ngFor="let image of imagePreviews; let i = index"
+          class="column is-one-quarter"
+        >
+          <figure class="image is-100x100">
+            <img [src]="image" alt="Preview Image" class="image-preview" />
+          </figure>
+          <button
+            class="button is-danger is-small mt-2"
+            (click)="removeNewImage(i)"
+          >
+            X
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="field mt-3">
+      <label class="label">Subir Imágenes</label>
+      <div class="control">
+        <div class="file has-name">
+          <label class="file-label">
+            <input
+              class="file-input"
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              multiple
+            />
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label">Selecciona una Imagen</span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <button class="button is-successis-small mt-5" (click)="saveImages()">Guardar Imagenes</button>
+    </div>
+  </div>
+</div>
