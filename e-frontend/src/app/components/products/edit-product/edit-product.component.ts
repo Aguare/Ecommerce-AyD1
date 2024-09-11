@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { log } from 'console';
 import { ProductService } from '../../../services/product.service';
 import { Brand } from '../view-products/view-products.component';
@@ -41,7 +41,8 @@ export class EditProductComponent {
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private productService: ProductService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private router: Router
   ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
@@ -250,5 +251,42 @@ export class EditProductComponent {
         });
       }
     });
+  }
+
+  removeNewImage(index: number) {
+    this.imagePreviews.splice(index, 1);
+    this.imagesToDB.splice(index, 1);
+  }
+
+  saveImages(){
+    this.imagesToDB.forEach(img => {
+      const formData = new FormData();
+      formData.append('image', img);
+      formData.append('productId', this.idProduct+"");
+      this.imageService.saveProductImage(formData).subscribe({
+        next: (res: any) => {
+          console.log(res);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+    })
+
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title:  'Imagenes Guardadas Correctamente',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+
+    setTimeout(()=>{
+      window.location.reload();
+    }, 1500)
+  }
+
+  turnBack(){
+    this.router.navigate(['/products/view']); 
   }
 }
