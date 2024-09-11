@@ -75,8 +75,6 @@ userController.verifyRecoveryPassword = async (req, res) => {
 
 	const { token, email, password } = req.body;
 
-	console.log(token, email, password);
-
 	try {
 		connection = await getConnection();
 	} catch (error) {
