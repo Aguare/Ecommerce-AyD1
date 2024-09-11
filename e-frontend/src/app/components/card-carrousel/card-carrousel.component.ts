@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ImagePipe } from '../../pipes/image.pipe';
 
 export interface Category {
+  id: number
   name: string;
   image: string;
 }
@@ -17,7 +18,7 @@ export interface Category {
   templateUrl: './card-carrousel.component.html',
   styleUrl: './card-carrousel.component.scss',
 })
-export class CardCarrouselComponent implements OnInit, AfterViewInit {
+export class CardCarrouselComponent implements AfterViewInit {
 
   categories: Category[] = [];
 
@@ -32,15 +33,19 @@ export class CardCarrouselComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {
-    
+  scrollToCategory(categoryName: string): void {
+    const categoryElement = document.getElementById('title-carrousel-' + categoryName);
+    if (categoryElement) {
+      categoryElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }
+
 
   ngAfterViewInit(): void {
     setTimeout(()=>{
       if (typeof document !== 'undefined') {
         new Splide('#image-carousel', {
-          type: 'loop',
+          
           perPage: 6,
           perMove: 1,
           gap: '20px',

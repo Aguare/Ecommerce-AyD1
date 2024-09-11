@@ -12,6 +12,9 @@ import { StoreBillingComponent } from './components/admin/store-billing/store-bi
 import { SettingsFormComponent } from './components/admin/company-settings/settings-form/settings-form.component';
 import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 import { ShopCartComponent } from './components/user/shop-cart/shop-cart/shop-cart.component';
+import { ViewProductsComponent } from './components/products/view-products/view-products.component';
+import { AddProductComponent } from './components/products/add-product/add-product.component';
+import { EditProductComponent } from './components/products/edit-product/edit-product.component';
 import { ProductDetailsComponent } from './components/commons/product-details/product-details.component';
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
 import { OrdersComponent } from './components/admin/orders/orders.component';
@@ -38,7 +41,10 @@ export const routes: Routes = [
   },
   {
     path: 'products', children: [
-      { path: 'init', component: ProductHomeComponent }
+      { path: 'init', component: ProductHomeComponent },
+      { path: 'view', component: ViewProductsComponent },
+      { path: 'addProduct', component: AddProductComponent },
+      { path: 'editProduct', component: EditProductComponent },
     ]
   },
   { path: 'product-details/:id', component: ProductDetailsComponent },

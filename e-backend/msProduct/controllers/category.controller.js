@@ -10,7 +10,7 @@ categoryController.getCategories = async (req, res) => {
 		connection = await getConnection();
                 
 		const queryMoney = `
-            SELECT name, image FROM category
+            SELECT id, name, image FROM category
             `;
 
 		const result = await connection.query(queryMoney);
