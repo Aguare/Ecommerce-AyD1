@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Product } from '../components/simple-carousel/simple-carousel.component';
 import { Category } from '../components/card-carrousel/card-carrousel.component';
 import { LocalStorageService } from './local-storage.service';
-import { ProductDetail } from '../interfaces';
+import { Order, OrderProduct, ProductDetail } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,9 @@ export class ProductService {
   updateViewsLogged = new EventEmitter();
   private apiProduct = 'http://localhost:3004/product';
   private apiCategories = 'http://localhost:3004/categories';
-  private apiCustomer = 'http://localhost:3003/customer'; 
+  private apiCustomer = 'http://localhost:3003/customer';
+  private apiOrder = 'http://localhost:3003/order';
+  sendOrder: EventEmitter<Order | null> = new EventEmitter<Order | null>();
 
   constructor(private http: HttpClient, private localStorageService: LocalStorageService) { }
 
@@ -137,6 +139,29 @@ export class ProductService {
   getNumberInCart(): Observable<any> {
     const id_user = this.localStorageService.getUserId();
     return this.http.get<any>(`${this.apiCustomer}/getNumberInCart/${id_user}`);
+  }
+
+  // Returns data array
+  getAllOrders() : Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiOrder}/getAllOrders`);
+  }
+
+  getProductsByOrderId(id: number, limit: number, offset: number) : Observable<OrderProduct[]> {
+    return this.http.get<OrderProduct[]>(`${this.apiOrder}/getProductsByOrderId/${id}/${limit}/${offset}`);
+  }
+
+  getOrderStatus() : Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiOrder}/getOrderStatus`);
+  }
+
+  getOrdersByUserId() : Observable<Order[]> {
+    const id_user = this.localStorageService.getUserId();
+    return this.http.get<Order[]>(`${this.apiOrder}/getOrdersByUserId/${id_user}`);
+  }
+
+  updateOrderStatus(id: number, status: string) : Observable<any> {
+    const user_id = this.localStorageService.getUserId();
+    return this.http.put<any>(`${this.apiOrder}/updateOrderStatus/${id}`, {status, user_id});
   }
 }
 
