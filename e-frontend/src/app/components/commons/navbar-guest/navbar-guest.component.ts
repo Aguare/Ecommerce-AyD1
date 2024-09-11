@@ -62,6 +62,7 @@ export class NavbarGuestComponent {
 		const userId = this._localStorage.getUserId();
         const url = this._router.url;
         this.showButtonsRegister = !userId && url !== "/login";
+        this.showButtonsRegister = url.includes("verify-email") ? false : this.showButtonsRegister;
         const token = this._cookieService.get("token");
         if (userId && token) {
             this._router.navigate(["/products/init"]);
@@ -90,6 +91,6 @@ export class NavbarGuestComponent {
 		}
 
 		window.location.reload();
-		
+
 	}
 }
