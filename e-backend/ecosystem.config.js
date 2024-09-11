@@ -50,6 +50,16 @@ module.exports = {
 				PORT: 3004,
 				NODE_ENV: "production"
 			},
+		},
+		{
+			name: "msEmail",
+			script: "./msEmail/index.js",
+			ignore_watch: ignore_paths,
+			watch: "./msEmail",
+			env_production: {
+				PORT: 3005,
+				NODE_ENV: "production"
+			},
 		}
 	],
 };

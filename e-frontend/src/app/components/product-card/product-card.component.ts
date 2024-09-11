@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '../simple-carousel/simple-carousel.component';
 import { MatCardModule } from '@angular/material/card';
 import { ImagePipe } from '../../pipes/image.pipe';
 import { CommonModule, SlicePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-product-card',
@@ -12,14 +13,18 @@ import { Router } from '@angular/router';
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.scss'
 })
-export class ProductCardComponent {
+export class ProductCardComponent implements OnInit {
   @Input() product!: Product;
+  @Input() currency = '$';
 
   constructor(private router: Router) {
     
   }
+  ngOnInit(): void {
 
-  navigateToProductDetail(product: Product) {
-    this.router.navigate(['/product-detail', product.name]);
+  }
+
+  navigateToProductDetails(id: number): void {
+    this.router.navigate(['/product-details', id]);
   }
 }

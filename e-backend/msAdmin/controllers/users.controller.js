@@ -19,7 +19,7 @@ usersController.login = async (req, res) => {
 		const querySalt = `SELECT * FROM company_settings WHERE key_name = 'password_salt';`;
 		const resultSalt = await connection.query(querySalt);
 
-		const queryUser = `SELECT id, username, password FROM user WHERE username = ? OR email = ?;`;
+		const queryUser = `SELECT id, username, password, isVerified FROM user WHERE username = ? OR email = ?;`;
 		const resultUser = await connection.query(queryUser, [username, username]);
 		if (resultUser.length === 0) {
 			return res.status(400).send({ message: "El usuario no existe." });
@@ -31,6 +31,10 @@ usersController.login = async (req, res) => {
 
 		const salt = resultSalt[0].key_value;
 		const user = resultUser[0];
+
+		if (!user.isVerified) {
+			return res.status(400).send({ message: "El usuario no ha verificado su correo!", isNotVerified: true });
+		}
 
 		const passBD = pbkdf2.pbkdf2Sync(password, salt, 1, 32, "sha512").toString("hex");
 

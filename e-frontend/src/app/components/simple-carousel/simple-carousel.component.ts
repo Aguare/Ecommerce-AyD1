@@ -10,6 +10,8 @@ import Splide from '@splidejs/splide';
 //Mis Importaciones
 import { ProductService } from '../../services/product.service';
 import { ImagePipe } from '../../pipes/image.pipe';
+import { Router } from '@angular/router';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 export interface Product {
   id: number
@@ -31,10 +33,28 @@ export interface Product {
 })
 export class SimpleCarouselComponent implements AfterViewInit, OnInit {
   products: Product[] = [];
+  currency = "$";
 
-  constructor(private productService: ProductService){}
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private _localStorage: LocalStorageService
+  ){}
 
   ngOnInit(): void {
+    const branchId = this._localStorage.getBranchId();
+
+    if(!branchId) {
+      this.productService.getBranchesWithProduct().subscribe((res: any) => {
+        this._localStorage.setBranchId(res[0].id);
+        this._localStorage.setBranchName(res[0].name);
+        this._localStorage.setBranchAddress(res[0].address);
+      });
+    }
+    this.productService.getCurrency().subscribe((currency: any) => {
+      this.currency = currency.data.currency
+    });
+
     this.productService.getProductsForCart().subscribe({
       next: (res: Product[]) => {
         this.products = res;       
@@ -76,4 +96,9 @@ export class SimpleCarouselComponent implements AfterViewInit, OnInit {
     }, 500)
   }
   
+
+  navigateToProductDetails(product: Product) {
+    console.log('product ', product);
+    this.router.navigate(['/product-details', product.id]);
+  }
 }

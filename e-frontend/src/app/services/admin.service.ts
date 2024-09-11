@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+import { Order } from '../interfaces';
 
 export interface Page {
   id: number;
@@ -24,11 +25,12 @@ export class AdminService {
   private apiCustomers = 'http://localhost:3003/customer';
   private apiLogin = 'http://localhost:3001';
   private apiSettings = 'http://localhost:3001/settings';
+  
 
   constructor(private http: HttpClient) { }
 
   getPages(id: number): Observable<PagesResponse> {
-    return this.http.post<PagesResponse>(`${this.apiAdmin}/getPages`, { id });
+    return this.http.get<PagesResponse>(`${this.apiAdmin}/getPages/${id}`);
   }
 
   login(data: any): Observable<any> {
@@ -62,4 +64,5 @@ export class AdminService {
   updateSettings(body: any) : Observable<any> {
     return this.http.put(`${this.apiSettings}/update`, body)
   }
+
 }

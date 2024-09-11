@@ -9,11 +9,15 @@ import { ImageService } from '../../../../services/image.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { CartItem, Product, CartResponse, ImageProduct } from '../../../../interfaces/index';
+import { LocalStorageService } from '../../../../services/local-storage.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select'; 
 
 @Component({
   selector: 'app-shop-cart',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatProgressSpinnerModule, NavbarComponent, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatProgressSpinnerModule, 
+    NavbarComponent, FormsModule, MatInputModule, MatSelectModule],
   templateUrl: './shop-cart.component.html',
   styleUrl: './shop-cart.component.scss'
 })
@@ -26,20 +30,62 @@ export class ShopCartComponent implements OnInit {
   public isLoading: boolean = true;
   public deliveryOptions: string[] = ['online', 'store'];
 
-  public deliveryOption: string = 'online';
+  public deliveryOption: string = 'store';
   public stores: any[] = []; 
-  public selectedStore: string | null = null; 
+  public selectedStore: string | null = ''; 
   public productStock: { [productId: number]: number } = {};
   public productOutOfStock: { [productId: number]: boolean } = {}; 
+  public isUserChangingStore: boolean = false;
+  public isModalActive: boolean = false;
 
+  public nitBill: string = '';  
+  public nameBill: string = ''; 
+  public addressBill: string = ''; 
+  public referenceAddress: string = ''; 
+  public isDelivery: boolean = false;
+  public deliveryCost: number = 0; 
+  public total: number = 0;
+
+  public deliveryCostCompany: number = 0;
+
+  public branchName: string = ''; 
+  public branchAddress: string = '';
+
+  public userData: any = {};
+
+  
+  
   constructor(
     private productService: ProductService,
     private imageService: ImageService,
-    private _router: Router
-  ) {}
+    private _router: Router,
+    private _localStorageService: LocalStorageService
+    
+  ) {
+    const branchName = this._localStorageService.getItem('branch_name');
+    const branchAddress = this._localStorageService.getItem('branch_address');
+    const currency = this._localStorageService.getItem('currency');
+
+    this.branchName = branchName ? branchName.replace(/['"]+/g, '') : '';
+    this.branchAddress = branchAddress ? branchAddress.replace(/['"]+/g, '') : '';
+    this.currency = currency ? currency.replace(/['"]+/g, '') : '';
+    
+    if (branchName) {
+      this.branchName = branchName;
+    }
+    
+    if (branchAddress) {
+      this.branchAddress = branchAddress;
+    }
+
+    if (currency) {
+      this.currency = currency;
+    }
+  }
 
   ngOnInit(): void {
     this.getMyCart();
+    this.getBranchSelected();
   }
 
   getMyCart(): void {
@@ -53,9 +99,18 @@ export class ShopCartComponent implements OnInit {
       this.getCurrency();
     },
     (error) => {
-      Swal.fire({ icon: 'error', title: 'Error', text: 'Carrito Vacio' });
       this.isLoading = false;
     });
+  }
+
+  getBranchSelected(): void {
+    if(this._localStorageService.getBranchId() !== null){
+      this.selectedStore = this._localStorageService.getBranchId().toString();
+      this.changeStore(this._localStorageService.getBranchId().toString());
+    }else{
+      this.selectedStore = "2";
+      this.changeStore(this.selectedStore.toString());
+    }
   }
 
 
@@ -65,6 +120,10 @@ export class ShopCartComponent implements OnInit {
       this.selectedStore = null;
       this.validateStockOnline();
     }else{
+      this.selectedStore = this.stores[0].id;
+      if(this.selectedStore !== null){
+        this.changeStore(this.selectedStore);
+      }
       Swal.fire('¡Listo!', 'Escoge un store para ver la existencia de tus productos', 'success');
     }
     
@@ -200,7 +259,7 @@ export class ShopCartComponent implements OnInit {
   deleteCart(): void {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: "¡No podrás revertir esto!",
+      text: "¡Se eliminara tu carrito, No podrás revertir esto!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -215,35 +274,63 @@ export class ShopCartComponent implements OnInit {
       }
     });
   }
+  
+  changeStoreUser(selectedStoreId: string): void {
+      this.isUserChangingStore = true;
+      this.changeStore(selectedStoreId);
+  }
+
 
   changeStore(selectedStoreId: string): void {
-    this.selectedStore = selectedStoreId;
+    if(!this.isUserChangingStore) return;
+    this.isUserChangingStore = false;
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡Si cambias de sucursal, se eliminara tu carrito actual y No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cambiarlo!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.selectedStore = selectedStoreId;
 
-    this.productStock = {};
-    this.productOutOfStock = {};
+        this.productStock = {};
+        this.productOutOfStock = {};
 
-    this.myCart.forEach((product, index) => {
-      this.productService.validateStock(product.FK_Product, parseInt(selectedStoreId)).subscribe((data: any) => {
-        if (data && data.data !== undefined && data.data.length > 0) {
-          const stockInfo = data.data[0]; 
-    
-          if (stockInfo.stock === null) {
-            this.productStock[product.FK_Product] = 0; 
-          } else {
-            this.productStock[product.FK_Product] = parseFloat(stockInfo.stock); 
-          }
-    
-          if (product.quantity > this.productStock[product.FK_Product]) {
-            this.productOutOfStock[product.FK_Product] = true; 
-          } else {
-
-            this.productOutOfStock[product.FK_Product] = false; 
-          }
-        } else {
-          this.productOutOfStock[product.FK_Product] = true; 
-        }
-      });
-    });    
+        this.myCart.forEach((product, index) => {
+          this.productService.validateStock(product.FK_Product, parseInt(selectedStoreId)).subscribe((data: any) => {
+            if (data && data.data !== undefined && data.data.length > 0) {
+              const stockInfo = data.data[0]; 
+        
+              if (stockInfo.stock === null || stockInfo.stock === '0') {
+                this.productStock[product.FK_Product] = 0; 
+                this.productOutOfStock[product.FK_Product] = true;
+                this.myCart[index].quantity = 0;
+                this.updateCartForQuantity(this.myCart[index]);
+              } else {
+                this.productStock[product.FK_Product] = parseFloat(stockInfo.stock); 
+                
+                if (product.quantity > this.productStock[product.FK_Product]) {
+                  this.productOutOfStock[product.FK_Product] = true; 
+                  this.myCart[index].quantity = this.productStock[product.FK_Product];
+                  this.updateCartForQuantity(this.myCart[index]);
+                } else {
+                  this.productOutOfStock[product.FK_Product] = false; 
+                }
+              }
+        
+            } else {
+              this.productOutOfStock[product.FK_Product] = true; 
+              this.myCart[index].quantity = 0;
+              this.updateCartForQuantity(this.myCart[index]);
+            }
+          });
+        });    
+      }
+    });
   }
 
   validateStockOnline(): void {
@@ -255,25 +342,132 @@ export class ShopCartComponent implements OnInit {
         if (data && data.data !== undefined && data.data.length > 0) {
           const stockInfo = data.data[0]; 
     
-          if (stockInfo.stock === null) {
+          if (stockInfo.stock === null || stockInfo.stock === '0') {
             this.productStock[product.FK_Product] = 0; 
+            this.productOutOfStock[product.FK_Product] = true;
+            this.myCart[index].quantity = 0;
+            this.updateCartForQuantity(this.myCart[index]);
           } else {
             this.productStock[product.FK_Product] = parseFloat(stockInfo.stock); 
+
+            if (product.quantity > this.productStock[product.FK_Product]) {
+              this.productOutOfStock[product.FK_Product] = true; 
+              this.myCart[index].quantity = this.productStock[product.FK_Product];
+              this.updateCartForQuantity(this.myCart[index]);
+            } else {
+              this.productOutOfStock[product.FK_Product] = false; 
+            }
           }
-    
-          if (product.quantity > this.productStock[product.FK_Product]) {
-            this.productOutOfStock[product.FK_Product] = true; 
-          } else {
-            this.productOutOfStock[product.FK_Product] = false; 
-          }
+  
         } else {
           this.productOutOfStock[product.FK_Product] = true; 
+          this.myCart[index].quantity = 0;
+          this.updateCartForQuantity(this.myCart[index]);
         }
       });
     });
   }
+  
+  openModal() {
+    this.isModalActive = true;
+  }
+
+  closeModal() {
+    this.isModalActive = false;
+  }
+  updateDeliveryOption(option: string) {
+    if (option === 'delivery') {
+      this.deliveryCost = this.deliveryCostCompany; 
+      this.total = this.total+this.deliveryCostCompany;
+    } else {
+      this.deliveryCost = 0;
+      this.total = this.total-this.deliveryCostCompany;
+    }
+  }
+
+  submitCheckout() {    
+    if(this.deliveryOption === 'store'){
+      if(this.nitBill === '' || this.nameBill === '' || this.addressBill === ''){
+        Swal.fire('¡Error!', 'Por favor, llena todos los campos', 'error');
+        return;
+      }
+    }else{
+      if(this.nitBill === '' || this.nameBill === '', this.addressBill === '' || this.referenceAddress === ''){
+        Swal.fire('¡Error!', 'Por favor, llena todos los campos', 'error');
+        return;
+      }else{
+        this.isDelivery = true;
+      }
+    }
+    // Aquí iría la logica para confirmar compra si esta seguro o no
+    Swal.fire({
+      title: '¿Estás seguro de realizar la compra?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, comprar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.confirmedPurchase();
+        //this.productService.deleteCart().subscribe();
+        //this.myCart = [];
+      }
+    })
+  }
 
   endPurchase(): void {
-    Swal.fire({ icon: 'warning', title: 'Esta funcionalidad esta en construccion', text: 'Pronto podras realizar compras' });
+    this.userData = this.productService.getDataForCheckout().subscribe((data) => {
+      if(data && data.data) {
+        this.userData = data.data.user;
+        if(data.data.info.nit !== null){
+        this.nitBill = data.data.info.nit;
+        }
+      } 
+    });
+    this.productService.getDeliveryCost().subscribe((data) => {
+      if(data) {
+        this.deliveryCostCompany = parseInt(data.data.delivery_cost);
+      }
+    });
+    
+    this.isModalActive = true;
+    this.deliveryCost = 0;
+    this.isDelivery = false;
+    this.deliveryOption = 'store';
+    this.total = this.getTotal();
   }
+
+  confirmedPurchase(): void {
+    const checkoutData = {
+      nit_bill: this.nitBill,
+      name_bill: this.nameBill,
+      address_bill: this.addressBill,
+      reference_address: this.referenceAddress,
+      isDelivery: this.isDelivery,
+      delivery_cost: this.isDelivery ? this.deliveryCost : 0,
+      status : 'PENDING',
+      total_taxes: 0,
+      total: this.getTotal(),
+      quantity_products : this.myCart.length,
+      id_user: this.userData.id,
+      id_employee: null,
+      id_branch: this._localStorageService.getBranchId(),
+    };
+    
+    this.productService.saveOrder(checkoutData).subscribe((data) => {
+      if(data && data.data) {
+        Swal.fire('¡Compra realizada!', 'Tu compra ha sido realizada con éxito', 'success');
+        this.myCart = [];
+        this.isModalActive = false;
+        this._router.navigate(['/products/init']);
+      }
+    }, (error) => {
+      Swal.fire('¡Error!', 'Ha ocurrido un error al realizar la compra, revisa los datos', 'error');
+    });
+  }
+  
+  
 }

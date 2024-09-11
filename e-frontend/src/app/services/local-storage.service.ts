@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,12 @@ export class LocalStorageService {
   USER_PHOTO = 'photo_user';
   COMPANY_LOGO = 'company_logo';
   COMPANY_NAME = 'company_name';
+  CURRENCY = 'currency';
 
-  constructor() { }
+
+  constructor(
+    private _cookieService: CookieService
+  ) { }
 
   private isLocalStorageAvailable(): boolean {
     return typeof window !== 'undefined' && !!window.localStorage;
@@ -41,6 +46,10 @@ export class LocalStorageService {
     if (this.isLocalStorageAvailable()) {
       localStorage.clear();
     }
+  }
+
+  getToken(): string {
+    return this._cookieService.get('token');
   }
 
   getUserId(): number {
@@ -81,5 +90,37 @@ export class LocalStorageService {
 
   setCompanyName(name: string): void {
     this.setItem(this.COMPANY_NAME, name);
+  }
+
+  setBranchId(branchId: number): void {
+    this.setItem('branch_id', branchId);
+  }
+
+  getBranchId(): number {
+    return this.getItem('branch_id');
+  }
+
+  setBranchName(branchName: string): void {
+    this.setItem('branch_name', branchName);
+  }
+
+  getBranchName(): string {
+    return this.getItem('branch_name');
+  }
+
+  setBranchAddress(branchAddress: string): void {
+    this.setItem('branch_address', branchAddress);
+  }
+
+  getBranchAddress(): string {
+    return this.getItem('branch_address');
+  }
+
+  setCurrency(currency: string): void {
+    this.setItem('currency', currency);
+  }
+
+  getCurrency(): string {
+    return this.getItem(this.CURRENCY);
   }
 }

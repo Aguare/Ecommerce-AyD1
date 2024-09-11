@@ -5,6 +5,10 @@ const controller = {};
 const jwt = require("jsonwebtoken");
 
 controller.verifyToken = async (req, res, next) => {
+	if (req.method === "OPTIONS") {
+		return res.sendStatus(200);
+	}
+
 	const token = req.header("Authorization") ? req.header("Authorization").replace("Bearer_auth=", "") : null;
 
 	if (!token) {

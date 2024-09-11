@@ -1,133 +1,208 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+/** @format */
 
-import { MatIconModule } from '@angular/material/icon';
-import { Router, RouterLink } from '@angular/router';
-import { AdminService, Page, PagesResponse } from '../../../services/admin.service';
-import { CookieService } from 'ngx-cookie-service';
-import { ImagePipe } from '../../../pipes/image.pipe';
-import { LocalStorageService } from '../../../services/local-storage.service';
-import Swal from 'sweetalert2';
+import { CommonModule } from "@angular/common";
+import { Component, EventEmitter, inject, OnInit, Output, TemplateRef } from "@angular/core";
+
+import { MatIconModule } from "@angular/material/icon";
+import { Router, RouterLink } from "@angular/router";
+import { AdminService, Page, PagesResponse } from "../../../services/admin.service";
+import { CookieService } from "ngx-cookie-service";
+import { ImagePipe } from "../../../pipes/image.pipe";
+import { LocalStorageService } from "../../../services/local-storage.service";
+import Swal from "sweetalert2";
+import { ProductService } from "../../../services/product.service";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatBadgeModule } from "@angular/material/badge";
 
 interface MenuItem {
-  module: string;
-  pages: PageItem[]
+	module: string;
+	pages: PageItem[];
 }
 
 interface PageItem {
-  pageName: string;
-  direction: string;
-  isAvailable: number
+	pageName: string;
+	direction: string;
+	isAvailable: number;
 }
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [CommonModule, MatIconModule, RouterLink, ImagePipe],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
-  providers: [CookieService]
+	selector: "app-navbar",
+	standalone: true,
+	imports: [CommonModule, MatIconModule, RouterLink, ImagePipe, MatTooltipModule, MatBadgeModule],
+	templateUrl: "./navbar.component.html",
+	styleUrl: "./navbar.component.scss",
+	providers: [CookieService],
 })
 export class NavbarComponent implements OnInit {
+	isClient = true;
+	pages: Page[] = [];
+	pagesNavBar: MenuItem[] = [];
+	userName: any;
+	userId: any;
+	userImage: string = "";
+	isActive: boolean = false;
+	activeModule: string | null = null;
+	logo: string = "";
+	branchName: string = "";
+	branchAddress: string = "";
+	currentBranchId: number = 0;
+	readonly dialog = inject(MatDialog);
+	branches: any[] = [];
+	dialogRef: MatDialogRef<any> | null = null;
+	numberInCart: number = 0;
 
-  isClient = true;
-  pages: Page[] = [];
-  pagesNavBar: MenuItem[] = [];
-  userName: any;
-  userId: any;
-  userImage: string = '';
-  isActive: boolean = false;
-  activeModule: string | null = null;
+	constructor(
+		private adminService: AdminService,
+		private _router: Router,
+		private _cookieService: CookieService,
+		private _localStorage: LocalStorageService,
+		private productService: ProductService
+	) {}
 
-  constructor(
-    private adminService: AdminService,
-    private _router: Router,
-    private _cookieService: CookieService,
-    private _localStorage: LocalStorageService
-  ) {}
+	ngOnInit(): void {
+		this.userId = this._localStorage.getUserId();
+		this.userName = this._localStorage.getUserName();
+		this.logo = this._localStorage.getCompanyLogo();
 
-  ngOnInit(): void {
-    this.userId = this._localStorage.getUserId();
-    this.userName = this._localStorage.getUserName();
+		const branchId = this._localStorage.getBranchId();
 
-    // Function to get pages of user by his id
-    this.adminService.getPages(this.userId).subscribe({
-      next: (res: PagesResponse) => {
-        this.pages = res.result;
-        this.pagesNavBar = this.groupPagesByModule(this.pages);
-      },
-      error: (err: any) => {
-        console.log('Error:', err);
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Error al obtener las páginas' });
-      },
-    });
+		if (!branchId) {
+			this.productService.getBranchesWithProduct().subscribe({
+				next: (res: any) => {
+					this.branches = res;
+					this.branchName = res[0].name;
+					this.branchAddress = res[0].address;
+					this._localStorage.setBranchId(res[0].id);
+					this._localStorage.setBranchName(res[0].name);
+					this._localStorage.setBranchAddress(res[0].address);
+					this.currentBranchId = res[0].id;
+				},
+				error: (err: any) => {
+					Swal.fire({ icon: "error", title: "Error", text: "Error al obtener la sucursal" });
+				},
+			});
+		} else {
+			this.branchName = this._localStorage.getBranchName();
+			this.branchAddress = this._localStorage.getBranchAddress();
+			this.currentBranchId = branchId;
+		}
 
+		// Function to get pages of user by his id
+		this.adminService.getPages(this.userId).subscribe({
+			next: (res: PagesResponse) => {
+				this.pages = res.result;
+				this.pagesNavBar = this.groupPagesByModule(this.pages);
+			},
+			error: (err: any) => {
+				console.log("Error:", err);
+				Swal.fire({ icon: "error", title: "Error", text: "Error al obtener las páginas" });
+			},
+		});
 
-    const photo = this._localStorage.getUserPhoto();
+		this.productService.updateViews.subscribe(() => {
+			this.currentBranchId = this._localStorage.getBranchId();
+			this.branchName = this._localStorage.getBranchName();
+			this.branchAddress = this._localStorage.getBranchAddress();
+		});
 
-    if (!photo) {
-      this.adminService.getUserImageProfile(this.userId).subscribe({
-        next: (res: any) => {
-          this.userImage = res.imageProfile;
-          this._localStorage.setUserPhoto(res.imageProfile);
-        },
-        error: (err: any) => {
-          this.userImage = 'img/default/profile.jpg'
-          this._localStorage.setUserPhoto('img/default/profile.jpg');
-        },
-      });
-      return;
-    }
+		this.productService.getNumberInCart().subscribe({
+			next: (res: any) => {
+				this.numberInCart = res.number;
+			},
+			error: (err: any) => {
+				Swal.fire({ icon: "error", title: "Error", text: "Error al obtener el carrito" });
+			},
+		});
 
-    this.userImage = photo;
-  }
+		const photo = this._localStorage.getUserPhoto();
 
+		if (!photo) {
+			this.adminService.getUserImageProfile(this.userId).subscribe({
+				next: (res: any) => {
+					this.userImage = res.imageProfile;
+					this._localStorage.setUserPhoto(res.imageProfile);
+				},
+				error: (err: any) => {
+					this.userImage = "img/default/profile.jpg";
+					this._localStorage.setUserPhoto("img/default/profile.jpg");
+				},
+			});
+			return;
+		}
 
-/**
- * Method to convert pages to navbarMenu
- * @param pages
- * @returns
- */
-  groupPagesByModule(pages: Page[]): MenuItem[] {
-    const groupedPages: { [key: string]: PageItem[] } = {};
+		this.userImage = photo;
+	}
 
-    pages.forEach((page) => {
-      if (!groupedPages[page.moduleName]) {
-        groupedPages[page.moduleName] = [];
-      }
-      groupedPages[page.moduleName].push({
-        pageName: page.pageName,
-        direction: page.direction,
-        isAvailable: page.isAvailable,
-      });
-    });
+	/**
+	 * Method to convert pages to navbarMenu
+	 * @param pages
+	 * @returns
+	 */
+	groupPagesByModule(pages: Page[]): MenuItem[] {
+		const groupedPages: { [key: string]: PageItem[] } = {};
 
-    return Object.keys(groupedPages).map((moduleName) => ({
-      module: moduleName,
-      pages: groupedPages[moduleName],
-    }));
-  }
+		pages.forEach((page) => {
+			if (!groupedPages[page.moduleName]) {
+				groupedPages[page.moduleName] = [];
+			}
+			groupedPages[page.moduleName].push({
+				pageName: page.pageName,
+				direction: page.direction,
+				isAvailable: page.isAvailable,
+			});
+		});
 
-  logout() {
-    this._localStorage.clear();
-    this._cookieService.delete('token');
-    this._router.navigate(['/home']);
-  }
+		return Object.keys(groupedPages).map((moduleName) => ({
+			module: moduleName,
+			pages: groupedPages[moduleName],
+		}));
+	}
 
-  toggleNavbar() {
-    this.isActive = !this.isActive;
-  }
+	logout() {
+		this._localStorage.clear();
+		this._cookieService.delete("token");
+		this._router.navigate(["/home"]);
+	}
 
-  toggleSubmenu(module: string) {
-    this.activeModule = this.activeModule === module ? null : module;
-  }
+	toggleNavbar() {
+		this.isActive = !this.isActive;
+	}
 
-  myAccount() {
-    this._router.navigate([`/account/${this.userName}`]);
-  }
+	toggleSubmenu(module: string) {
+		this.activeModule = this.activeModule === module ? null : module;
+	}
 
-  shopCart() {
-    this._router.navigate([`/shop/cart/${this.userName}`]);
-  }
+	myAccount() {
+		this._router.navigate([`/account/${this.userName}`]);
+	}
 
+	shopCart() {
+		this._router.navigate([`/shop/cart/${this.userName}`]);
+	}
+
+	openModal(template: TemplateRef<any>) {
+		this.productService.getBranchesWithProduct().subscribe({
+			next: (res: any) => {
+				this.branches = res;
+				this.dialogRef = this.dialog.open(template, { data: this.branches });
+			},
+			error: (err: any) => {
+				Swal.fire({ icon: "error", title: "Error", text: "Error al obtener la sucursal" });
+			},
+		});
+	}
+
+	changeBranchId(branch: any) {
+		this._localStorage.setBranchId(branch.id);
+		this._localStorage.setBranchName(branch.name);
+		this._localStorage.setBranchAddress(branch.address);
+		this.branchName = branch.name;
+		this.currentBranchId = branch.id;
+		if (this.dialogRef) {
+			this.dialogRef.close();
+		}
+
+		window.location.reload();
+	}
 }
