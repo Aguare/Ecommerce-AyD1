@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import { ProductService } from "../../../services/product.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatBadgeModule } from "@angular/material/badge";
 
 interface MenuItem {
 	module: string;
@@ -50,8 +50,7 @@ export class NavbarComponent implements OnInit {
 	readonly dialog = inject(MatDialog);
 	branches: any[] = [];
 	dialogRef: MatDialogRef<any> | null = null;
-	@Output() update = new EventEmitter<any>();
-  numberInCart: number = 0;
+	numberInCart: number = 0;
 
 	constructor(
 		private adminService: AdminService,
@@ -101,20 +100,20 @@ export class NavbarComponent implements OnInit {
 			},
 		});
 
-    this.productService.updateViews.subscribe(() => {
+		this.productService.updateViews.subscribe(() => {
 			this.currentBranchId = this._localStorage.getBranchId();
 			this.branchName = this._localStorage.getBranchName();
 			this.branchAddress = this._localStorage.getBranchAddress();
 		});
 
-    this.productService.getNumberInCart().subscribe({
-      next: (res: any) => {
-        this.numberInCart = res.number;
-      },
-      error: (err: any) => {
-        Swal.fire({ icon: "error", title: "Error", text: "Error al obtener el carrito" });
-      }
-    });
+		this.productService.getNumberInCart().subscribe({
+			next: (res: any) => {
+				this.numberInCart = res.number;
+			},
+			error: (err: any) => {
+				Swal.fire({ icon: "error", title: "Error", text: "Error al obtener el carrito" });
+			},
+		});
 
 		const photo = this._localStorage.getUserPhoto();
 
@@ -133,7 +132,6 @@ export class NavbarComponent implements OnInit {
 		}
 
 		this.userImage = photo;
-
 	}
 
 	/**

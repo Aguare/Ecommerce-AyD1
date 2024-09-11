@@ -59,4 +59,40 @@
         address: string;
         stock: number;
     }
+
+    export interface Order {
+        id: number;
+        nit_bill: string;
+        name_bill: string;
+        address_bill: string;
+        reference_address: string;
+        isDelivery: number;
+        delivery_cost: number;
+        status: string;
+        total_taxes: number;
+        total: number;
+        quantity_products: number;
+        created_at: string;
+        FK_User: number;
+        FK_Employee_Shipped: number;
+        branch_id: number;
+        branch_name: string;
+    }
+
+    export interface OrderProduct {
+        id: number;
+        name: string;
+        quantity: number;
+        price: number;
+        taxes: number;
+        total: number;
+        branch_name: string;
+    }
+
+    export const OrderStatus = {
+        'PENDING': 'Pendiente',
+        'IN_PROCESS': 'En proceso',
+        'DELIVERED': 'Enviado',
+        'CANCELED': 'Cancelado'
+    };
   

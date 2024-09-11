@@ -29,6 +29,7 @@ import { ProductService } from '../../../services/product.service';
 export class ProductHomeComponent implements OnInit {
 
   spinner = true;
+  currentBranchId: number = 0;
 
   homeImages: string[] = [
     'img/carrousell/carrousell-1.jpg',
@@ -38,16 +39,13 @@ export class ProductHomeComponent implements OnInit {
     'img/carrousell/carrousell-5.jpg',
   ]
   
-  constructor(private productService: ProductService) { }
+  constructor(private _productService: ProductService, private _localStorageService: LocalStorageService) { }
 
   ngOnInit() {
+    this.currentBranchId = this._localStorageService.getBranchId();
     setTimeout(() => {
       this.spinner = false;
     },700)
-
-    this.productService.updateViewsLogged.subscribe(() =>{
-      this.ngOnInit();
-    });
   }
 
 }
