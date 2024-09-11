@@ -12,8 +12,7 @@ router.use(express.urlencoded({ extended: true }));
 
 router.post("/customer/sign-up", CustomerController.signUp);
 router.get("/customer/getCurrency", CustomerController.getCurrency);
-router.get('/customer/getNumberInCart/:id', CustomerController.getNumberInCart);
-
+router.get("/customer/getNumberInCart/:id", CustomerController.getNumberInCart);
 
 router.use("/customer", [middleware.verifyToken], customerRoutes);
 router.use("/order", [middleware.verifyToken], orderRoutes);

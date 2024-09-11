@@ -163,5 +163,27 @@ export class ProductService {
     const user_id = this.localStorageService.getUserId();
     return this.http.put<any>(`${this.apiOrder}/updateOrderStatus/${id}`, {status, user_id});
   }
+  
+  /**
+   * get delivery cost
+   */
+  getDeliveryCost(): Observable<any> {
+    return this.http.get<any>(`${this.apiCustomer}/getDeliveryCost`);
+  }
+
+  /** 
+   * get data for checkout
+   */
+  getDataForCheckout(): Observable<any> {
+    const id_user = this.localStorageService.getUserId();
+    return this.http.get<any>(`${this.apiCustomer}/getDataForCheckout/${id_user}`);
+  }
+
+  /** 
+   * Save order
+   */
+  saveOrder(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiOrder}/saveOrder`, data);
+  }
 }
 

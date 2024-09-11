@@ -14,11 +14,11 @@ const pool = mariadb.createPool({
 
 async function getConnection() {
 	try {
-        const connection = await pool.getConnection();
-        return connection;
-    } catch (error) {
-        throw new Error('No se pudo establecer una conexión con la base de datos.');
-    }
+		const connection = await pool.getConnection();
+		return connection;
+	} catch (error) {
+		throw new Error("No se pudo establecer una conexión con la base de datos.");
+	}
 }
 
 module.exports = getConnection;
