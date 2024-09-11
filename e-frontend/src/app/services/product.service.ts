@@ -221,5 +221,9 @@ export class ProductService {
   saveOrder(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiOrder}/saveOrder`, data);
   }
+  
+  getProductsLike(name: any, branchId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiProduct}/getProductsLike/${name}/${branchId}`);
+  }
 }
 

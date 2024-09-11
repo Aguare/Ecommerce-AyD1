@@ -19,6 +19,7 @@ import { ProductDetailsComponent } from './components/commons/product-details/pr
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
 import { OrdersComponent } from './components/admin/orders/orders.component';
 import { PurchasesComponent } from './components/user/purchases/purchases.component';
+import { SearchProductComponent } from './components/commons/search-product/search-product.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'account/:username', component: MyAccountComponent },
   { path: 'shop/cart/:username', component: ShopCartComponent },
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
+  { path: 'search/:product', component: SearchProductComponent },
   {
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }

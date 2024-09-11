@@ -1,0 +1,27 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-5">
+    <div class="columns">
+        <div class="column is-two-fifths">
+            <div class="box">
+                <h3 class="title is-3">Categorias</h3>
+            </div>
+        </div>
+        <div class="column">
+            @if(products.length > 0) {
+                <div class="fixed-grid has-auto-count">
+                    <div class="grid">
+                        @for(product of products; track $index) {
+                            <app-product-card class="cell" [product]="product" [currency]="currency"></app-product-card>
+                        }
+                    </div>
+                </div>
+            }
+            @else {
+                <div class="box">
+                    <h3 class="title is-3">No hay productos</h3>
+                </div>
+            }
+        </div>
+    </div>
+</div>
