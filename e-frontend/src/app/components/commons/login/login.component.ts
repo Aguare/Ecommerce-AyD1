@@ -124,7 +124,7 @@ export class LoginComponent {
   }
 
   forgotPassword() {
-    alert("Olvide mi contraseña");
+    this._router.navigate(["/forgot-password"]);
   }
 
   onLogin() {
