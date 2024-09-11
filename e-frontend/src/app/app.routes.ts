@@ -14,6 +14,7 @@ import { DashboardComponent } from './components/admin/dashboard/dashboard.compo
 import { ShopCartComponent } from './components/user/shop-cart/shop-cart/shop-cart.component';
 import { ProductDetailsComponent } from './components/commons/product-details/product-details.component';
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
+import { AddHelperComponent } from './components/admin/add-helper/add-helper.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'account/:username', component: MyAccountComponent },
   { path: 'shop/cart/:username', component: ShopCartComponent },
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
+  { path: 'add-helper', component: AddHelperComponent},
   {
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }

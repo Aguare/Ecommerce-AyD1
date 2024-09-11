@@ -62,4 +62,20 @@ export class AdminService {
   updateSettings(body: any) : Observable<any> {
     return this.http.put(`${this.apiSettings}/update`, body)
   }
+
+  /**
+   * save employee information, and add new user
+   * 
+   */
+  saveEmployeeInformation(data: any): Observable<any> {
+    return this.http.post(`${this.apiAdmin}/addEmployee`, data);
+  }
+
+  /**
+   * get roles from employee
+   */
+  getRoles(): Observable<any> {
+    return this.http.get(`${this.apiAdmin}/getRoles`);
+  }
 }
+
