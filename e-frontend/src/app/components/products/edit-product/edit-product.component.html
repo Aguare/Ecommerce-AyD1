@@ -67,21 +67,46 @@
   
     <!-- Editar Atributos del Producto -->
     <div *ngIf="sectionVisible.attributes">
-      <form [formGroup]="attributeForm" (ngSubmit)="submitAttributeForm()">
-        <div *ngFor="let attribute of attributes.controls; let i = index" [formGroupName]="i">
-          <div class="field">
-            <label class="label">Nombre del Atributo</label>
-            <input class="input" formControlName="name" type="text" placeholder="Atributo" />
+        <div class="container mt-5">
+            <h1 class="title">Atributos del Producto</h1>
+          
+            <form [formGroup]="attributeForm" (ngSubmit)="submitAttributeForm()">
+                <div *ngFor="let attribute of attributesFormArray.controls; let i = index" [formGroup]="attributeFormGroup(i)" class="box">
+                <!-- Campo de Nombre del Atributo -->
+                <div class="field">
+                  <label class="label">Nombre del Atributo</label>
+                  <div class="control">
+                    <input class="input" formControlName="name" type="text" placeholder="Nombre del Atributo" />
+                  </div>
+                  <p class="help is-danger" *ngIf="attribute.get('name')?.invalid && attribute.get('name')?.touched">
+                    El nombre es requerido.
+                  </p>
+                </div>
+          
+                <!-- Campo de Descripción del Atributo -->
+                <div class="field">
+                  <label class="label">Descripción del Atributo</label>
+                  <div class="control">
+                    <input class="input" formControlName="description" type="text" placeholder="Descripción del Atributo" />
+                  </div>
+                  <p class="help is-danger" *ngIf="attribute.get('description')?.invalid && attribute.get('description')?.touched">
+                    La descripción es requerida.
+                  </p>
+                </div>
+          
+                <!-- Botón para eliminar el atributo -->
+                <button class="button is-danger" type="button" (click)="removeAttribute(i)">Eliminar Atributo</button>
+              </div>
+          
+              <!-- Botón para agregar un nuevo atributo -->
+              <button class="button is-link m-3" type="button" (click)="addAttribute()">Agregar Atributo</button>
+          
+              <!-- Botón de enviar -->
+              <button class="button is-primary m-3" type="submit" [disabled]="attributeForm.invalid">Guardar Atributos</button>
+            </form>
           </div>
-          <div class="field">
-            <label class="label">Valor del Atributo</label>
-            <input class="input" formControlName="value" type="text" placeholder="Valor" />
-          </div>
-          <button class="button is-danger" type="button" (click)="removeAttribute(i)">Eliminar Atributo</button>
-        </div>
-        <button class="button is-link" type="button" (click)="addAttribute()">Agregar Atributo</button>
-        <button class="button is-primary" type="submit">Guardar Atributos</button>
-      </form>
+          
+          
     </div>
   
     <!-- Editar Imágenes del Producto -->

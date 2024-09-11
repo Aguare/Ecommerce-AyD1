@@ -50,6 +50,14 @@ export class ProductService {
     return this.http.get(`${this.apiProduct}/getProductById?id=${id}`);
   }
   
+  updateDataProduct(body: any){
+    return this.http.put(`${this.apiProduct}/updateDataProduct`, body);
+  }
+  
+  updateAttributesProduct(body: any){
+    return this.http.put(`${this.apiProduct}/updateAttributesProduct`, body);
+  }
+  
   saveBrand(body:any){
     return this.http.post(`${this.apiBrands}/saveBrand`, body);
   }

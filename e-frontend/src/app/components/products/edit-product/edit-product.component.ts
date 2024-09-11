@@ -13,6 +13,7 @@ import { log } from 'console';
 import { ProductService } from '../../../services/product.service';
 import { Brand } from '../view-products/view-products.component';
 import { Category } from '../../card-carrousel/card-carrousel.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-product',
@@ -22,13 +23,20 @@ import { Category } from '../../card-carrousel/card-carrousel.component';
   styleUrl: './edit-product.component.scss',
 })
 export class EditProductComponent {
-  idProducto: number = 0;
+  idProduct: number = 0;
   productForm: FormGroup;
-  attributeForm: FormGroup;
   sectionVisible: any = { data: true, attributes: false, images: false };
-  categories : Category[] = [];
-  brands :Brand[] = [];
+  categories: Category[] = [];
+  brands: Brand[] = [];
   images = [{ url: 'path/to/image1.jpg' }, { url: 'path/to/image2.jpg' }];
+
+  attributeForm!: FormGroup;
+
+  // Atributos iniciales (puedes cambiar estos valores)
+  initialAttributes = [
+    { name: 'Color', description: 'Rojo' },
+    { name: 'Tamaño', description: 'Mediano' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -42,10 +50,60 @@ export class EditProductComponent {
       brand: ['', Validators.required],
       category: ['', Validators.required],
     });
+  }
 
-    this.attributeForm = this.fb.group({
-      attributes: this.fb.array([]),
+  createAttributeGroup(attribute?: any): FormGroup {
+    return this.fb.group({
+      name: [attribute ? attribute.name : '', Validators.required],
+      description: [
+        attribute ? attribute.description : '',
+        Validators.required,
+      ],
     });
+  }
+
+  // Obtener el FormArray de los atributos
+  get attributesFormArray(): FormArray {
+    return this.attributeForm.get('attributes') as FormArray;
+  }
+
+  // Añadir esto para manejar cada FormGroup individualmente
+  attributeFormGroup(index: number): FormGroup {
+    return this.attributesFormArray.at(index) as FormGroup;
+  }
+
+  // Agregar un nuevo atributo
+  addAttribute(): void {
+    this.attributesFormArray.push(this.createAttributeGroup());
+  }
+
+  // Eliminar un atributo
+  removeAttribute(index: number): void {
+    this.attributesFormArray.removeAt(index);
+  }
+
+  // Método para manejar el envío del formulario
+  submitAttributeForm(): void {
+    if (this.attributeForm.valid) {
+      const { attributes } = this.attributeForm.value;
+      if (attributes.length > 0) {
+        const body = {
+          attributes,
+          id: this.idProduct,
+        };
+
+        this.productService.updateAttributesProduct(body).subscribe({
+          next: (res: any) => {
+            console.log(res);
+          },
+          error: (error: any) => {
+            console.log(error);
+          },
+        });
+      }
+    } else {
+      console.log('El formulario no es válido');
+    }
   }
 
   getBrands() {
@@ -58,7 +116,7 @@ export class EditProductComponent {
       },
     });
   }
-  
+
   getCategories() {
     this.productService.getCategories().subscribe({
       next: (res: Category[]) => {
@@ -72,22 +130,33 @@ export class EditProductComponent {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.idProducto = params.idProducto;
+      this.idProduct = params.idProduct;
     });
 
     this.getBrands();
     this.getCategories();
 
-    this.productService.getProductById(this.idProducto).subscribe({
+    this.productService.getProductById(this.idProduct).subscribe({
       next: (res: any) => {
-        
+        console.log(res);
+
+        this.attributeForm = this.fb.group({
+          attributes: this.fb.array(
+            res.productAttributes
+              ? res.productAttributes.map((attr: any) =>
+                  this.createAttributeGroup(attr)
+                )
+              : []
+          ),
+        });
+
         this.productForm.setValue({
           name: res.productData.name,
           description: res.productData.description,
           price: res.productData.price,
           brand: res.productData.brandId,
           category: res.productData.categoryId,
-        })
+        });
       },
       error: (error) => {
         console.log(error);
@@ -97,43 +166,44 @@ export class EditProductComponent {
 
   // Toggle section visibility
   toggleSection(section: string) {
-    // Establece la sección seleccionada como visible y oculta las demás
     this.sectionVisible = {
       data: section === 'data',
       attributes: section === 'attributes',
       images: section === 'images',
     };
-
-    console.log(this.sectionVisible);
-  }
-
-  // Attribute form array
-  get attributes(): FormArray {
-    return this.attributeForm.get('attributes') as FormArray;
-  }
-
-  addAttribute() {
-    const attributeGroup = this.fb.group({
-      name: ['', Validators.required],
-      value: ['', Validators.required],
-    });
-    this.attributes.push(attributeGroup);
-  }
-
-  removeAttribute(index: number) {
-    this.attributes.removeAt(index);
   }
 
   // Handle form submissions
   submitProductForm() {
     if (this.productForm.valid) {
-      console.log('Product data:', this.productForm.value);
-    }
-  }
+      const body = this.productForm.value;
+      body.id = this.idProduct;
 
-  submitAttributeForm() {
-    if (this.attributeForm.valid) {
-      console.log('Attributes:', this.attributeForm.value);
+      this.productService.updateDataProduct(body).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: res.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Tienes que llenar todos los campos',
+      });
     }
   }
 

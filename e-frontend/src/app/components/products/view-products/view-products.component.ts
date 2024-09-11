@@ -46,7 +46,7 @@ export class ViewProductsComponent implements OnInit{
 
   editProduct(id: number) {
     this.router.navigate(['/products/editProduct'],{
-      queryParams: { idProducto: id },
+      queryParams: { idProduct: id },
     })
   }
 
