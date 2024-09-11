@@ -30,4 +30,8 @@ export class ImageService {
   getLogoCompany(): Observable<any> {
     return this.httpClient.get(this.portImage + 'company/logo');
   }
+
+  deleteImage(id:number): Observable<any> {
+    return this.httpClient.delete(`${this.portImage}img/deleteImage/${id}`);
+  }
 }

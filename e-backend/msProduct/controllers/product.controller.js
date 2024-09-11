@@ -183,7 +183,16 @@ productController.getProductById = async (req, res) => {
 
 		const productAttributes = await connection.query(queryAttribute, id);
 
-		res.status(200).send({productData: productData[0], productAttributes});
+		const queryImage = `
+			SELECT id, image_path FROM product_image WHERE FK_Product = ?
+		`;
+
+		const productImages = await connection.query(queryImage, id);
+
+		console.log(productImages);
+		
+
+		res.status(200).send({productData: productData[0], productAttributes, images: productImages});
 	} catch (error) {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
@@ -251,16 +260,11 @@ productController.updateAttributesProduct = async (req, res) => {
 
 		idsAttributes = await connection.query(queryGetIdsAttributes, id);
 
-		console.log(idsAttributes);
-		console.log(attributes);
-
 		const queryDeletePhA = `
 			DELETE FROM product_has_attribute WHERE FK_Product = ?;
 		`;
 
 		const resultDeletePhA = await connection.query(queryDeletePhA, id);
-		
-		console.log(resultDeletePhA);
 
 		await connection.commit();
 		
@@ -268,7 +272,6 @@ productController.updateAttributesProduct = async (req, res) => {
 
 		idsAttributes.forEach(async (value)=>{
 			const resultDelete = await connection.query(queryDeleteAttribute, value.id);
-			console.log(resultDelete);
 			
 		});
 

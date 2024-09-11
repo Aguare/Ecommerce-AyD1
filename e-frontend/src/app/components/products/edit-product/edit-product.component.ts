@@ -14,11 +14,13 @@ import { ProductService } from '../../../services/product.service';
 import { Brand } from '../view-products/view-products.component';
 import { Category } from '../../card-carrousel/card-carrousel.component';
 import Swal from 'sweetalert2';
+import { ImagePipe } from '../../../pipes/image.pipe';
+import { ImageService } from '../../../services/image.service';
 
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, ImagePipe],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.scss',
 })
@@ -28,20 +30,18 @@ export class EditProductComponent {
   sectionVisible: any = { data: true, attributes: false, images: false };
   categories: Category[] = [];
   brands: Brand[] = [];
-  images = [{ url: 'path/to/image1.jpg' }, { url: 'path/to/image2.jpg' }];
+  images: any[] = [];
 
   attributeForm!: FormGroup;
 
-  // Atributos iniciales (puedes cambiar estos valores)
-  initialAttributes = [
-    { name: 'Color', description: 'Rojo' },
-    { name: 'Tamaño', description: 'Mediano' },
-  ];
+  imagePreviews: string[] = [];
+  imagesToDB: File[] = [];
 
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private imageService: ImageService
   ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
@@ -62,27 +62,22 @@ export class EditProductComponent {
     });
   }
 
-  // Obtener el FormArray de los atributos
   get attributesFormArray(): FormArray {
     return this.attributeForm.get('attributes') as FormArray;
   }
 
-  // Añadir esto para manejar cada FormGroup individualmente
   attributeFormGroup(index: number): FormGroup {
     return this.attributesFormArray.at(index) as FormGroup;
   }
 
-  // Agregar un nuevo atributo
   addAttribute(): void {
     this.attributesFormArray.push(this.createAttributeGroup());
   }
 
-  // Eliminar un atributo
   removeAttribute(index: number): void {
     this.attributesFormArray.removeAt(index);
   }
 
-  // Método para manejar el envío del formulario
   submitAttributeForm(): void {
     if (this.attributeForm.valid) {
       const { attributes } = this.attributeForm.value;
@@ -138,7 +133,6 @@ export class EditProductComponent {
 
     this.productService.getProductById(this.idProduct).subscribe({
       next: (res: any) => {
-        console.log(res);
 
         this.attributeForm = this.fb.group({
           attributes: this.fb.array(
@@ -157,11 +151,34 @@ export class EditProductComponent {
           brand: res.productData.brandId,
           category: res.productData.categoryId,
         });
+
+        this.images = res.images;
       },
       error: (error) => {
         console.log(error);
       },
     });
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.imagesToDB.push(file);
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreviews.push(e.target.result);
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'La imagen se agrego correctamente',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   // Toggle section visibility
@@ -207,12 +224,31 @@ export class EditProductComponent {
     }
   }
 
-  // Image management
-  addImage() {
-    this.images.push({ url: 'path/to/newImage.jpg' });
-  }
-
   removeImage(index: number) {
-    this.images.splice(index, 1);
+    Swal.fire({
+      title: '¿Seguro que quieres eliminar la imagen?',
+      showDenyButton: true,
+      confirmButtonText: 'Si',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const deletedImage = this.images[index];
+
+        this.imageService.deleteImage(deletedImage.id).subscribe({
+          next: (res: any) => {
+            this.images.splice(index, 1);
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: res.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+          error: (error: any) => {
+            console.log(error);
+          },
+        });
+      }
+    });
   }
 }
