@@ -17,6 +17,7 @@ import { AddProductComponent } from './components/products/add-product/add-produ
 import { EditProductComponent } from './components/products/edit-product/edit-product.component';
 import { ProductDetailsComponent } from './components/commons/product-details/product-details.component';
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
+import { AddHelperComponent } from './components/admin/add-helper/add-helper.component';
 import { OrdersComponent } from './components/admin/orders/orders.component';
 import { PurchasesComponent } from './components/user/purchases/purchases.component';
 
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'account/:username', component: MyAccountComponent },
   { path: 'shop/cart/:username', component: ShopCartComponent },
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
+  { path: 'add-helper', component: AddHelperComponent},
   {
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }

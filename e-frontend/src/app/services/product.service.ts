@@ -156,8 +156,8 @@ export class ProductService {
    * @returns
    */
 
-  getProductById(id: any): Observable<ProductDetail> {
-    return this.http.get<ProductDetail>(`${this.apiProduct}/getProductById/${id}`);
+  getProductDetailById(id: any): Observable<ProductDetail> {
+    return this.http.get<ProductDetail>(`${this.apiProduct}/getProductDetailById/${id}`);
   }
 
   getStockProductById(id: any): Observable<any> {
