@@ -158,11 +158,11 @@ productController.saveProduct = async (req, res) => {
 	}
 };
 
-productController.getProductById = async (req, res) => {
+productController.getProductDetailById = async (req, res) => {
 	let connection;
 	try {
 
-		const {id} = req.query;
+		const {id} = req.params;
 		if(!id){
 			return res.status(400).send({message: 'El id es obligatorio'})
 		}
@@ -193,9 +193,12 @@ productController.getProductById = async (req, res) => {
 		const productImages = await connection.query(queryImage, id);
 
 		console.log(productImages);
-		
 
-		res.status(200).send({productData: productData[0], productAttributes, images: productImages});
+		productData[0].attributes = productAttributes;
+		productData[0].images = productImages.map((image) => image.image_path);
+
+		res.status(200).send(productData[0]);
+
 	} catch (error) {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
