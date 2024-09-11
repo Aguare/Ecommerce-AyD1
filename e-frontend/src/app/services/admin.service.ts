@@ -83,5 +83,13 @@ export class AdminService {
   sendResetPasswordEmail(data: any): any {
     return this.http.post(`${this.apiCustomers}/verifyResetPassword`, data);
   }
+
+  addRole(name: string, description: string): Observable<any> {
+    return this.http.post(`${this.apiAdmin}/addRole`, { name, description });
+  }
+
+  updateRole(name: string, description: string, id: number): Observable<any> {
+    return this.http.put(`${this.apiAdmin}/updateRole`, { name, description, id });
+  }
 }
 

@@ -20,7 +20,7 @@ settingsController.getSettings = async (req, res) => {
         res.status(500).send({ message: "Error al obtener las configuraciones.", error: error.message });
     } finally {
         if (connection) {
-            connection.end();
+            connection.release();
         }
     }
 }
@@ -47,7 +47,7 @@ settingsController.updateSettings = async (req, res) => {
         connection.rollback();
     } finally {
         if (connection) {
-            connection.end();
+            connection.release();
         }
     }
 }
@@ -68,7 +68,7 @@ settingsController.getTabs = async (req, res) => {
         res.status(500).send({ message: "Error al obtener las pestañas.", error: error.message });
     } finally {
         if (connection) {
-            connection.end();
+            connection.release();
         }
     }
 }

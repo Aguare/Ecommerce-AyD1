@@ -27,7 +27,7 @@ productController.getProductsByCategory = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -57,7 +57,7 @@ productController.getProductsWithCategory = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -81,7 +81,7 @@ productController.getProductsForCart = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -104,7 +104,7 @@ productController.getProducts = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -150,7 +150,7 @@ productController.saveProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al guardar producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -196,7 +196,7 @@ productController.getProductDetailById = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -233,7 +233,7 @@ productController.updateDataProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -293,7 +293,7 @@ productController.updateAttributesProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -334,7 +334,7 @@ productController.getProductById = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -368,7 +368,7 @@ productController.getStockProductById = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -396,7 +396,7 @@ productController.getBranchesWithProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -463,7 +463,7 @@ productController.getProductsLike = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };

@@ -66,7 +66,7 @@ usersController.login = async (req, res) => {
 		res.status(500).send({ message: "Error al iniciar sesión", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -108,7 +108,7 @@ usersController.updateUserInformation = async (req, res) => {
 		res.status(500).send({ message: "Error al actualizar la información", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -136,7 +136,7 @@ usersController.getProfileInformation = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener la información", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -167,7 +167,7 @@ usersController.getImageProfile = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener la información", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };

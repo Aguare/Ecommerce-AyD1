@@ -95,4 +95,11 @@
         'DELIVERED': 'Enviado',
         'CANCELED': 'Cancelado'
     };
+
+    export interface Role {
+        id: number;
+        name: string;
+        description: string;
+        created_at: string;
+    }
   

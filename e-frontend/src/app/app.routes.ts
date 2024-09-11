@@ -23,6 +23,7 @@ import { PurchasesComponent } from './components/user/purchases/purchases.compon
 import { SearchProductComponent } from './components/commons/search-product/search-product.component';
 import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/commons/forgot-password/forgot-password.component';
+import { PermissionsComponent } from './components/admin/permissions/permissions.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -42,6 +43,7 @@ export const routes: Routes = [
   { path: 'search/:product', component: SearchProductComponent },
   { path: 'reset-password/:token/:email', component: ResetPasswordComponent },
   { path: 'add-helper', component: AddHelperComponent},
+  { path: 'permissions', component: PermissionsComponent },
   {
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }

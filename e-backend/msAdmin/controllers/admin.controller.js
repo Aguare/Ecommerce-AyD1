@@ -30,7 +30,7 @@ adminController.getPages = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener las páginas.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -99,7 +99,7 @@ adminController.addEmployee = async (req, res) => {
 		res.status(500).send({ message: "Error al agregar el empleado.", error: error.message });
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -121,9 +121,64 @@ adminController.getRoles = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los roles.", error: error.message });
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
+
+adminController.addRole = async (req, res) => {
+	let conn;
+	try {
+		const { name, description } = req.body;
+		conn = await getConnection();
+
+		const queryRole = `INSERT INTO role (name, description) VALUE (?, ?);`;
+		const result = await conn.query(queryRole, [name, description]);
+
+		res.status(200).send({ message: "Rol agregado correctamente." });
+	} catch (error) {
+		await conn.rollback();
+		res.status(500).send({ message: "Error al agregar el rol.", error: error.message });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+};
+
+adminController.updateRole = async (req, res) => {
+	let conn;
+	try {
+		const { id, name, description } = req.body;
+		conn = await getConnection();
+
+		const queryRole = `UPDATE role SET name = ?, description = ? WHERE id = ?;`;
+		const result = await conn.query(queryRole, [name, description, id]);
+
+		res.status(200).send({ message: "Rol actualizado correctamente." });
+	} catch (error) {
+		await conn.rollback();
+		res.status(500).send({ message: "Error al actualizar el rol.", error: error.message });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+}
+
+adminController.getAllPages = async (req, res) => {
+	let conn;
+	try {
+		conn = await getConnection();
+
+		const queryPages = `SELECT * FROM page;`;
+		const result = await conn.query(queryPages);
+
+		res.status(200).send({ data: result });
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener las páginas.", error: error.message });
+	}
+}
+
 
 module.exports = adminController;
