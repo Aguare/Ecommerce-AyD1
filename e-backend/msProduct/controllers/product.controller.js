@@ -566,4 +566,41 @@ productController.addStockInventory = async (req, res) => {
 	}
 };
 
+productController.getProducsWithMoreSales = async (req, res) => {
+	let connection;
+	try {
+		connection = await getConnection();
+
+		const query = `SELECT SUM(i.outflow)as sales, p.name FROM inventory i
+    		JOIN product p ON i.FK_Product = p.id
+    		GROUP BY i.FK_Product ORDER BY sales DESC LIMIT 10`;
+
+		const result = await connection.query(query);
+		
+		const query1 = `SELECT SUM(i.stock) as sales, p.name FROM inventory i
+    		JOIN product p ON i.FK_Product = p.id
+    		GROUP BY i.FK_Product ORDER BY sales DESC LIMIT 10`;
+
+		const result1 = await connection.query(query1);
+		
+		const query2 = `SELECT CONCAT(COUNT(r.name),'') as quantity, r.name FROM user u
+    						JOIN user_has_role uhr ON u.id = uhr.FK_User
+    						JOIN role r ON uhr.FK_Role = r.id
+    						GROUP BY r.name
+`;
+
+		const result2 = await connection.query(query2);
+		console.log(result2);
+		
+		
+		res.status(200).send({report1: result, report2: result1, report3: result2});
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener datos", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+};
+
 module.exports = productController;
