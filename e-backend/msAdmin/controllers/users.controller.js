@@ -118,6 +118,11 @@ usersController.updateUserInformation = async (req, res) => {
 		// Update user information
 		const queryUpdateUserInfo = `UPDATE user_information SET nit = ?, description = ?, image_profile = ?, isPreferCash = ? WHERE FK_User = ?;`;
 		await connection.query(queryUpdateUserInfo, [nit, description, image, isPreferCash, id]);
+
+		if (connection) {
+			connection.release();
+		}
+
 		res.status(200).send({ message: "Información actualizada correctamente." });
 	} catch (error) {
 		console.log(error);
@@ -144,6 +149,10 @@ usersController.getProfileInformation = async (req, res) => {
 		const resultUserInfo = await connection.query(query, [username]);
 		if (resultUserInfo.length === 0) {
 			return res.status(400).send({ message: "El usuario no existe." });
+		}
+
+		if (connection) {
+			connection.release();
 		}
 
 		res.status(200).send({ user: resultUserInfo[0] });
@@ -175,6 +184,10 @@ usersController.getImageProfile = async (req, res) => {
 		const resultUserInfo = await connection.query(query, [id]);
 		if (resultUserInfo.length === 0) {
 			return res.status(400).send({ message: "No se encontró al usuario." });
+		}
+
+		if (connection) {
+			connection.release();
 		}
 
 		res.status(200).send({ imageProfile: resultUserInfo[0].image_profile });

@@ -25,6 +25,10 @@ adminController.getPages = async (req, res) => {
             WHERE uhs.FK_User = ?`;
 
 		const result = await connection.query(queryMoney, [id]);
+
+		if (conn) {
+			conn.release();
+		}
 		res.status(200).send({ result });
 	} catch (error) {
 		res.status(500).send({ message: "Error al obtener las páginas.", error: error.message });
@@ -93,6 +97,10 @@ adminController.addEmployee = async (req, res) => {
 		await conn.query(insertEmployeeQuery, [first_name, last_name, DPI, date_birth, tel, FK_Branch, result.insertId]);
 
 		await conn.commit();
+
+		if (conn) {
+			conn.release();
+		}
 		res.status(200).send({ message: "Empleado agregado correctamente." });
 	} catch (error) {
 		await conn.rollback();
@@ -120,6 +128,10 @@ adminController.getRoles = async (req, res) => {
 			result[i].pages = resultPages;
 		}
 
+		if (conn) {
+			conn.release();
+		}
+
 		res.status(200).send({ data: result });
 	} catch (error) {
 		await conn.rollback();
@@ -139,6 +151,10 @@ adminController.addRole = async (req, res) => {
 
 		const queryRole = `INSERT INTO role (name, description) VALUE (?, ?);`;
 		const result = await conn.query(queryRole, [name, description]);
+
+		if (conn) {
+			conn.release();
+		}
 
 		res.status(200).send({ message: "Rol agregado correctamente." });
 	} catch (error) {
@@ -160,6 +176,10 @@ adminController.updateRole = async (req, res) => {
 		const queryRole = `UPDATE role SET name = ?, description = ? WHERE id = ?;`;
 		const result = await conn.query(queryRole, [name, description, id]);
 
+		if (conn) {
+			conn.release();
+		}
+
 		res.status(200).send({ message: "Rol actualizado correctamente." });
 	} catch (error) {
 		await conn.rollback();
@@ -178,6 +198,10 @@ adminController.getAllRolePages = async (req, res) => {
 
 		const queryPages = `SELECT id, name FROM page WHERE isAvailable = 1;`;
 		const result = await conn.query(queryPages);
+
+		if (conn) {
+			conn.release();
+		}
 
 		res.status(200).send({ data: result });
 	} catch (error) {
@@ -206,6 +230,10 @@ adminController.updateRolePages = async (req, res) => {
 		}
 
 		await conn.commit();
+
+		if (conn) {
+			conn.release();
+		}
 
 		res.status(200).send({ message: "Páginas actualizadas correctamente." });
 	} catch (error) {
