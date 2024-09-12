@@ -233,5 +233,9 @@ export class ProductService {
   addStockInventory(body:any): Observable<any> {
     return this.http.post(`${this.apiProduct}/addStockInventory`, body);
   }
+
+  getProductsLike(name: any, branchId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiProduct}/getProductsLike/${name}/${branchId}`);
+  }
 }
 

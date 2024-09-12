@@ -95,4 +95,17 @@
         'DELIVERED': 'Enviado',
         'CANCELED': 'Cancelado'
     };
+
+    export interface RolePage {
+        id: number;
+        name: string;
+    }
+
+    export interface Role {
+        id: number;
+        name: string;
+        description: string;
+        created_at: string;
+        pages: RolePage[];
+    }
   

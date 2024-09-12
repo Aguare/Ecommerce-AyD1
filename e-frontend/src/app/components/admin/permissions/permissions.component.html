@@ -1,0 +1,91 @@
+<app-navbar></app-navbar>
+
+<div class="is-centered m-5">
+    <div class="columns">
+        <div class="column">
+            <div class="box">
+                <h3 class="title is-3">Roles</h3>
+                <div class="m-5">
+                    <h4 class="title is-4">Roles actuales</h4>
+                    <div class="field">
+                        <div class="select">
+                            <select>
+                                <option value="0">Selecciona un rol</option>
+                                @for(role of roles; track $index) {
+                                <option value="{{ role.id }}" (click)="editRole(role)">{{ role.name }}</option>
+                                }
+                            </select>
+                            <p class="help is-info">Selecciona para editar</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-5">
+                    <h4 class="title is-4">Crear nuevo rol</h4>
+                    <form [formGroup]="roleForm" (ngSubmit)="submit()">
+                        <div class="field">
+                            <label class="label">Nombre</label>
+                            <div class="control">
+                                <input formControlName="name" class="input" type="text" placeholder="Nombre del rol">
+                            </div>
+                            <p class="help is-danger">El nombre es requerido</p>
+                        </div>
+                        <div class="field">
+                            <label class="label">Descripción</label>
+                            <div class="control">
+                                <input formControlName="description" class="input" type="text"
+                                    placeholder="Descripción del rol">
+                            </div>
+                            <p class="help is-danger">La descripción es requerida</p>
+                        </div>
+                        @if(!isUpdating) {
+                        <button class="button is-primary is-fullwidth" type="submit">Guardar</button>
+                        } @else {
+                        <div class="grid">
+                            <button class="button is-primary cell" type="submit">Actualizar</button>
+                            <button type="button" class="button is-danger cell"
+                                (click)="cancelUpdate()">Cancelar</button>
+                        </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="box">
+                <h3 class="title is-3">Gestionar permisos</h3>
+                <div class="m-5">
+                    <h4 class="title is-4">Selecciona el rol a gestionar</h4>
+                    <div class="field">
+                        <div class="select">
+                            <select>
+                                <option value="0">Selecciona un rol</option>
+                                @for(role of roles; track $index) {
+                                <option value="{{ role.id }}" (click)="chooseRolePages(role.id)">
+                                    {{role.name}}
+                                </option>
+                                }
+                            </select>
+                            <p class="help is-info">Selecciona para editar permisos</p>
+                        </div>
+                    </div>
+                    <div class="m-5">
+                        <h4 class="title is-4">Permisos actuales</h4>
+                        <form [formGroup]="pagesForm" (ngSubmit)="updatePages()">
+                            <div class="field m-5" formArrayName="pages">
+                                @for(page of pages; track pageIndex; let pageIndex = $index) {
+                                    <div class="control">
+                                        <label class="checkbox">
+                                            <input type="checkbox" [formControlName]="pageIndex" />
+                                            {{page.name}}
+                                        </label>
+                                    </div>
+                                    }
+                            </div>
+                            <button class="button is-primary is-fullwidth" type="submit">Actualizar permisos</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

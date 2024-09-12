@@ -1,12 +1,13 @@
 <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <div class="navbar-item is-clickable" [routerLink]="['/products/init']" routerLinkActive="router-link-active" >
-      <span class="image is-32x32">
+    <div class="navbar-item is-clickable" routerLinkActive="router-link-active" >
+      <span class="image is-32x32" [routerLink]="['/products/init']">
         <img [src]="this.logo | imagePipe" alt="Logo" />
       </span>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
          [ngClass]="{'is-active': isActive}"
          (click)="toggleNavbar()">
+        <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -35,28 +36,32 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <a (click)="openModal(changeBranchTemplate)" matTooltip="Sucursales" class="navbar-item is-align-content-center" *ngIf="isClient">
-          <mat-icon aria-hidden="false" aria-label="Branch Icon"
-          fontIcon="location_on"></mat-icon>
-          {{branchName}}
+        <app-search-input></app-search-input>
+      </div>
+      <div class="navbar-item">
+        <a (click)="openModal(changeBranchTemplate)" matTooltip="Sucursales" class="button is-primary">
+          <mat-icon aria-hidden="false" aria-label="Branch Icon" fontIcon="location_on"></mat-icon>
+          <span class="ml-2">{{branchName}}</span>
         </a>
-        <a (click)="shopCart()" class="navbar-item" *ngIf="isClient">
+      </div>
+      <div class="navbar-item">
+        <a (click)="shopCart()" class="button is-primary" *ngIf="isClient">
           <span title="Badge top right" class="badge is-danger">{{numberInCart}}</span>
           <mat-icon aria-hidden="false" aria-label="Example home icon"
            fontIcon="shopping_cart"></mat-icon>
         </a>
-        <div class="navbar-item has-dropdown is-hoverable mr-3">
-          <a class="navbar-link">
-            <figure class="image is-32x32 is-align-content-center">
-              <img class="is-rounded" [src]="this.userImage | imagePipe" alt="profile image" />
-            </figure>
-            {{ this.userName }}
-          </a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" (click)="myAccount()">Mi Cuenta</a>
-            <hr class="navbar-divider" />
-            <a class="navbar-item" (click)="logout()">Salir</a>
-          </div>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable mr-3">
+        <a class="navbar-link">
+          <figure class="image is-32x32 is-align-content-center">
+            <img class="is-rounded" [src]="this.userImage | imagePipe" alt="profile image" />
+          </figure>
+          {{ this.userName }}
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" (click)="myAccount()">Mi Cuenta</a>
+          <hr class="navbar-divider" />
+          <a class="navbar-item" (click)="logout()">Salir</a>
         </div>
       </div>
     </div>

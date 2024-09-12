@@ -21,5 +21,7 @@ router.get("/getBranchesWithProduct", productController.getBranchesWithProduct);
 router.get("/getProductsAndBranchesForStock", productController.getProductsAndBranchesForStock);
 router.get("/getStockOfProductByBranch", productController.getStockOfProductByBranch);
 router.post("/addStockInventory", productController.addStockInventory);
+router.get("/getProductsLike/:name/:id", productController.getProductsLike);
+
 
 module.exports = router;

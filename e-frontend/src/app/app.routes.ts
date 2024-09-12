@@ -1,3 +1,4 @@
+import { Verify2faComponent } from './components/commons/verify2fa/verify2fa.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PruebaMaterialComponent } from './prueba-material/prueba-material.component';
@@ -17,9 +18,15 @@ import { AddProductComponent } from './components/products/add-product/add-produ
 import { EditProductComponent } from './components/products/edit-product/edit-product.component';
 import { ProductDetailsComponent } from './components/commons/product-details/product-details.component';
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
+import { AddHelperComponent } from './components/admin/add-helper/add-helper.component';
 import { OrdersComponent } from './components/admin/orders/orders.component';
 import { PurchasesComponent } from './components/user/purchases/purchases.component';
 import { AddStockComponent } from './components/admin/add-stock/add-stock.component';
+import { SearchProductComponent } from './components/commons/search-product/search-product.component';
+import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './components/commons/forgot-password/forgot-password.component';
+import { PermissionsComponent } from './components/admin/permissions/permissions.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,7 +41,13 @@ export const routes: Routes = [
   { path: 'purchases', component: PurchasesComponent },
   { path: 'account/:username', component: MyAccountComponent },
   { path: 'shop/cart/:username', component: ShopCartComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
+  { path: 'search/:product', component: SearchProductComponent },
+  { path: 'reset-password/:token/:email', component: ResetPasswordComponent },
+  { path: 'add-helper', component: AddHelperComponent},
+  { path: 'permissions', component: PermissionsComponent },
+  { path: 'verify-2FA', component: Verify2faComponent },
   {
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }

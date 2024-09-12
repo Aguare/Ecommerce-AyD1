@@ -25,7 +25,7 @@ export class AdminService {
   private apiCustomers = 'http://localhost:3003/customer';
   private apiLogin = 'http://localhost:3001';
   private apiSettings = 'http://localhost:3001/settings';
-  
+
 
   constructor(private http: HttpClient) { }
 
@@ -48,7 +48,7 @@ export class AdminService {
   getUserImageProfile(id: number) : Observable<any> {
     return this.http.get(`${this.apiUsers}/user/image/${id}`)
   }
-  
+
   register = (data: any): Observable<any> => {
     return this.http.post(`${this.apiCustomers}/sign-up`, data);
   }
@@ -65,4 +65,54 @@ export class AdminService {
     return this.http.put(`${this.apiSettings}/update`, body)
   }
 
+  /**
+   * save employee information, and add new user
+   *
+   */
+  saveEmployeeInformation(data: any): Observable<any> {
+    return this.http.post(`${this.apiAdmin}/addEmployee`, data);
+  }
+
+  /**
+   * get roles from employee
+   */
+  getRoles(): Observable<any> {
+    return this.http.get(`${this.apiAdmin}/getRoles`);
+  }
+
+  sendResetPasswordEmail(data: any): any {
+    return this.http.post(`${this.apiCustomers}/verifyResetPassword`, data);
+  }
+
+  addRole(name: string, description: string): Observable<any> {
+    return this.http.post(`${this.apiAdmin}/addRole`, { name, description });
+  }
+
+  updateRole(name: string, description: string, id: number): Observable<any> {
+    return this.http.put(`${this.apiAdmin}/updateRole`, { name, description, id });
+  }
+
+  /**
+   * Method to get all pages in order to manage permissions for each role
+   * @returns 
+   */
+  getAllRolePages(): Observable<any> {
+    return this.http.get(`${this.apiAdmin}/getAllRolePages`);
+  }
+
+  /**
+   * Method to update permissions for a role
+   */
+  updateRolePages(id: number, pages: any[]): Observable<any> {
+    return this.http.put(`${this.apiAdmin}/updateRolePages`, { id, pages });
+  }
+  
+  verify2FACode(data: any): any {
+    return this.http.post(`${this.apiUsers}/validate2FA`, data);
+  }
+
+  validateCode2FA(data: any): any {
+    return this.http.post(`${this.apiUsers}/validateCode2FA`, data);
+  }
 }
+

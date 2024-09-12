@@ -1,0 +1,56 @@
+@if (isLogged) {
+<app-navbar></app-navbar>
+
+} @else {
+    <app-navbar-guest></app-navbar-guest>
+}
+
+<div class="container mt-5">
+    <div class="columns">
+        <div class="column is-two-fifths">
+            <div class="box">
+                <form [formGroup]="filterForm" (ngSubmit)="filter()">
+                    <h3 class="title is-3">Categorias</h3>
+                    <div class="field m-5" formArrayName="categories">
+                        @for(category of categories; track categoryIndex; let categoryIndex = $index) {
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" [formControlName]="categoryIndex"/>
+                                    {{category}}
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <h3 class="title is-3">Atributos</h3>
+                    <div class="field m-5" formArrayName="attributes">
+                        @for(attribute of attributes; track attributeIndex; let attributeIndex = $index) {
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" [formControlName]="attributeIndex"/>
+                                    {{attribute.description}}
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <button class="button is-primary is-fullwidth" type="submit">Filtrar</button>
+                </form>
+            </div>
+        </div>
+        <div class="column">
+            @if(currentProducts.length > 0) {
+                <div class="fixed-grid has-auto-count">
+                    <div class="grid">
+                        @for(product of currentProducts; track $index) {
+                            <app-product-card class="cell" [product]="product" [currency]="currency"></app-product-card>
+                        }
+                    </div>
+                </div>
+            }
+            @else {
+                <div class="box">
+                    <h3 class="title is-3">No hay productos</h3>
+                </div>
+            }
+        </div>
+    </div>
+</div>

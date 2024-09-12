@@ -27,7 +27,7 @@ productController.getProductsByCategory = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -57,7 +57,7 @@ productController.getProductsWithCategory = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -81,7 +81,7 @@ productController.getProductsForCart = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -104,7 +104,7 @@ productController.getProducts = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -150,7 +150,7 @@ productController.saveProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al guardar producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -166,7 +166,7 @@ productController.getProductDetailById = async (req, res) => {
 		connection = await getConnection();
 
 		const queryMoney = `
-            SELECT p.id, p.name, p.description, p.price, b.id as brandId, b.name as brand, c.id as categoryId, c.name as category FROM product p
+            SELECT p.id, p.name, p.description, p.isAvailable, p.price, b.id as brandId, b.name as brand, c.id as categoryId, c.name as category FROM product p
     			LEFT JOIN brand b ON p.FK_Brand = b.id
     			LEFT JOIN product_has_category phc ON p.id = phc.FK_Product
     			LEFT JOIN category c ON phc.FK_Category = c.id
@@ -188,8 +188,6 @@ productController.getProductDetailById = async (req, res) => {
 
 		const productImages = await connection.query(queryImage, id);
 
-		console.log(productImages);
-
 		productData[0].attributes = productAttributes;
 		productData[0].images = productImages.map((image) => image.image_path);
 
@@ -198,7 +196,7 @@ productController.getProductDetailById = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -235,7 +233,7 @@ productController.updateDataProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -295,7 +293,7 @@ productController.updateAttributesProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -340,7 +338,7 @@ productController.getProductByIdForEdit = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -374,7 +372,7 @@ productController.getStockProductById = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -385,15 +383,15 @@ productController.getBranchesWithProduct = async (req, res) => {
 		connection = await getConnection();
 
 		const queryProduct = `
-		SELECT b.id as id, b.name as name, b.address as address
+		SELECT b.id as id, b.name as name, b.address as address, stock
         FROM inventory i1
         JOIN (
             SELECT FK_Branch, MAX(created_at) AS MaxDate
-            FROM inventory
+            FROM inventory i3
+            WHERE i3.stock != 0
             GROUP BY FK_Branch
         ) i2 ON i1.FK_Branch = i2.FK_Branch AND i1.created_at = i2.MaxDate
-        JOIN branch b ON i1.FK_Branch = b.id
-        WHERE i1.stock != 0;
+        JOIN branch b ON i1.FK_Branch = b.id;
 		`;
 
 		const resultProduct = await connection.query(queryProduct);
@@ -402,7 +400,73 @@ productController.getBranchesWithProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
+		}
+	}
+};
+
+productController.getProductsLike = async (req, res) => {
+	let connection;
+	try {
+		const { name, id } = req.params;
+		connection = await getConnection();
+
+		if (!name) {
+			return res.status(400).send({ message: "El nombre es requerido" });
+		}
+
+		if (!id) {
+			return res.status(400).send({ message: "El id de la sucursal es requerido" });
+		}
+
+		const queryProduct = `
+		SELECT p.* from inventory i
+		JOIN (
+			SELECT FK_Product, FK_Branch, created_at, stock
+					FROM inventory i3
+					WHERE i3.stock != 0 AND i3.FK_Branch = ?
+				GROUP BY FK_Product, FK_Branch
+		) i2 ON i.FK_Branch = i2.FK_Branch
+		JOIN product p ON i2.FK_Product = p.id
+		WHERE p.name LIKE ?
+		GROUP BY p.id;`;
+
+		const resultProduct = await connection.query(queryProduct, [id, `%${name}%`]);
+
+		for (let i = 0; i < resultProduct.length; i++) {
+			// find attributes
+			const queryAttribute = `
+			SELECT a.name, a.description
+			FROM attribute a
+			JOIN product_has_attribute pha ON a.id = pha.FK_Attribute
+			WHERE pha.FK_Product = ?;`;
+
+			const resultAttributes = await connection.query(queryAttribute, [resultProduct[i].id]);
+			resultProduct[i].attributes = resultAttributes;
+
+			// get one image
+			const queryImage = `
+			SELECT image_path FROM product_image WHERE FK_Product = ? LIMIT 1;`;
+
+			const resultImage = await connection.query(queryImage, [resultProduct[i].id]);
+			resultProduct[i].image_path = resultImage[0].image_path;
+
+			// find categories
+			const queryCategory = `
+			SELECT c.name as name FROM category c
+			JOIN product_has_category phc ON c.id = phc.FK_Category
+			WHERE phc.FK_Product = ?;`;
+
+			const resultCategory = await connection.query(queryCategory, [resultProduct[i].id]);
+			resultProduct[i].categories = resultCategory;
+		}
+
+		res.status(200).send(resultProduct);
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
+	} finally {
+		if (connection) {
+			connection.release();
 		}
 	}
 };

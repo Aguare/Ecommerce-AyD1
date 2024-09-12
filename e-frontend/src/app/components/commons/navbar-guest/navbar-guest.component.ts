@@ -17,11 +17,12 @@ import {
 	MatDialogRef,
 	MatDialogTitle,
 } from "@angular/material/dialog";
+import { SearchInputComponent } from "../search-input/search-input.component";
 
 @Component({
 	selector: "app-navbar-guest",
 	standalone: true,
-	imports: [CommonModule, RouterLink, MatIconModule, RegisterModalComponent],
+	imports: [CommonModule, RouterLink, MatIconModule, RegisterModalComponent, SearchInputComponent],
 	templateUrl: "./navbar-guest.component.html",
 	styleUrl: "./navbar-guest.component.scss",
 })
@@ -61,6 +62,7 @@ export class NavbarGuestComponent {
 		const userId = this._localStorage.getUserId();
         const url = this._router.url;
         this.showButtonsRegister = !userId && url !== "/login";
+        this.showButtonsRegister = url.includes("verify-email") ? false : this.showButtonsRegister;
         const token = this._cookieService.get("token");
         if (userId && token) {
             this._router.navigate(["/products/init"]);
@@ -89,6 +91,6 @@ export class NavbarGuestComponent {
 		}
 
 		window.location.reload();
-		
+
 	}
 }
