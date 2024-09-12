@@ -195,12 +195,14 @@ userController.myCart = async (req, res) => {
 		const data = {
 			cart: resultCart,
 			info: resultCartItems,
-			images: resultImagePath[0],
+			images: resultImagePath,
 		};
 
 		if (conn) {
 			conn.release();
 		}
+
+		console.log(data);
 
 		return res.status(200).send({ message: "Carrito obtenido correctamente", data: data });
 	} catch (error) {
