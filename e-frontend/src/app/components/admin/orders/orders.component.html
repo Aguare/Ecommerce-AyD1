@@ -4,17 +4,22 @@
     <h2 class="title has-text-centered is-2">Pedidos</h2>
     <div class="field m-3 is-full">
         <div class="container box">
-            <div class="field m-3">
-                <label class="label">Filtrar por Sucursal</label>
-                <div class="select mx-5">
-                    <select [formControl]="branchIdControl">
-                        <option selected value="0">Todas</option>
-                        @for(branch of branches; track $index) {
-                        <option [value]="branch.id">{{ branch.name }}</option>
-                        }
-                    </select>
+            @if(!isEmployee) {
+                <div class="field m-3">
+                    <label class="label">Filtrar por Sucursal</label>
+                    <div class="select mx-5">
+                        <select [formControl]="branchIdControl">
+                            <option selected value="0">Todas</option>
+                            @for(branch of branches; track $index) {
+                            <option [value]="branch.id">{{ branch.name }}</option>
+                            }
+                        </select>
+                    </div>
                 </div>
-            </div>
+            } @else {
+                <h4 class="title is-4">Sucursal</h4>
+                <h5 class="subtitle is-5">{{ branchName }}</h5>
+            }
             <div class="field m-3">
                 <label class="label">Filtrar por Estado</label>
                 <div class="select mx-5">

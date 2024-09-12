@@ -24,19 +24,19 @@ orderController.getAllOrders = async (req, res) => {
 };
 
 orderController.getOrderStatus = async (req, res) => {
-    let conn;
-    try {
-        conn = await getConnection();
-        const query = `
+	let conn;
+	try {
+		conn = await getConnection();
+		const query = `
         SELECT status FROM orders GROUP BY status;
         `;
-        const result = await conn.query(query);
-        res.status(200).json(result);
-    } catch (err) {
-        res.status(500).json({ message: "No se pudieron obtener los estados de los pedidos." });
-    } finally {
-        if (conn) conn.release();
-    }
+		const result = await conn.query(query);
+		res.status(200).json(result);
+	} catch (err) {
+		res.status(500).json({ message: "No se pudieron obtener los estados de los pedidos." });
+	} finally {
+		if (conn) conn.release();
+	}
 };
 
 orderController.getProductsByOrderId = async (req, res) => {
@@ -80,7 +80,7 @@ orderController.getOrdersByUserId = async (req, res) => {
 	} finally {
 		if (conn) conn.release();
 	}
-}
+};
 
 orderController.updateOrderStatus = async (req, res) => {
 	let conn;
@@ -94,12 +94,12 @@ orderController.updateOrderStatus = async (req, res) => {
 		`;
 
 		const updateResult = await conn.query(query, [status, id]);
-		if(status === 'CANCELED') {
+		if (status === "CANCELED") {
 			// add products to stock again
 			const queryProducts = `
 			SELECT FK_Product as product_id, quantity, FK_Branch as branch_id FROM order_has_product WHERE FK_Order = ?;`;
 			const products = await conn.query(queryProducts, [id]);
-			for(let i = 0; i < products.length; i++) {
+			for (let i = 0; i < products.length; i++) {
 				const queryStock = `
 				SELECT
                 i.FK_Product,
@@ -116,27 +116,53 @@ orderController.updateOrderStatus = async (req, res) => {
 				WHERE i.FK_Product = ? AND i.FK_Branch = ?
 				GROUP BY i.FK_Product;
 				`;
-				const stockResult = await conn.query(queryStock, [products[i].product_id, products[i].product_id, products[i].branch_id]);
+				const stockResult = await conn.query(queryStock, [
+					products[i].product_id,
+					products[i].product_id,
+					products[i].branch_id,
+				]);
 				const newStock = parseInt(stockResult[0].stock) + parseInt(products[i].quantity);
 
 				const queryInsertInventory = `
 				INSERT INTO inventory (inflow, outflow, stock, description, FK_Product, FK_Branch, FK_User) 
 				VALUES (?, ?, ?, ?, ?, ?, ?);
 				`;
-				const insertResult = await conn.query(queryInsertInventory, [products[i].quantity, 0, newStock, 'Pedido cancelado', products[i].product_id, products[i].branch_id, user_id]);
+				const insertResult = await conn.query(queryInsertInventory, [
+					products[i].quantity,
+					0,
+					newStock,
+					"Pedido cancelado",
+					products[i].product_id,
+					products[i].branch_id,
+					user_id,
+				]);
+			}
+		} else if (status === "DELIVERED") {
+			const queryGetEmployee = `
+			SELECT id FROM employee WHERE FK_User = ?;
+			`;
+
+			const employeeResult = await conn.query(queryGetEmployee, [user_id]);
+
+			if (employeeResult.length > 0) {
+				const updateEmployeeShipped = `
+				UPDATE orders SET FK_Employee_Shipped = ? WHERE id = ?;
+				`;
+
+				const resultEmployee = await conn.query(updateEmployeeShipped, [employeeResult[0].id, parseInt(id)]);
 			}
 		}
-
 
 		await conn.commit();
 		res.status(200).json({ message: "Estado actualizado." });
 	} catch (err) {
+		console.log(err.message);
 		res.status(500).json({ message: "No se pudo actualizar el estado del pedido." });
 		await conn.rollback();
 	} finally {
 		if (conn) conn.release();
 	}
-}
+};
 
 /**
  * Save the order of the customer and save order_has_product

@@ -9,5 +9,6 @@ router.get("/user/information/:username", usersController.getProfileInformation)
 router.put("/user/information/:id", usersController.updateUserInformation);
 router.post("/validate2FA", usersController.validate2FA);
 router.post("/validateCode2FA", usersController.verifyCode2FA);
+router.get("/getEmployeeById/:id", usersController.getEmployeeById);
 
 module.exports = router;

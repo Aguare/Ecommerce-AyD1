@@ -5,6 +5,9 @@ import { OrderCardComponent } from '../../commons/order-card/order-card.componen
 import { OrderDetailsComponent } from '../../commons/order-details/order-details.component';
 import { ProductService } from '../../../services/product.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { AdminService } from '../../../services/admin.service';
+import { error } from 'console';
+import { LocalStorageService } from '../../../services/local-storage.service';
 
 @Component({
   selector: 'app-orders',
@@ -23,23 +26,39 @@ export class OrdersComponent implements OnInit {
   orderStatus: any[] = [];
   enumOrderStatus: any = OrderStatus;
   statusControl = new FormControl('all');
+  isEmployee: boolean = false;
+  branchName: string = '';
 
-  constructor(private _productService: ProductService) { }
+  constructor(
+    private _productService: ProductService,
+    private _adminService: AdminService,
+    private _localStorageService: LocalStorageService
+  ) { }
 
   ngOnInit(): void {
+    const id: number = this._localStorageService.getUserId();
     this._productService.getAllOrders().subscribe((data) => {
       this.orders = data;
       this.currentOrders = this.orders;
-    });
-
-    this._productService.sendOrder.subscribe((order) => {
-      this.orderSelected = order;
+      this._adminService.getEmployeeById(id).subscribe((res) => {
+        console.log(res);
+        this.branchName = res.user.branch_name;
+        this.orders = this.orders.filter((order) => order.branch_id === res.user.FK_Branch);
+        this.currentOrders = this.orders;
+        this.isEmployee = true;
+      }, error => {
+        console.log(error);
+      });
     });
 
     this._productService.getStores().subscribe((res) => {
-      console.log(res.data)
       this.branches = res.data.stores;
+    });
 
+    
+
+    this._productService.sendOrder.subscribe((order) => {
+      this.orderSelected = order;
     });
 
     this._productService.getOrderStatus().subscribe((res) => {

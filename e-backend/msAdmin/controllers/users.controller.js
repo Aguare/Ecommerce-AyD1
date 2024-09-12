@@ -253,4 +253,30 @@ usersController.verifyCode2FA = async (req, res) => {
 	}
 };
 
+usersController.getEmployeeById = async (req, res) => {
+	let connection;
+	try {
+		const { id } = req.params;
+		connection = await getConnection();
+
+		const query = `SELECT e.*, b.name as branch_name FROM employee e
+		JOIN branch b ON e.FK_Branch = b.id
+		WHERE FK_User = ?;`;
+		const result = await connection.query(query, [id]);
+
+		if (result.length === 0) {
+			return res.status(400).send({ message: "No se encontró al usuario." });
+		}
+
+		res.status(200).send({ user: result[0] });
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ message: "Error al obtener la información", error: error.message });
+	} finally {
+		if (connection) {
+			connection.release();
+		}
+	}
+}
+
 module.exports = usersController;

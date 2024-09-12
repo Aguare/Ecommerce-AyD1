@@ -32,7 +32,7 @@ export class OrderCardComponent implements OnInit{
   updateStatus(status: string) {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: `¿Quieres cambiar el estado del pedido a ${status}?`,
+      text: `¿Quieres cambiar el estado del pedido a ${this.orderStatus[status]}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

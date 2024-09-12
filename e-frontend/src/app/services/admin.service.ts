@@ -114,5 +114,9 @@ export class AdminService {
   validateCode2FA(data: any): any {
     return this.http.post(`${this.apiUsers}/validateCode2FA`, data);
   }
+
+  getEmployeeById(id: number) : Observable<any>{
+    return this.http.get(`${this.apiUsers}/getEmployeeById/${id}`);
+  }
 }
 
