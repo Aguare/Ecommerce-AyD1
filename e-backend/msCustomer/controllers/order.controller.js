@@ -19,7 +19,7 @@ orderController.getAllOrders = async (req, res) => {
 	} catch (err) {
 		res.status(500).json({ message: "No se pudieron obtener los pedidos." });
 	} finally {
-		if (conn) conn.end();
+		if (conn) conn.release();
 	}
 };
 
@@ -35,7 +35,7 @@ orderController.getOrderStatus = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: "No se pudieron obtener los estados de los pedidos." });
     } finally {
-        if (conn) conn.end();
+        if (conn) conn.release();
     }
 };
 
@@ -58,7 +58,7 @@ orderController.getProductsByOrderId = async (req, res) => {
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	} finally {
-		if (conn) conn.end();
+		if (conn) conn.release();
 	}
 };
 
@@ -78,7 +78,7 @@ orderController.getOrdersByUserId = async (req, res) => {
 	} catch (err) {
 		res.status(500).json({ message: "No se pudieron obtener los pedidos." });
 	} finally {
-		if (conn) conn.end();
+		if (conn) conn.release();
 	}
 }
 
@@ -134,7 +134,7 @@ orderController.updateOrderStatus = async (req, res) => {
 		res.status(500).json({ message: "No se pudo actualizar el estado del pedido." });
 		await conn.rollback();
 	} finally {
-		if (conn) conn.end();
+		if (conn) conn.release();
 	}
 }
 
@@ -291,7 +291,7 @@ orderController.saveOrder = async (req, res) => {
 		});
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };

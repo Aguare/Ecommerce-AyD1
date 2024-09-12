@@ -19,7 +19,7 @@ categoryController.getCategories = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener las categorias.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };

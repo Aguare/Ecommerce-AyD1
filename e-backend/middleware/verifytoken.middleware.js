@@ -58,7 +58,7 @@ controller.verifyToken = async (req, res, next) => {
 		return res.status(401).send({ message: "Sesión expirada, vuelva a iniciar sesión", error: error.message });
 	} finally {
 		if (connec) {
-			connec.end();
+			connec.release();
 		}
 	}
 };

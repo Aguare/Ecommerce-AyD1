@@ -19,7 +19,7 @@ brandController.getBrands = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener las marcas.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -38,7 +38,7 @@ brandController.saveBrand = async (req, res) => {
 		res.status(500).send({ message: "Error al guardar Marca", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -59,7 +59,7 @@ brandController.updateBrand = async (req, res) => {
 		res.status(500).send({ message: "Error al actualizar marca", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -80,7 +80,7 @@ brandController.deleteBrand = async (req, res) => {
 		res.status(500).send({ message: "Error al eliminar marca", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
