@@ -83,7 +83,7 @@ userController.verifyRecoveryPassword = async (req, res) => {
 	}
 
 	try {
-		const queryToken = `SELECT * FROM email_verification WHERE email = ? AND token = ?;`;
+		const queryToken = `SELECT * FROM email_verification WHERE email_token = ? AND token = ?;`;
 		const resultToken = await connection.query(queryToken, [email, token]);
 
 		if (resultToken.length === 0) {
@@ -94,7 +94,7 @@ userController.verifyRecoveryPassword = async (req, res) => {
 			return res.status(400).send({ message: "Token inválido" });
 		}
 
-		const result = await updatePassword(email, password, connection);
+		const result = await updatePassword(resultToken[0].email , password, connection);
 
 		if (result) {
 			const queryDeleteToken = `DELETE FROM email_verification WHERE email = ?;`;

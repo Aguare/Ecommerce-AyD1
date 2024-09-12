@@ -1,3 +1,4 @@
+import { Verify2faComponent } from './components/commons/verify2fa/verify2fa.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PruebaMaterialComponent } from './prueba-material/prueba-material.component';
@@ -42,6 +43,7 @@ export const routes: Routes = [
   { path: 'search/:product', component: SearchProductComponent },
   { path: 'reset-password/:token/:email', component: ResetPasswordComponent },
   { path: 'add-helper', component: AddHelperComponent},
+  { path: 'verify-2FA', component: Verify2faComponent },
   {
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }

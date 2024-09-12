@@ -83,5 +83,13 @@ export class AdminService {
   sendResetPasswordEmail(data: any): any {
     return this.http.post(`${this.apiCustomers}/verifyResetPassword`, data);
   }
+
+  verify2FACode(data: any): any {
+    return this.http.post(`${this.apiUsers}/validate2FA`, data);
+  }
+
+  validateCode2FA(data: any): any {
+    return this.http.post(`${this.apiUsers}/validateCode2FA`, data);
+  }
 }
 
