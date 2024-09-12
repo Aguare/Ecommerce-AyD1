@@ -11,7 +11,7 @@ emailController.sendVerificationEmail = async (req, res) => {
 	let connection;
 
 	let { email, isObject, isLogin } = req.body;
-	const tokenGenerated = uuidv4();
+	let tokenGenerated = uuidv4();
 	const website = "http://localhost:4200/verify-email";
 
 	try {
@@ -28,7 +28,7 @@ emailController.sendVerificationEmail = async (req, res) => {
 			}
 		}
 
-		const queryDataCompany = `SELECT key_name, key_value FROM company_settings WHERE key_name IN ('company_name', 'company_state', 'company_address', 'company_img', 'email', 'email_password');`;
+		const queryDataCompany = `SELECT key_name, key_value FROM company_settings WHERE key_name IN ('company_name', 'company_state', 'company_address', 'company_img', 'email', 'email_password', 'password_salt');`;
 		const resultDataCompany = await connection.query(queryDataCompany);
 
 		if (resultDataCompany.length === 0) {
