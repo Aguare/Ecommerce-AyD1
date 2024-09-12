@@ -8,11 +8,12 @@ import { ProductCardComponent } from '../../product-card/product-card.component'
 import { CommonModule } from '@angular/common';
 import { Attribute } from '../../../interfaces';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NavbarGuestComponent } from '../navbar-guest/navbar-guest.component';
 
 @Component({
   selector: 'app-search-product',
   standalone: true,
-  imports: [NavbarComponent, ProductCardComponent, CommonModule, ReactiveFormsModule],
+  imports: [NavbarComponent, NavbarGuestComponent, ProductCardComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './search-product.component.html',
   styleUrl: './search-product.component.scss'
 })
@@ -24,8 +25,8 @@ export class SearchProductComponent implements OnInit {
   categories: any[] = [];
   currency = '$';
 
-  attributesForm!: FormGroup;
-  categoriesForm!: FormGroup;
+  filterForm!: FormGroup;
+  isLogged = false;
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
@@ -35,6 +36,11 @@ export class SearchProductComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    const userId = this._localStorageService.getUserId();
+
+    this.isLogged = userId ? true : false;
+
     this.currency = this._localStorageService.getCurrency();
     const product = this._activatedRoute.snapshot.paramMap.get('product');
 
@@ -72,11 +78,8 @@ export class SearchProductComponent implements OnInit {
       this._router.navigate(['/products/init']);
     });
     
-    this.attributesForm = this.fb.group({
-      attributes: this.fb.array([])
-    });
-
-    this.categoriesForm = this.fb.group({
+    this.filterForm = this.fb.group({
+      attributes: this.fb.array([]),
       categories: this.fb.array([])
     });
 
@@ -111,11 +114,16 @@ export class SearchProductComponent implements OnInit {
   }
 
   getFormArray(value: string) {
-    return value === 'attributes' ? this.attributesForm.get('attributes') as FormArray : this.categoriesForm.get('categories') as FormArray;
+    return value === 'attributes' ? this.filterForm.get('attributes') as FormArray : this.filterForm.get('categories') as FormArray;
+  }
+
+  filter() {
+    this.filterCategories();
+    this.filterAttributes();
   }
 
   filterCategories() {
-    const categories = this.categoriesForm.value.categories
+    const categories = this.filterForm.value.categories
     .map((checked: boolean, index: number) => checked ? this.categories[index] : null)
     .filter((value: any) => value !== null);
 
@@ -130,16 +138,15 @@ export class SearchProductComponent implements OnInit {
   }
 
   filterAttributes() {
-    const attributes = this.attributesForm.value.attributes
+    const attributes = this.filterForm.value.attributes
     .map((checked: boolean, index: number) => checked ? this.attributes[index] : null)
     .filter((value: any) => value !== null);
 
     if(attributes.length === 0) {
-      this.currentProducts = this.products;
       return;
     }
 
-    this.currentProducts = this.products.filter((product: any) => {
+    this.currentProducts = this.currentProducts.filter((product: any) => {
       return product.attributes.some((attr: Attribute) => attributes.includes(attr));
     });
   }

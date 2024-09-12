@@ -86,7 +86,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit{
     });
 
     this.productService.getProductDetailById(productId).subscribe((product: ProductDetail) => {
-      console.log('product detail', product);
       this.productDetail = product;
     }, error => {
       Swal.fire({
