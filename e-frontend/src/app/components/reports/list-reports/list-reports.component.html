@@ -1,0 +1,32 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-6">
+  <div class="title">Lista de Reportes</div>
+
+  <table class="table is-fullwidth is-striped" *ngIf="reports.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of reports">
+        <td>{{ report.id }}</td>
+        <td>{{ report.name }}</td>
+        <td>{{ report.description }}</td>
+        <td>
+          <button class="button is-primary" (click)="openDateRangeModal(report)">
+            Generar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="reports.length === 0" class="notification is-warning">
+    No hay reportes disponibles.
+  </div>
+</div>

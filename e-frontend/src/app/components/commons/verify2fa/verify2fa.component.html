@@ -1,0 +1,45 @@
+<section class="section">
+  <div class="columns is-centered">
+    <div class="column is-half">
+      <div class="card">
+        <div class="card-content">
+          <div class="content has-text-centered">
+            <h2 class="title is-4">Ingrese su Código de Verificación</h2>
+            <p class="subtitle is-6">Introduce el código de 6 dígitos que te hemos enviado.</p>
+          </div>
+
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <input type="text" class="input is-medium code-input" maxlength="1" id="digit1"
+                (input)="moveNext($event, 'digit2')" autofocus>
+            </div>
+            <div class="control">
+              <input type="text" class="input is-medium code-input" maxlength="1" id="digit2"
+                (input)="moveNext($event, 'digit3')">
+            </div>
+            <div class="control">
+              <input type="text" class="input is-medium code-input" maxlength="1" id="digit3"
+                (input)="moveNext($event, 'digit4')">
+            </div>
+            <div class="control">
+              <input type="text" class="input is-medium code-input" maxlength="1" id="digit4"
+                (input)="moveNext($event, 'digit5')">
+            </div>
+            <div class="control">
+              <input type="text" class="input is-medium code-input" maxlength="1" id="digit5"
+                (input)="moveNext($event, 'digit6')">
+            </div>
+            <div class="control">
+              <input type="text" class="input is-medium code-input" maxlength="1" id="digit6"
+                (input)="moveNext($event, '')">
+            </div>
+          </div>
+
+          <div class="has-text-centered mt-5">
+            <button class="button is-primary is-medium" (click)="verifyCode()">Verificar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -55,6 +55,10 @@ userController.signUp = async (req, res) => {
 
 		await emailController.sendVerificationEmail({ body: { email: email, isObject: true } }, res);
 
+		if (conn) {
+			conn.release();
+		}
+
 		return res.status(200).send({ message: "Usuario registrado correctamente", data: result.insertId.toString() });
 	} catch (error) {
 		console.log(error);
@@ -83,7 +87,7 @@ userController.verifyRecoveryPassword = async (req, res) => {
 	}
 
 	try {
-		const queryToken = `SELECT * FROM email_verification WHERE email = ? AND token = ?;`;
+		const queryToken = `SELECT * FROM email_verification WHERE email_token = ? AND token = ?;`;
 		const resultToken = await connection.query(queryToken, [email, token]);
 
 		if (resultToken.length === 0) {
@@ -94,14 +98,22 @@ userController.verifyRecoveryPassword = async (req, res) => {
 			return res.status(400).send({ message: "Token inválido" });
 		}
 
-		const result = await updatePassword(email, password, connection);
+		const result = await updatePassword(resultToken[0].email, password, connection);
 
 		if (result) {
 			const queryDeleteToken = `DELETE FROM email_verification WHERE email = ?;`;
 			await connection.query(queryDeleteToken, [email]);
 
+			if (conn) {
+				conn.release();
+			}
+
 			return res.status(200).send({ message: "Contraseña actualizada correctamente" });
 		} else {
+			if (conn) {
+				conn.release();
+			}
+
 			return res.status(400).send({ message: "Error al actualizar la contraseña" });
 		}
 	} catch (error) {
@@ -183,8 +195,14 @@ userController.myCart = async (req, res) => {
 		const data = {
 			cart: resultCart,
 			info: resultCartItems,
-			images: resultImagePath[0],
+			images: resultImagePath,
 		};
+
+		if (conn) {
+			conn.release();
+		}
+
+		console.log(data);
 
 		return res.status(200).send({ message: "Carrito obtenido correctamente", data: data });
 	} catch (error) {
@@ -214,6 +232,10 @@ userController.getCurrency = async (req, res) => {
 		const resultCurrency = await conn.query(queryCurrency);
 		if (resultCurrency.length === 0) {
 			return res.status(400).send({ message: "No se encontro la moneda" });
+		}
+
+		if (conn) {
+			conn.release();
 		}
 
 		return res
@@ -262,6 +284,11 @@ userController.updateCart = async (req, res) => {
 		const resultUpdate = await conn.query(updateCart, [quantity, id_user, id_product]);
 
 		await conn.commit();
+
+		if (conn) {
+			conn.release();
+		}
+
 		return res.status(200).send({
 			message: "Carrito actualizado correctamente",
 			data: resultUpdate.toString(),
@@ -300,6 +327,11 @@ userController.deleteCart = async (req, res) => {
 		const resultDelete = await conn.query(deleteCart, [id]);
 
 		await conn.commit();
+
+		if (conn) {
+			conn.release();
+		}
+
 		return res.status(200).send({ message: "Carrito eliminado correctamente", data: resultDelete.toString() });
 	} catch (error) {
 		if (conn) await conn.rollback();
@@ -329,6 +361,10 @@ userController.getStore = async (req, res) => {
 		const resultStore = await conn.query(queryStore);
 		if (resultStore.length === 0) {
 			return res.status(400).send({ message: "No se encontro la tienda" });
+		}
+
+		if (conn) {
+			conn.release();
 		}
 
 		return res.status(200).send({ message: "Tienda obtenida correctamente", data: { stores: resultStore } });
@@ -375,6 +411,10 @@ userController.validateStock = async (req, res) => {
 		const resultProduct = await conn.query(queryProduct, [id_product, id_branch, id_branch]);
 		if (resultProduct.length === 0) {
 			return res.status(400).send({ message: "No se encontro el producto" });
+		}
+
+		if (conn) {
+			conn.release();
 		}
 
 		return res.status(200).send({ message: "Producto obtenido correctamente", data: resultProduct });
@@ -425,6 +465,11 @@ userController.validateStockOnline = async (req, res) => {
 		`;
 
 		const resultProduct = await conn.query(queryProduct, [id_product, id_product]);
+
+		if (conn) {
+			conn.release();
+		}
+
 		if (resultProduct.length === 0) {
 			return res.status(400).send({ message: "No se encontro el producto" });
 		}
@@ -465,6 +510,11 @@ userController.deleteProductCart = async (req, res) => {
 		const resultDelete = await conn.query(deleteProduct, [id_user, id_product]);
 
 		await conn.commit();
+
+		if (conn) {
+			conn.release();
+		}
+
 		return res.status(200).send({
 			message: "Producto eliminado correctamente",
 			data: resultDelete.toString(),
@@ -528,6 +578,10 @@ userController.addProductCart = async (req, res) => {
 		const updateCart = `UPDATE shop_cart SET quantity = quantity + ? WHERE Fk_User = ? AND FK_Product = ? AND FK_Branch = ?;`;
 		const resultUpdate = await conn.query(updateCart, [quantity, id_user, id_product, id_branch]);
 
+		if (conn) {
+			conn.release();
+		}
+
 		return res.status(200).send({ message: "Producto actualizado correctamente", data: resultUpdate.toString() });
 	} catch (error) {
 		res.status(400).send({
@@ -580,6 +634,11 @@ userController.getNumberInCart = async (req, res) => {
 
 		const queryCart = `SELECT COUNT(*) AS number FROM shop_cart WHERE Fk_User = ?;`;
 		const resultCart = await conn.query(queryCart, [id]);
+
+		if (conn) {
+			conn.release();
+		}
+
 		if (resultCart.length === 0) {
 			return res.status(400).send({ message: "El carrito esta vacio" });
 		}
@@ -611,6 +670,11 @@ userController.getCompanyShipment = async (req, res) => {
 
 		const queryShipment = "SELECT key_value FROM company_settings WHERE key_name = 'delivery_cost';";
 		const resultShipment = await conn.query(queryShipment);
+
+		if (conn) {
+			conn.release();
+		}
+
 		if (resultShipment.length === 0) {
 			return res.status(400).send({ message: "No se encontro el costo de envio" });
 		}
@@ -667,6 +731,11 @@ userController.getUserData = async (req, res) => {
 			user: result,
 			info: resultInformation,
 		};
+
+		if (conn) {
+			conn.release();
+		}
+		
 		return res.status(200).send({
 			message: "Usuario obtenido correctamente",
 			data: data,

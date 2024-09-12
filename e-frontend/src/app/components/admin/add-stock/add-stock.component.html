@@ -1,0 +1,107 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-6">
+  <h1 class="title is-4 has-text-primary">Agregar Productos a Stock</h1>
+
+  <div class="columns">
+    <div class="column is-half">
+      <form [formGroup]="addStockForm" (ngSubmit)="onSubmit()">
+        <div class="box">
+          <div class="field">
+            <label class="label">Seleccionar Producto</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select
+                  formControlName="product"
+                  (change)="onProductChange($event)"
+                >
+                  <option value="">Seleccionar producto</option>
+                  <option *ngFor="let product of products" [value]="product.id">
+                    {{ product.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select de tiendas -->
+          <div class="field">
+            <label class="label">Tienda</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select formControlName="store">
+                  <option value="">Seleccionar tienda</option>
+                  <option *ngFor="let store of stores" [value]="store.id">
+                    {{ store.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <p
+              *ngIf="
+                addStockForm.get('store')?.invalid &&
+                addStockForm.get('store')?.touched
+              "
+              class="help is-danger"
+            >
+              Selecciona una tienda
+            </p>
+          </div>
+
+          <!-- Campo para ingresar cantidad de stock -->
+          <div class="field">
+            <label class="label">Cantidad de Stock</label>
+            <div class="control">
+              <input
+                class="input"
+                type="number"
+                formControlName="stock"
+                placeholder="Cantidad de stock"
+                min="0"
+              />
+            </div>
+            <p
+              *ngIf="
+                addStockForm.get('stock')?.invalid &&
+                addStockForm.get('stock')?.touched
+              "
+              class="help is-danger"
+            >
+              Ingresa una cantidad válida
+            </p>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="field is-grouped m-3">
+            <div class="control">
+              <button class="button is-primary" type="submit">
+                Agregar Stock
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Columna derecha: Cantidad de stock por tienda -->
+    <div class="column is-half">
+      <div class="box">
+        <h2 class="subtitle is-5">Stock por Sucursal</h2>
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Sucursal</th>
+              <th>Stock Disponible</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stockItem of stockList">
+              <td>{{ stockItem.name }}</td>
+              <td>{{ stockItem.stock | integer }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

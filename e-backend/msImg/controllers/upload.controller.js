@@ -86,7 +86,7 @@ const saveImageProduct = async (req, res) => {
 		res.status(500).send({ message: "Internal server error" });
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -118,7 +118,7 @@ const saveImageClient = async (req, res) => {
 		res.status(500).send({ message: "Internal server error" });
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -147,7 +147,7 @@ const saveImageAdmin = async (req, res) => {
         res.status(500).send({message: 'Internal server error'});
    }finally{
        if (conn){
-           conn.end();
+           conn.release();
        }
    }
 }
@@ -168,7 +168,7 @@ const getCompanyLogo = async (req, res) => {
 		res.status(500).send({ message: "Internal server error" });
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -207,7 +207,7 @@ const deleteImage = async (req, res) => {
 		res.status(500).send({ message: "Internal server error" });
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };

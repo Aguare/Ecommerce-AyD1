@@ -1,3 +1,4 @@
+import { Verify2faComponent } from './components/commons/verify2fa/verify2fa.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PruebaMaterialComponent } from './prueba-material/prueba-material.component';
@@ -20,9 +21,13 @@ import { VerifyEmailComponent } from './components/commons/verify-email/verify-e
 import { AddHelperComponent } from './components/admin/add-helper/add-helper.component';
 import { OrdersComponent } from './components/admin/orders/orders.component';
 import { PurchasesComponent } from './components/user/purchases/purchases.component';
+import { AddStockComponent } from './components/admin/add-stock/add-stock.component';
 import { SearchProductComponent } from './components/commons/search-product/search-product.component';
 import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/commons/forgot-password/forgot-password.component';
+import { PermissionsComponent } from './components/admin/permissions/permissions.component';
+import { ListReportsComponent } from './components/reports/list-reports/list-reports.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -41,10 +46,17 @@ export const routes: Routes = [
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
   { path: 'search/:product', component: SearchProductComponent },
   { path: 'reset-password/:token/:email', component: ResetPasswordComponent },
-  { path: 'add-helper', component: AddHelperComponent},
+  { path: 'add-helper', component: AddHelperComponent },
+  { path: 'permissions', component: PermissionsComponent },
+  { path: 'verify-2FA', component: Verify2faComponent },
   {
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }
+    ]
+  },
+  {
+    path: 'reports', children: [
+      { path: 'list', component: ListReportsComponent }
     ]
   },
   {
@@ -53,6 +65,7 @@ export const routes: Routes = [
       { path: 'view', component: ViewProductsComponent },
       { path: 'addProduct', component: AddProductComponent },
       { path: 'editProduct', component: EditProductComponent },
+      { path: 'addStock', component: AddStockComponent },
     ]
   },
   { path: 'product-details/:id', component: ProductDetailsComponent },
@@ -64,4 +77,8 @@ export const routes: Routes = [
   exports: [RouterModule],
 })
 
-export class AppRoutingModule { }
+export class AppRoutingModule { 
+
+  
+
+}

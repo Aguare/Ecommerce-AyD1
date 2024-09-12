@@ -83,5 +83,36 @@ export class AdminService {
   sendResetPasswordEmail(data: any): any {
     return this.http.post(`${this.apiCustomers}/verifyResetPassword`, data);
   }
+
+  addRole(name: string, description: string): Observable<any> {
+    return this.http.post(`${this.apiAdmin}/addRole`, { name, description });
+  }
+
+  updateRole(name: string, description: string, id: number): Observable<any> {
+    return this.http.put(`${this.apiAdmin}/updateRole`, { name, description, id });
+  }
+
+  /**
+   * Method to get all pages in order to manage permissions for each role
+   * @returns 
+   */
+  getAllRolePages(): Observable<any> {
+    return this.http.get(`${this.apiAdmin}/getAllRolePages`);
+  }
+
+  /**
+   * Method to update permissions for a role
+   */
+  updateRolePages(id: number, pages: any[]): Observable<any> {
+    return this.http.put(`${this.apiAdmin}/updateRolePages`, { id, pages });
+  }
+  
+  verify2FACode(data: any): any {
+    return this.http.post(`${this.apiUsers}/validate2FA`, data);
+  }
+
+  validateCode2FA(data: any): any {
+    return this.http.post(`${this.apiUsers}/validateCode2FA`, data);
+  }
 }
 

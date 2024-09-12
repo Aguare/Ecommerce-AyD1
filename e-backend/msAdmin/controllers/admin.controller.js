@@ -25,12 +25,16 @@ adminController.getPages = async (req, res) => {
             WHERE uhs.FK_User = ?`;
 
 		const result = await connection.query(queryMoney, [id]);
+
+		if (connection) {
+			connection.release();
+		}
 		res.status(200).send({ result });
 	} catch (error) {
 		res.status(500).send({ message: "Error al obtener las páginas.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -93,13 +97,17 @@ adminController.addEmployee = async (req, res) => {
 		await conn.query(insertEmployeeQuery, [first_name, last_name, DPI, date_birth, tel, FK_Branch, result.insertId]);
 
 		await conn.commit();
+
+		if (conn) {
+			conn.release();
+		}
 		res.status(200).send({ message: "Empleado agregado correctamente." });
 	} catch (error) {
 		await conn.rollback();
 		res.status(500).send({ message: "Error al agregar el empleado.", error: error.message });
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
@@ -109,21 +117,134 @@ adminController.getRoles = async (req, res) => {
 	try {
 		conn = await getConnection();
 
-		await conn.beginTransaction();
-
 		const queryRoles = `SELECT * FROM role;`;
 		const result = await conn.query(queryRoles);
 
-		await conn.commit();
+		for(let i = 0; i < result.length; i++) {
+			const queryPages = `SELECT p.id, p.name FROM role_has_page rhp 
+			LEFT JOIN page p ON p.id = rhp.FK_Page 
+			WHERE rhp.FK_Role = ? AND p.isAvailable = 1;`;
+			const resultPages = await conn.query(queryPages, [result[i].id]);
+			result[i].pages = resultPages;
+		}
+
+		if (conn) {
+			conn.release();
+		}
+
 		res.status(200).send({ data: result });
 	} catch (error) {
 		await conn.rollback();
 		res.status(500).send({ message: "Error al obtener los roles.", error: error.message });
 	} finally {
 		if (conn) {
-			conn.end();
+			conn.release();
 		}
 	}
 };
+
+adminController.addRole = async (req, res) => {
+	let conn;
+	try {
+		const { name, description } = req.body;
+		conn = await getConnection();
+
+		const queryRole = `INSERT INTO role (name, description) VALUE (?, ?);`;
+		const result = await conn.query(queryRole, [name, description]);
+
+		if (conn) {
+			conn.release();
+		}
+
+		res.status(200).send({ message: "Rol agregado correctamente." });
+	} catch (error) {
+		await conn.rollback();
+		res.status(500).send({ message: "Error al agregar el rol.", error: error.message });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+};
+
+adminController.updateRole = async (req, res) => {
+	let conn;
+	try {
+		const { id, name, description } = req.body;
+		conn = await getConnection();
+
+		const queryRole = `UPDATE role SET name = ?, description = ? WHERE id = ?;`;
+		const result = await conn.query(queryRole, [name, description, id]);
+
+		if (conn) {
+			conn.release();
+		}
+
+		res.status(200).send({ message: "Rol actualizado correctamente." });
+	} catch (error) {
+		await conn.rollback();
+		res.status(500).send({ message: "Error al actualizar el rol.", error: error.message });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+}
+
+adminController.getAllRolePages = async (req, res) => {
+	let conn;
+	try {
+		conn = await getConnection();
+
+		const queryPages = `SELECT id, name FROM page WHERE isAvailable = 1;`;
+		const result = await conn.query(queryPages);
+
+		if (conn) {
+			conn.release();
+		}
+
+		res.status(200).send({ data: result });
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener las páginas.", error: error.message });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+}
+
+adminController.updateRolePages = async (req, res) => {
+	let conn;
+	try {
+		const { id, pages } = req.body;
+		conn = await getConnection();
+
+		await conn.beginTransaction();
+
+		const queryDelete = `DELETE FROM role_has_page WHERE FK_Role = ?;`;
+		await conn.query(queryDelete, [id]);
+
+		for(let i = 0; i < pages.length; i++) {
+			const queryInsert = `INSERT INTO role_has_page (FK_Role, FK_Page) VALUE (?, ?);`;
+			await conn.query(queryInsert, [id, pages[i].id]);
+		}
+
+		await conn.commit();
+
+		if (conn) {
+			conn.release();
+		}
+
+		res.status(200).send({ message: "Páginas actualizadas correctamente." });
+	} catch (error) {
+		await conn.rollback();
+		res.status(500).send({ message: "Error al actualizar las páginas.", error: error.message });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+}
+
 
 module.exports = adminController;

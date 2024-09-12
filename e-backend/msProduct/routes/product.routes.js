@@ -14,10 +14,15 @@ router.get('/getProductsWithCategory', productController.getProductsWithCategory
 router.post('/getProductsForCart', productController.getProductsForCart);
 router.get('/getProducts', productController.getProducts);
 router.post('/saveProduct', productController.saveProduct);
-router.get('/getProductById', productController.getProductById);
+router.get('/getProductByIdForEdit', productController.getProductByIdForEdit);
 router.put('/updateDataProduct', productController.updateDataProduct);
 router.put('/updateAttributesProduct', productController.updateAttributesProduct);
 router.get("/getBranchesWithProduct", productController.getBranchesWithProduct);
+router.get("/getProductsAndBranchesForStock", productController.getProductsAndBranchesForStock);
+router.get("/getStockOfProductByBranch", productController.getStockOfProductByBranch);
+router.post("/addStockInventory", productController.addStockInventory);
 router.get("/getProductsLike/:name/:id", productController.getProductsLike);
+router.get("/getProducsWithMoreSales", productController.getProducsWithMoreSales);
+
 
 module.exports = router;

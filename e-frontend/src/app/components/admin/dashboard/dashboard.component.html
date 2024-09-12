@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <div class="container">
   <section class="section">
     <h1 class="title is-3 has-text-centered">
@@ -10,9 +12,9 @@
 
   <section class="section ar">
     <div class="columns">
-      <div class="column is-6">
+      <div class="column is-12">
         <div class="box">
-          <h4 class="title is-4 has-text-primary">Ventas Semanales</h4>
+          <h4 class="title is-4 has-text-primary">Productos mas vendidos</h4>
           <div class="content">
             <canvas *ngIf="isBrowser"
               baseChart
@@ -27,28 +29,32 @@
         </div>
       </div>
 
-      <div class="column is-6">
+    </div>
+    
+    <div class="columns">
+      <div class="column is-12">
         <div class="box">
-          <h4 class="title is-4 has-text-info">Rendimiento de Productos</h4>
+          <h4 class="title is-4 has-text-primary">Productos con mas stock</h4>
           <div class="content">
             <canvas *ngIf="isBrowser"
               baseChart
-              [datasets]="lineChartData"
-              [labels]="lineChartLabels"
-              [options]="lineChartOptions"
+              [datasets]="barChartData1"
+              [labels]="barChartLabels1"
+              [options]="barChartOptions1"
               [legend]="true"
-              [type]="'line'"
+              [type]="'bar'"
             >
             </canvas>
           </div>
         </div>
       </div>
+
     </div>
   </section>
 
   <section class="section">
     <div class="columns">
-      <div class="column is-6">
+      <div class="column is-12">
         <div class="box">
           <h4 class="title is-4 has-text-success">
             Análisis de Tendencias de Ventas
@@ -64,13 +70,6 @@
         </div>
       </div>
 
-      <div class="column is-6">
-        <div class="box has-text-centered">
-          <h4 class="title is-4 has-text-grey-light">
-            Espacio para una nueva gráfica
-          </h4>
-        </div>
-      </div>
     </div>
   </section>
 </div>

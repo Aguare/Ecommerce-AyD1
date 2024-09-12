@@ -16,11 +16,12 @@ import { Category } from '../../card-carrousel/card-carrousel.component';
 import Swal from 'sweetalert2';
 import { ImagePipe } from '../../../pipes/image.pipe';
 import { ImageService } from '../../../services/image.service';
+import { NavbarComponent } from "../../commons/navbar/navbar.component";
 
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, ImagePipe],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, ImagePipe, NavbarComponent],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.scss',
 })

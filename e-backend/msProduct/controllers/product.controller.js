@@ -27,7 +27,7 @@ productController.getProductsByCategory = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -57,7 +57,7 @@ productController.getProductsWithCategory = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -81,7 +81,7 @@ productController.getProductsForCart = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -104,7 +104,7 @@ productController.getProducts = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -150,7 +150,7 @@ productController.saveProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al guardar producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -196,7 +196,7 @@ productController.getProductDetailById = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -233,7 +233,7 @@ productController.updateDataProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -293,48 +293,52 @@ productController.updateAttributesProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
 
-productController.getProductById = async (req, res) => {
+productController.getProductByIdForEdit = async (req, res) => {
 	let connection;
 	try {
-		const { id, id_branch } = req.params;
-		connection = await getConnection();
-
+		const { id } = req.query;
 		if (!id) {
-			return res.status(400).send({ message: "El id es requerido" });
+			return res.status(400).send({ message: "El id es obligatorio" });
 		}
 
-		const queryProduct = `
-			SELECT pr.id, pr.name, pr.description, pr.isAvailable, pr.price, c.name as category from product pr
-				JOIN product_has_category phc ON pr.id = phc.FK_Product
-				JOIN category c ON phc.FK_Category = c.id
-				WHERE pr.id = ?`;
+		connection = await getConnection();
 
-		const resultProduct = await connection.query(queryProduct, [id]);
+		const queryMoney = `
+            SELECT p.id, p.name, p.description, p.price, b.id as brandId, b.name as brand, c.id as categoryId, c.name as category FROM product p
+    			LEFT JOIN brand b ON p.FK_Brand = b.id
+    			LEFT JOIN product_has_category phc ON p.id = phc.FK_Product
+    			LEFT JOIN category c ON phc.FK_Category = c.id
+    			WHERE p.id = ?`;
 
-		const queryImages = `
-			SELECT image_path from product_image WHERE FK_Product = ?`;
-
-		const resultImages = await connection.query(queryImages, [id]);
-		resultProduct[0].images = resultImages.map((image) => image.image_path);
+		const productData = await connection.query(queryMoney, id);
 
 		const queryAttribute = `
-			SELECT a.name, a.description from attribute a
-			INNER JOIN product_has_attribute pha ON a.id = pha.FK_Attribute
-			WHERE pha.FK_Product = ?`;
+			SELECT a.name, a.description FROM attribute a
+    			JOIN product_has_attribute pha ON a.id = pha.FK_Attribute
+    			WHERE pha.FK_Product = ?;
+		`;
 
-		const resultAttribute = await connection.query(queryAttribute, [id]);
-		resultProduct[0].attributes = resultAttribute;
-		res.status(200).send(resultProduct[0]);
+		const productAttributes = await connection.query(queryAttribute, id);
+
+		const queryImage = `
+			SELECT id, image_path FROM product_image WHERE FK_Product = ?
+		`;
+
+		const productImages = await connection.query(queryImage, id);
+
+		console.log(productImages);
+
+		res.status(200).send({ productData: productData[0], productAttributes, images: productImages });
 	} catch (error) {
-		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
+		res.status(500).send({ message: "Error al obtener producto", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -368,7 +372,7 @@ productController.getStockProductById = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -396,7 +400,7 @@ productController.getBranchesWithProduct = async (req, res) => {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
 	} finally {
 		if (connection) {
-			connection.end();
+			connection.release();
 		}
 	}
 };
@@ -405,7 +409,6 @@ productController.getProductsLike = async (req, res) => {
 	let connection;
 	try {
 		const { name, id } = req.params;
-		console.log(name, id);
 		connection = await getConnection();
 
 		if (!name) {
@@ -461,6 +464,138 @@ productController.getProductsLike = async (req, res) => {
 		res.status(200).send(resultProduct);
 	} catch (error) {
 		res.status(500).send({ message: "Error al obtener los productos.", error: error.message });
+	} finally {
+		if (connection) {
+			connection.release();
+		}
+	}
+};
+
+productController.getProductsAndBranchesForStock = async (req, res) => {
+	let connection;
+	try {
+		connection = await getConnection();
+
+		const queryProduct = `
+			SELECT id, name FROM product;
+		`;
+
+		const resultProduct = await connection.query(queryProduct);
+
+		const queryBranches = `
+			SELECT id, name FROM branch;
+		`;
+
+		const resultBranches = await connection.query(queryBranches);
+
+		res.status(200).send({ products: resultProduct, branches: resultBranches });
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener los productos y .", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+};
+
+productController.getStockOfProductByBranch = async (req, res) => {
+	let connection;
+	try {
+		connection = await getConnection();
+
+		const { id } = req.query;
+
+		if (!id) {
+			res.status(400).send({ message: "El id es requerido", error: error.message });
+		}
+
+		const queryProduct = `
+			SELECT b.name,
+       			(SELECT i2.stock
+        		FROM inventory i2
+        		WHERE i2.FK_Product = ?
+          		AND i2.FK_Branch = i.FK_Branch
+        		ORDER BY i2.id DESC
+        		LIMIT 1) AS stock
+			FROM inventory i
+         		LEFT JOIN branch b ON i.FK_Branch = b.id
+			GROUP BY i.FK_Branch;
+		`;
+
+		const resultProduct = await connection.query(queryProduct, id);
+
+		res.status(200).send(resultProduct);
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener los stock", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+};
+
+productController.addStockInventory = async (req, res) => {
+	let connection;
+	try {
+		connection = await getConnection();
+
+		const { idUser, product, store, stock, actualStock } = req.body;
+
+		if (!idUser || !product || !store || !stock) {
+			res.status(400).send({ message: "Faltan campos requeridos", error: error.message });
+		}
+
+		let sum = +stock;
+		if (actualStock) {
+			sum = sum + Number(actualStock);
+		}
+
+		const description = "Ingreso de producto a inventario";
+
+		const query = `INSERT INTO inventory (inflow, stock, description, FK_Product, FK_Branch, FK_User) VALUES (?,?,?,?,?,?)`;
+
+		const result = await connection.query(query, [stock, sum, description, product, store, idUser]);
+
+		res.status(200).send({ message: "Producto ingresado en el inventario" });
+	} catch (error) {
+		res.status(500).send({ message: "Error al guardar stock", error: error.message });
+	} finally {
+		if (connection) {
+			connection.end();
+		}
+	}
+};
+
+productController.getProducsWithMoreSales = async (req, res) => {
+	let connection;
+	try {
+		connection = await getConnection();
+
+		const query = `SELECT SUM(i.outflow)as sales, p.name FROM inventory i
+    		JOIN product p ON i.FK_Product = p.id
+    		GROUP BY i.FK_Product ORDER BY sales DESC LIMIT 10`;
+
+		const result = await connection.query(query);
+		
+		const query1 = `SELECT SUM(i.stock) as sales, p.name FROM inventory i
+    		JOIN product p ON i.FK_Product = p.id
+    		GROUP BY i.FK_Product ORDER BY sales DESC LIMIT 10`;
+
+		const result1 = await connection.query(query1);
+		
+		const query2 = `SELECT CONCAT(COUNT(r.name),'') as quantity, r.name FROM user u
+    						JOIN user_has_role uhr ON u.id = uhr.FK_User
+    						JOIN role r ON uhr.FK_Role = r.id
+    						GROUP BY r.name
+`;
+
+		const result2 = await connection.query(query2);
+		console.log(result2);
+		
+		
+		res.status(200).send({report1: result, report2: result1, report3: result2});
+	} catch (error) {
+		res.status(500).send({ message: "Error al obtener datos", error: error.message });
 	} finally {
 		if (connection) {
 			connection.end();

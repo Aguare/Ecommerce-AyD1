@@ -1,11 +1,16 @@
+@if (isLogged) {
 <app-navbar></app-navbar>
+
+} @else {
+    <app-navbar-guest></app-navbar-guest>
+}
 
 <div class="container mt-5">
     <div class="columns">
         <div class="column is-two-fifths">
             <div class="box">
-                <h3 class="title is-3">Categorias</h3>
-                <form [formGroup]="categoriesForm" (ngSubmit)="filterCategories()">
+                <form [formGroup]="filterForm" (ngSubmit)="filter()">
+                    <h3 class="title is-3">Categorias</h3>
                     <div class="field m-5" formArrayName="categories">
                         @for(category of categories; track categoryIndex; let categoryIndex = $index) {
                             <div class="control">
@@ -16,12 +21,7 @@
                             </div>
                         }
                     </div>
-                    <button class="button is-primary is-fullwidth" type="submit">Filtrar categorias</button>
-                </form>
-            </div>
-            <div class="box mt-5">
-                <h3 class="title is-3">Atributos</h3>
-                <form [formGroup]="attributesForm" (ngSubmit)="filterAttributes()">
+                    <h3 class="title is-3">Atributos</h3>
                     <div class="field m-5" formArrayName="attributes">
                         @for(attribute of attributes; track attributeIndex; let attributeIndex = $index) {
                             <div class="control">
@@ -32,7 +32,7 @@
                             </div>
                         }
                     </div>
-                    <button class="button is-primary is-fullwidth" type="submit">Filtrar Atributos</button>
+                    <button class="button is-primary is-fullwidth" type="submit">Filtrar</button>
                 </form>
             </div>
         </div>

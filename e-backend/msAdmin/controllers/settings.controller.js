@@ -15,12 +15,17 @@ settingsController.getSettings = async (req, res) => {
             `;
 
         const result = await connection.query(queryMoney, [name]);
+
+        if (connection) {
+            connection.release();
+        }
+
         res.status(200).send(result);
     } catch (error) {
         res.status(500).send({ message: "Error al obtener las configuraciones.", error: error.message });
     } finally {
         if (connection) {
-            connection.end();
+            connection.release();
         }
     }
 }
@@ -41,13 +46,18 @@ settingsController.updateSettings = async (req, res) => {
             await connection.query(query, [value, name]);
         });
         await connection.commit();
+
+        if (connection) {
+            connection.release();
+        }
+
         res.status(200).send({ message: "Configuración actualizada correctamente." });
     } catch (error) {
         res.status(500).send({ message: "Error al actualizar la configuración.", error: error.message });
         connection.rollback();
     } finally {
         if (connection) {
-            connection.end();
+            connection.release();
         }
     }
 }
@@ -63,12 +73,17 @@ settingsController.getTabs = async (req, res) => {
             `;
 
         const result = await connection.query(queryMoney);
+
+        if (connection) {
+            connection.release();
+        }
+        
         res.status(200).send(result);
     } catch (error) {
         res.status(500).send({ message: "Error al obtener las pestañas.", error: error.message });
     } finally {
         if (connection) {
-            connection.end();
+            connection.release();
         }
     }
 }
