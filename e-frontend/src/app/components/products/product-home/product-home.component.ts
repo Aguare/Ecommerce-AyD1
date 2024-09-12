@@ -9,17 +9,19 @@ import { ImageCarrousellComponent } from "../../image-carrousell/image-carrousel
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { SimpleCarouselComponent } from '../../simple-carousel/simple-carousel.component';
 import { ProductService } from '../../../services/product.service';
+import { AdminService } from '../../../services/admin.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-home',
   standalone: true,
   imports: [
-    CommonModule, 
-    ImageCarrousellComponent, 
-    NavbarComponent, 
-    CardCarrouselComponent, 
-    CategoryCarrousellComponent, 
-    MatProgressSpinnerModule, 
+    CommonModule,
+    ImageCarrousellComponent,
+    NavbarComponent,
+    CardCarrouselComponent,
+    CategoryCarrousellComponent,
+    MatProgressSpinnerModule,
     ImageCarrousellComponent,
     SimpleCarouselComponent
   ],
@@ -38,14 +40,41 @@ export class ProductHomeComponent implements OnInit {
     'img/carrousell/carrousell-4.jpg',
     'img/carrousell/carrousell-5.jpg',
   ]
-  
-  constructor(private _productService: ProductService, private _localStorageService: LocalStorageService) { }
+
+  constructor(
+    private _productService: ProductService,
+    private _localStorageService: LocalStorageService,
+    private _adminService: AdminService,
+    private _router: Router
+  ) { }
 
   ngOnInit() {
     this.currentBranchId = this._localStorageService.getBranchId();
     setTimeout(() => {
       this.spinner = false;
-    },700)
+    }, 700)
+    this.verify2FAUser();
+  }
+
+  verify2FAUser() {
+    const url = this._router.url;
+
+    if (url === "/verify-2FA") {
+      return
+    }
+
+    const id = this._localStorageService.getUserId();
+
+    this._adminService.verify2FACode({ id }).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this._router.navigate(["/verify-2FA"]);
+        }
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    });
   }
 
 }

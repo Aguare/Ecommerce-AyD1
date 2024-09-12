@@ -123,4 +123,10 @@ export class LocalStorageService {
   getCurrency(): string {
     return this.getItem(this.CURRENCY);
   }
+
+  logout(): void {
+    this.clear();
+    this._cookieService.delete('token');
+
+  }
 }

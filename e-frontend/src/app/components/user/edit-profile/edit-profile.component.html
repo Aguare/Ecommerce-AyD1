@@ -9,13 +9,14 @@
           <label class="label">NIT</label>
           <div class="control">
             <input formControlName="nit" class="input" type="text" placeholder="Número de Identificación Tributaria">
-            <p class="help is-danger" *ngIf="editProfileForm.controls['nit'].invalid && editProfileForm.controls['nit'].touched">
+            <p class="help is-danger"
+              *ngIf="editProfileForm.controls['nit'].invalid && editProfileForm.controls['nit'].touched">
               Este campo es requerido.
             </p>
           </div>
         </div>
 
-        <div class="field">
+        <div class="field mt-4">
           <label class="label">Subir Foto de perfil</label>
           <div class="control">
             <div class="file has-name">
@@ -31,12 +32,13 @@
               </label>
             </div>
           </div>
-          <p class="help is-danger" *ngIf="editProfileForm.controls['image'].invalid && editProfileForm.controls['image'].touched">
+          <p class="help is-danger"
+            *ngIf="editProfileForm.controls['image'].invalid && editProfileForm.controls['image'].touched">
             Debes subir una imagen.
           </p>
         </div>
 
-        <div class="field">
+        <div class="field mt-4">
           <label class="label">Preferencia de Pago</label>
           <div class="control">
             <label class="radio mr-5">
@@ -48,7 +50,16 @@
           </div>
         </div>
 
-        <div class="field">
+        <div class="field mt-4"></div>
+        <label class="label">Seguridad</label>
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" formControlName="isTwoFactor" (click)="activate2FA()"/>
+            Autenticación en 2 Pasos
+          </label>
+        </div>
+
+        <div class="field mt-4">
           <label class="label">Descripción</label>
           <div class="control">
             <textarea formControlName="description" class="textarea" placeholder="Descripción del perfil"></textarea>
@@ -57,7 +68,8 @@
 
         <div class="field is-grouped mt-3">
           <div class="control">
-            <button [disabled]="editProfileForm.invalid" class="button is-primary" type="submit">Guardar Cambios</button>
+            <button [disabled]="editProfileForm.invalid" class="button is-primary" type="submit">Guardar
+              Cambios</button>
           </div>
           <div class="control">
             <button (click)="goBack()" class="button is-warning" type="reset">Volver</button>
