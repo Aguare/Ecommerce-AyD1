@@ -196,6 +196,7 @@ adminController.updateRolePages = async (req, res) => {
 		conn = await getConnection();
 
 		await conn.beginTransaction();
+
 		const queryDelete = `DELETE FROM role_has_page WHERE FK_Role = ?;`;
 		await conn.query(queryDelete, [id]);
 

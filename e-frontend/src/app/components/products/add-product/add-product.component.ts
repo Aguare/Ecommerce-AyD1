@@ -16,11 +16,12 @@ import { Brand } from '../view-products/view-products.component';
 import { ImageService } from '../../../services/image.service';
 import { get } from 'http';
 import { Router } from '@angular/router';
+import { NavbarComponent } from "../../commons/navbar/navbar.component";
 
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NavbarComponent],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.scss',
 })
