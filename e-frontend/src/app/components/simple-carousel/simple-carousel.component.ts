@@ -12,6 +12,7 @@ import { ProductService } from '../../services/product.service';
 import { ImagePipe } from '../../pipes/image.pipe';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { CurrencyPipe } from '../../pipes/currency.pipe';
 
 export interface Product {
   id: number
@@ -27,7 +28,7 @@ export interface Product {
 @Component({
   selector: 'app-simple-carousel',
   standalone: true,
-  imports: [CommonModule, MatCardModule, ImagePipe],
+  imports: [CommonModule, MatCardModule, ImagePipe, CurrencyPipe],
   templateUrl: './simple-carousel.component.html',
   styleUrl: './simple-carousel.component.scss',
 })

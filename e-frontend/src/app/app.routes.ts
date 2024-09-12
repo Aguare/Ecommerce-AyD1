@@ -21,11 +21,13 @@ import { VerifyEmailComponent } from './components/commons/verify-email/verify-e
 import { AddHelperComponent } from './components/admin/add-helper/add-helper.component';
 import { OrdersComponent } from './components/admin/orders/orders.component';
 import { PurchasesComponent } from './components/user/purchases/purchases.component';
+import { AddStockComponent } from './components/admin/add-stock/add-stock.component';
 import { SearchProductComponent } from './components/commons/search-product/search-product.component';
 import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/commons/forgot-password/forgot-password.component';
 import { PermissionsComponent } from './components/admin/permissions/permissions.component';
 import { ListReportsComponent } from './components/reports/list-reports/list-reports.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -63,6 +65,7 @@ export const routes: Routes = [
       { path: 'view', component: ViewProductsComponent },
       { path: 'addProduct', component: AddProductComponent },
       { path: 'editProduct', component: EditProductComponent },
+      { path: 'addStock', component: AddStockComponent },
     ]
   },
   { path: 'product-details/:id', component: ProductDetailsComponent },
@@ -74,4 +77,8 @@ export const routes: Routes = [
   exports: [RouterModule],
 })
 
-export class AppRoutingModule { }
+export class AppRoutingModule { 
+
+  
+
+}

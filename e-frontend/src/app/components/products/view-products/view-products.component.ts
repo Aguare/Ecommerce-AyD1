@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../simple-carousel/simple-carousel.component';
 import { Router } from '@angular/router';
+import { NavbarComponent } from "../../commons/navbar/navbar.component";
 
 export interface Brand {
   id: number;
@@ -13,7 +14,7 @@ export interface Brand {
 @Component({
   selector: 'app-view-products',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NavbarComponent],
   templateUrl: './view-products.component.html',
   styleUrl: './view-products.component.scss'
 })
