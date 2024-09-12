@@ -58,7 +58,7 @@ module.exports = {
 				NODE_ENV: "production",
 			},
 		},
-		{
+		/*,{
 			name: "msReports",
 			script: "./msReports/index.js",
 			ignore_watch: ignore_paths,
@@ -67,6 +67,6 @@ module.exports = {
 				PORT: 3006,
 				NODE_ENV: "production",
 			},
-		},
+		},*/
 	],
 };
