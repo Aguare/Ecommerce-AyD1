@@ -25,6 +25,7 @@ import { SearchProductComponent } from './components/commons/search-product/sear
 import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/commons/forgot-password/forgot-password.component';
 import { PermissionsComponent } from './components/admin/permissions/permissions.component';
+import { ListReportsComponent } from './components/reports/list-reports/list-reports.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -43,12 +44,17 @@ export const routes: Routes = [
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
   { path: 'search/:product', component: SearchProductComponent },
   { path: 'reset-password/:token/:email', component: ResetPasswordComponent },
-  { path: 'add-helper', component: AddHelperComponent},
+  { path: 'add-helper', component: AddHelperComponent },
   { path: 'permissions', component: PermissionsComponent },
   { path: 'verify-2FA', component: Verify2faComponent },
   {
     path: 'edit', children: [
       { path: 'profile', component: EditProfileComponent }
+    ]
+  },
+  {
+    path: 'reports', children: [
+      { path: 'list', component: ListReportsComponent }
     ]
   },
   {

@@ -1,9 +1,6 @@
 /** @format */
 
-const ignore_paths = [
-	"./msImg/public/*",
-	"./msImg/public/**",
-]
+const ignore_paths = ["./msImg/public/*", "./msImg/public/**", "./msReports/Templates/*", "./msReports/Templates/**"];
 
 module.exports = {
 	apps: [
@@ -27,8 +24,8 @@ module.exports = {
 				PORT: 3002,
 				JWT_SECRET: "zl_frperg_xrl_cebcreqri",
 				NODE_ENV: "production",
-				MAX_FILE_SIZE: '5000000',
-				MAX_FILES: '10'
+				MAX_FILE_SIZE: "5000000",
+				MAX_FILES: "10",
 			},
 		},
 		{
@@ -38,7 +35,7 @@ module.exports = {
 			watch: "./msCustomer",
 			env_production: {
 				PORT: 3003,
-				NODE_ENV: "production"
+				NODE_ENV: "production",
 			},
 		},
 		{
@@ -48,7 +45,7 @@ module.exports = {
 			watch: "./msProduct",
 			env_production: {
 				PORT: 3004,
-				NODE_ENV: "production"
+				NODE_ENV: "production",
 			},
 		},
 		{
@@ -58,8 +55,18 @@ module.exports = {
 			watch: "./msEmail",
 			env_production: {
 				PORT: 3005,
-				NODE_ENV: "production"
+				NODE_ENV: "production",
 			},
-		}
+		},
+		{
+			name: "msReports",
+			script: "./msReports/index.js",
+			ignore_watch: ignore_paths,
+			watch: "./msReports",
+			env_production: {
+				PORT: 3006,
+				NODE_ENV: "production",
+			},
+		},
 	],
 };

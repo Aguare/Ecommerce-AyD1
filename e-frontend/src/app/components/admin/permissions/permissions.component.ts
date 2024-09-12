@@ -49,7 +49,7 @@ export class PermissionsComponent implements OnInit {
     this._adminService.getAllRolePages().subscribe((data: any) => {
       this.pages = data.data;
       this.pages.forEach(page => {
-        (this.pagesForm.get('pages') as FormArray).push(new FormControl(false));
+        (this.pagesForm.get('pages') as FormArray).push(new FormControl(true));
       });
     }, error => {
       this.pages = [];
@@ -84,7 +84,7 @@ export class PermissionsComponent implements OnInit {
       Swal.fire('Error!', 'No se ha seleccionado un rol para actualizar.', 'error');
       return;
     }
-    
+
     this._adminService.updateRole(name, description, this.currentRoleId).subscribe((data: any) => {
       Swal.fire('Actualizado', 'El rol ha sido actualizado.', 'success');
       window.location.reload();
