@@ -70,19 +70,16 @@
                     </div>
                     <div class="m-5">
                         <h4 class="title is-4">Permisos actuales</h4>
-                        <form [formGroup]="pagesForm" (ngSubmit)="updatePages()">
-                            <div class="field m-5" formArrayName="pages">
-                                @for(page of pages; track pageIndex; let pageIndex = $index) {
-                                    <div class="control">
-                                        <label class="checkbox">
-                                            <input type="checkbox" [formControlName]="pageIndex" />
-                                            {{page.name}}
-                                        </label>
-                                    </div>
-                                    }
-                            </div>
-                            <button class="button is-primary is-fullwidth" type="submit">Actualizar permisos</button>
-                        </form>
+                        @for(page of pages; track $index) {
+                        <ul class="field">
+                            <li class="control">
+                                <mat-checkbox class="checkbox" [checked]="page.isAssigned === 1" (change)="updateAssigned($index)">
+                                    {{page.name}}
+                                </mat-checkbox>
+                            </li>
+                        </ul>
+                        }
+                        <button class="button is-primary is-fullwidth" (click)="updatePages()">Actualizar permisos</button>
                     </div>
                 </div>
             </div>

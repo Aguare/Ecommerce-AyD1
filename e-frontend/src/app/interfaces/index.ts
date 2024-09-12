@@ -99,6 +99,7 @@
     export interface RolePage {
         id: number;
         name: string;
+        isAssigned: number;
     }
 
     export interface Role {

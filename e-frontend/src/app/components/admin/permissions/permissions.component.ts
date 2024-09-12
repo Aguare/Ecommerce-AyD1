@@ -5,12 +5,13 @@ import { LocalStorageService } from '../../../services/local-storage.service';
 import { AdminService } from '../../../services/admin.service';
 import { Role, RolePage } from '../../../interfaces';
 import Swal from 'sweetalert2';
-import e from 'express';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-permissions',
   standalone: true,
-  imports: [NavbarComponent, ReactiveFormsModule],
+  imports: [NavbarComponent, ReactiveFormsModule, MatCheckboxModule, JsonPipe],
   templateUrl: './permissions.component.html',
   styleUrl: './permissions.component.scss'
 })
@@ -48,9 +49,6 @@ export class PermissionsComponent implements OnInit {
 
     this._adminService.getAllRolePages().subscribe((data: any) => {
       this.pages = data.data;
-      this.pages.forEach(page => {
-        (this.pagesForm.get('pages') as FormArray).push(new FormControl(false));
-      });
     }, error => {
       this.pages = [];
     });
@@ -111,27 +109,16 @@ export class PermissionsComponent implements OnInit {
 
   chooseRolePages(roleId: number) {
     this.currentPermissionsRoleId = roleId;
-    const rolePages = this.roles[this.currentPermissionsRoleId - 1].pages;
-    // update new form array with currentRoleId permissions
-    (this.pagesForm.get('pages') as FormArray).controls.forEach((control, index) => {
-      control.setValue(rolePages.some(page => page.id === this.pages[index].id));
-    });
+    this.pages = this.roles[roleId-1].pages;
+  }
+
+  updateAssigned(index: number) {
+    this.pages[index].isAssigned = this.pages[index].isAssigned === 0 ? 1 : 0;
   }
 
   updatePages() {
-    if (this.currentPermissionsRoleId === 0) {
-      Swal.fire('Error!', 'No se ha seleccionado un rol para actualizar.', 'error');
-      return;
-    }
-
-    const pages = this.pagesForm.value.pages;
-    const rolePages = this.pages.filter((page, index) => pages[index]);
-    // this._adminService.updateRolePages(this.currentPermissionsRoleId, rolePages).subscribe((data: any) => {
-    //   Swal.fire('Actualizado', 'Los permisos del rol han sido actualizados.', 'success');
-    // }, error => {
-    //   Swal.fire('Error!', 'Un error ha ocurrido al actualizar los permisos del rol.', 'error');
-    // });
-    this._adminService.updateRolePages(this.currentPermissionsRoleId, rolePages).subscribe((data: any) => {
+    console.log(this.pages);
+    this._adminService.updateRolePages(this.currentPermissionsRoleId, this.pages).subscribe((data: any) => {
       Swal.fire('Actualizado', 'Los permisos del rol han sido actualizados.', 'success');
       window.location.reload();
     }, error => {

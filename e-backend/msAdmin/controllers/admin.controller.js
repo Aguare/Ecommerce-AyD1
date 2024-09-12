@@ -113,9 +113,14 @@ adminController.getRoles = async (req, res) => {
 		const result = await conn.query(queryRoles);
 
 		for(let i = 0; i < result.length; i++) {
-			const queryPages = `SELECT p.id, p.name FROM role_has_page rhp 
-			LEFT JOIN page p ON p.id = rhp.FK_Page 
-			WHERE rhp.FK_Role = ? AND p.isAvailable = 1;`;
+			const queryPages = `SELECT p.id, p.name,
+			CASE
+				WHEN rhp.FK_Page IS NOT NULL THEN 1
+				ELSE 0
+			END AS isAssigned
+			FROM page p
+			LEFT JOIN role_has_page rhp ON p.id = rhp.FK_Page AND rhp.FK_Role = ?
+			WHERE p.isAvailable = 1;`;
 			const resultPages = await conn.query(queryPages, [result[i].id]);
 			result[i].pages = resultPages;
 		}
@@ -176,7 +181,7 @@ adminController.getAllRolePages = async (req, res) => {
 	try {
 		conn = await getConnection();
 
-		const queryPages = `SELECT id, name FROM page WHERE isAvailable = 1;`;
+		const queryPages = `SELECT id, name, 0 as isAssigned FROM page WHERE isAvailable = 1;`;
 		const result = await conn.query(queryPages);
 
 		res.status(200).send({ data: result });
@@ -201,8 +206,10 @@ adminController.updateRolePages = async (req, res) => {
 		await conn.query(queryDelete, [id]);
 
 		for(let i = 0; i < pages.length; i++) {
-			const queryInsert = `INSERT INTO role_has_page (FK_Role, FK_Page) VALUE (?, ?);`;
-			await conn.query(queryInsert, [id, pages[i].id]);
+			if(pages[i].isAssigned === 1) {
+				const queryInsert = `INSERT INTO role_has_page (FK_Role, FK_Page) VALUE (?, ?);`;
+				await conn.query(queryInsert, [id, pages[i].id]);
+			}
 		}
 
 		await conn.commit();
