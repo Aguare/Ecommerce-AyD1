@@ -48,8 +48,8 @@ emailController.sendVerificationEmail = async (req, res) => {
 		let expiredAt = new Date(dateNow.setHours(dateNow.getHours() + 1));
 		expiredAt = expiredAt.toISOString().slice(0, 19).replace("T", " ");
 
-		const queryInsertToken = `INSERT INTO email_verification (email, token, isVerification, expired_at) VALUES (?, ?, ?, ?);`;
-		await connection.query(queryInsertToken, [emailEncrypt, tokenGenerated, 1, expiredAt]);
+		const queryInsertToken = `INSERT INTO email_verification (email_token, email, token, isVerification, expired_at) VALUES (?, ?, ?, ?, ?);`;
+		await connection.query(queryInsertToken, [emailEncrypt, email, tokenGenerated, 1, expiredAt]);
 
 		const transporter = nodemailer.createTransport({
 			service: "gmail",
@@ -125,7 +125,7 @@ emailController.verifyEmail = async (req, res) => {
 	}
 
 	try {
-		const queryToken = `SELECT * FROM email_verification WHERE email = ? AND token = ?;`;
+		const queryToken = `SELECT * FROM email_verification WHERE email_token = ? AND token = ?;`;
 		const resultToken = await connection.query(queryToken, [email, token]);
 
 		if (resultToken.length === 0) {
@@ -139,10 +139,10 @@ emailController.verifyEmail = async (req, res) => {
 			}
 
 			const queryUpdateUser = `UPDATE user SET isVerified = 1 WHERE email = ?;`;
-			await connection.query(queryUpdateUser, [email]);
+			await connection.query(queryUpdateUser, [resultToken[0].email]);
 
 			const queryDeleteToken = `DELETE FROM email_verification WHERE email = ?;`;
-			await connection.query(queryDeleteToken, [email]);
+			await connection.query(queryDeleteToken, [resultToken[0].email]);
 
 			if (connection) {
 				connection.release();
