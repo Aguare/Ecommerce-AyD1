@@ -59,7 +59,7 @@ export class ProductService {
   }
   
   getProductById(id:number){
-    return this.http.get(`${this.apiProduct}/getProductById?id=${id}`);
+    return this.http.get(`${this.apiProduct}/getProductByIdForEdit?id=${id}`);
   }
   
   updateDataProduct(body: any){
@@ -220,6 +220,18 @@ export class ProductService {
    */
   saveOrder(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiOrder}/saveOrder`, data);
+  }
+  
+  getProductsAndBranchesForStock(): Observable<any> {
+    return this.http.get(`${this.apiProduct}/getProductsAndBranchesForStock`);
+  }
+  
+  getStockOfProductByBranch(id:number): Observable<any> {
+    return this.http.get(`${this.apiProduct}/getStockOfProductByBranch?id=${id}`);
+  }
+ 
+  addStockInventory(body:any): Observable<any> {
+    return this.http.post(`${this.apiProduct}/addStockInventory`, body);
   }
 }
 

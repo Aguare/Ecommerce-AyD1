@@ -19,6 +19,7 @@ import { ProductDetailsComponent } from './components/commons/product-details/pr
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
 import { OrdersComponent } from './components/admin/orders/orders.component';
 import { PurchasesComponent } from './components/user/purchases/purchases.component';
+import { AddStockComponent } from './components/admin/add-stock/add-stock.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -45,6 +46,7 @@ export const routes: Routes = [
       { path: 'view', component: ViewProductsComponent },
       { path: 'addProduct', component: AddProductComponent },
       { path: 'editProduct', component: EditProductComponent },
+      { path: 'addStock', component: AddStockComponent },
     ]
   },
   { path: 'product-details/:id', component: ProductDetailsComponent },
@@ -56,4 +58,8 @@ export const routes: Routes = [
   exports: [RouterModule],
 })
 
-export class AppRoutingModule { }
+export class AppRoutingModule { 
+
+  
+
+}
