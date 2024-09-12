@@ -75,6 +75,8 @@ export class EditProfileComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           this.editProfileForm.get("isTwoFactor")?.setValue(false);
+        } else {
+          this.editProfileForm.get("isTwoFactor")?.setValue(true);
         }
       });
       return;
@@ -90,6 +92,8 @@ export class EditProfileComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.editProfileForm.get("isTwoFactor")?.setValue(true);
+      } else {
+        this.editProfileForm.get("isTwoFactor")?.setValue(false);
       }
     });
   }
