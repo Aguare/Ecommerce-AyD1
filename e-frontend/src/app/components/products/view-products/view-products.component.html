@@ -29,7 +29,7 @@
       <tr *ngFor="let product of filteredProducts">
         <td>{{ product.name }}</td>
         <td>{{ product.description | slice : 0 : 40 }}...</td>
-        <td>${{ product.price }}</td>
+        <td>{{this.currency}}{{ product.price }}</td>
         <td>{{ product.brand }}</td>
         <td>{{ product.category }}</td>
         <td>

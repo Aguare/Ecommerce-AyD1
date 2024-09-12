@@ -237,5 +237,9 @@ export class ProductService {
   getProductsLike(name: any, branchId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiProduct}/getProductsLike/${name}/${branchId}`);
   }
+  
+  getProducsWithMoreSales() {
+    return this.http.get(`${this.apiProduct}/getProducsWithMoreSales`);
+  }
 }
 

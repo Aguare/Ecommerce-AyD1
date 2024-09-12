@@ -22,6 +22,7 @@ router.get("/getProductsAndBranchesForStock", productController.getProductsAndBr
 router.get("/getStockOfProductByBranch", productController.getStockOfProductByBranch);
 router.post("/addStockInventory", productController.addStockInventory);
 router.get("/getProductsLike/:name/:id", productController.getProductsLike);
+router.get("/getProducsWithMoreSales", productController.getProducsWithMoreSales);
 
 
 module.exports = router;

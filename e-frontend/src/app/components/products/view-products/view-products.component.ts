@@ -5,6 +5,7 @@ import { ProductService } from '../../../services/product.service';
 import { Product } from '../../simple-carousel/simple-carousel.component';
 import { Router } from '@angular/router';
 import { NavbarComponent } from "../../commons/navbar/navbar.component";
+import { LocalStorageService } from '../../../services/local-storage.service';
 
 export interface Brand {
   id: number;
@@ -22,9 +23,10 @@ export class ViewProductsComponent implements OnInit{
 
   searchQuery: string = '';
   products: Product[] = [];
+  currency: string = '';
 
-  constructor(private productService: ProductService, private router:Router) {
-    
+  constructor(private productService: ProductService, private router:Router, private _localStorageService: LocalStorageService) {
+    this.currency = this._localStorageService.getCurrency();
   }
 
   ngOnInit(): void {
