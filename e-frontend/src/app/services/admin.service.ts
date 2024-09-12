@@ -91,5 +91,20 @@ export class AdminService {
   updateRole(name: string, description: string, id: number): Observable<any> {
     return this.http.put(`${this.apiAdmin}/updateRole`, { name, description, id });
   }
+
+  /**
+   * Method to get all pages in order to manage permissions for each role
+   * @returns 
+   */
+  getAllRolePages(): Observable<any> {
+    return this.http.get(`${this.apiAdmin}/getAllRolePages`);
+  }
+
+  /**
+   * Method to update permissions for a role
+   */
+  updateRolePages(id: number, pages: any[]): Observable<any> {
+    return this.http.put(`${this.apiAdmin}/updateRolePages`, { id, pages });
+  }
 }
 

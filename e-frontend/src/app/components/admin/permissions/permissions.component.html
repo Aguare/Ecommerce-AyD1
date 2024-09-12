@@ -54,19 +54,35 @@
             <div class="box">
                 <h3 class="title is-3">Gestionar permisos</h3>
                 <div class="m-5">
-                    <h4 class="title is-4">Selecciona el rol a actualizar</h4>
+                    <h4 class="title is-4">Selecciona el rol a gestionar</h4>
                     <div class="field">
                         <div class="select">
                             <select>
                                 <option value="0">Selecciona un rol</option>
                                 @for(role of roles; track $index) {
-                                <option value="{{ role.id }}" (click)="updatePermissionsWithRole(role.id)">
+                                <option value="{{ role.id }}" (click)="chooseRolePages(role.id)">
                                     {{role.name}}
                                 </option>
                                 }
                             </select>
                             <p class="help is-info">Selecciona para editar permisos</p>
                         </div>
+                    </div>
+                    <div class="m-5">
+                        <h4 class="title is-4">Permisos actuales</h4>
+                        <form [formGroup]="pagesForm" (ngSubmit)="updatePages()">
+                            <div class="field m-5" formArrayName="pages">
+                                @for(page of pages; track pageIndex; let pageIndex = $index) {
+                                    <div class="control">
+                                        <label class="checkbox">
+                                            <input type="checkbox" [formControlName]="pageIndex" />
+                                            {{page.name}}
+                                        </label>
+                                    </div>
+                                    }
+                            </div>
+                            <button class="button is-primary is-fullwidth" type="submit">Actualizar permisos</button>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -109,12 +109,17 @@ adminController.getRoles = async (req, res) => {
 	try {
 		conn = await getConnection();
 
-		await conn.beginTransaction();
-
 		const queryRoles = `SELECT * FROM role;`;
 		const result = await conn.query(queryRoles);
 
-		await conn.commit();
+		for(let i = 0; i < result.length; i++) {
+			const queryPages = `SELECT p.id, p.name FROM role_has_page rhp 
+			LEFT JOIN page p ON p.id = rhp.FK_Page 
+			WHERE rhp.FK_Role = ? AND p.isAvailable = 1;`;
+			const resultPages = await conn.query(queryPages, [result[i].id]);
+			result[i].pages = resultPages;
+		}
+
 		res.status(200).send({ data: result });
 	} catch (error) {
 		await conn.rollback();
@@ -166,17 +171,46 @@ adminController.updateRole = async (req, res) => {
 	}
 }
 
-adminController.getAllPages = async (req, res) => {
+adminController.getAllRolePages = async (req, res) => {
 	let conn;
 	try {
 		conn = await getConnection();
 
-		const queryPages = `SELECT * FROM page;`;
+		const queryPages = `SELECT id, name FROM page WHERE isAvailable = 1;`;
 		const result = await conn.query(queryPages);
 
 		res.status(200).send({ data: result });
 	} catch (error) {
 		res.status(500).send({ message: "Error al obtener las páginas.", error: error.message });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+}
+
+adminController.updateRolePages = async (req, res) => {
+	let conn;
+	try {
+		const { id, pages } = req.body;
+		conn = await getConnection();
+
+		const queryDelete = `DELETE FROM role_has_page WHERE FK_Role = ?;`;
+		await conn.query(queryDelete, [id]);
+
+		for(let i = 0; i < pages.length; i++) {
+			const queryInsert = `INSERT INTO role_has_page (FK_Role, FK_Page) VALUE (?, ?);`;
+			await conn.query(queryInsert, [id, pages[i].id]);
+		}
+
+		res.status(200).send({ message: "Páginas actualizadas correctamente." });
+	} catch (error) {
+		await conn.rollback();
+		res.status(500).send({ message: "Error al actualizar las páginas.", error: error.message });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
 	}
 }
 
