@@ -26,8 +26,8 @@ adminController.getPages = async (req, res) => {
 
 		const result = await connection.query(queryMoney, [id]);
 
-		if (conn) {
-			conn.release();
+		if (connection) {
+			connection.release();
 		}
 		res.status(200).send({ result });
 	} catch (error) {
