@@ -195,6 +195,8 @@ adminController.updateRolePages = async (req, res) => {
 		const { id, pages } = req.body;
 		conn = await getConnection();
 
+		await conn.beginTransaction();
+
 		const queryDelete = `DELETE FROM role_has_page WHERE FK_Role = ?;`;
 		await conn.query(queryDelete, [id]);
 
@@ -202,6 +204,8 @@ adminController.updateRolePages = async (req, res) => {
 			const queryInsert = `INSERT INTO role_has_page (FK_Role, FK_Page) VALUE (?, ?);`;
 			await conn.query(queryInsert, [id, pages[i].id]);
 		}
+
+		await conn.commit();
 
 		res.status(200).send({ message: "Páginas actualizadas correctamente." });
 	} catch (error) {
