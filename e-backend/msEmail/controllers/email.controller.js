@@ -404,6 +404,10 @@ emailController.encryptData = async (req, res) => {
 
 		const encryptedData = pbkdf2.pbkdf2Sync(data, salt, 1, 32, "sha512").toString("hex");
 		res.status(200).send({ data: encryptedData });
+
+		if (connection) {
+			connection.release();
+		}
 	} catch (error) {
 		console.log(error);
 		res.status(500).send({ message: "Error al conectar con la base de datos" });

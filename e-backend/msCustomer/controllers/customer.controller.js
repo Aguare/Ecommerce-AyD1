@@ -53,11 +53,11 @@ userController.signUp = async (req, res) => {
 		const insertUserInformationQuery = "INSERT INTO user_information (Fk_User) VALUE (?)";
 		await conn.query(insertUserInformationQuery, [result.insertId]);
 
-		await emailController.sendVerificationEmail({ body: { email: email, isObject: true } }, res);
-
 		if (conn) {
 			conn.release();
 		}
+
+		await emailController.sendVerificationEmail({ body: { email: email, isObject: true } }, res);
 
 		return res.status(200).send({ message: "Usuario registrado correctamente", data: result.insertId.toString() });
 	} catch (error) {
@@ -735,7 +735,7 @@ userController.getUserData = async (req, res) => {
 		if (conn) {
 			conn.release();
 		}
-		
+
 		return res.status(200).send({
 			message: "Usuario obtenido correctamente",
 			data: data,
